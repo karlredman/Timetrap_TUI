@@ -10,11 +10,18 @@ var screen = blessed.screen()
 var grid = new contrib.grid({rows: 1, cols: 2, screen: screen})
 
 var tree =  grid.set(0, 0, 1, 1, contrib.tree,
-  { style: { text: "red" }
-      , vi: true
-      , selectedBg: 'yellow'
+    { style: {
+        text: "red", fg: 'blue',
+        selected: {
+            bg: 'yellow', fg: 'white'
+        }
+    }
+  , vi: true
   , template: { lines: true }
-  , label: 'Filesystem Tree'})
+  , label: 'Filesystem Tree'
+    })
+
+//tree.instance.options.selectedBg = 'yellow'
 
 var table =  grid.set(0, 1, 1, 1, contrib.table,
   { keys: true
@@ -53,18 +60,19 @@ var explorer = { name: start_path
             var completePath = selfPath+'/'+child;
             if( fs.lstatSync(completePath).isDirectory() ){
               // If it's a directory we generate the child with the children generation function
-              result[child] = { name: child, getPath: self.getPath, extended: false, children: self.children };
+              result[child] = { name: child, getPath: self.getPath, extended: true, children: self.children };
             }else{
               // Otherwise children is not set (you can also set it to "{}" or "null" if you want)
               // result[child] = { name: child, getPath: self.getPath, extended: false };
                 //add path to array?
                 //create .timetrap-sheet if not exist?
-                if ( child.match(/.timetrap-sheet/) ) {
-                    // result[child] = { name: 'thing', getPath: self.getPath, extended: false };
-                    result[child] = { name: child, getPath: self.getPath, extended: false };
-                    console.log("xxxxxx");
-                    //set something to perform other operations
-                }
+                // if ( child.match(/.timetrap-sheet/) ) {
+                //     // result[child] = { name: 'thing', getPath: self.getPath, extended: false };
+                //     result[child] = { name: child, getPath: self.getPath, extended: true };
+                //     //console.log("xxxxxx\n");
+                //     //set something to perform other operations
+                // }
+                ;
             }
           }
         }else{
@@ -77,6 +85,7 @@ var explorer = { name: start_path
 
 //set tree
 tree.setData(explorer);
+
 
 // Handling select event. Every custom property that was added to node is
 // available like the "node.getPath" defined above
@@ -94,6 +103,10 @@ tree.on('select',function(node){
   try {
     // Add results
     data = data.concat(JSON.stringify(fs.lstatSync(path),null,2).split("\n").map(function(e){return [e]}));
+      //console.log(tree.options.vi)
+      // tree.options.fg = "yellow";
+      // tree.options.vi=false;
+
     table.setData({headers: ['Info'], data: data});
   }catch(e){
     table.setData({headers: ['Info'], data: [[e.toString()]]});
