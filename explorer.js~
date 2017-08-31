@@ -27,6 +27,7 @@ var table =  grid.set(0, 1, 1, 1, contrib.table,
   { keys: true
   , fg: 'green'
   , label: 'Informations'
+  , vi: true
   , columnWidth: [24, 10, 10]})
 
 var start_path = '/home/karl/timetrap'
@@ -35,6 +36,7 @@ var start_path = '/home/karl/timetrap'
 // var explorer = { name: '/'
 var explorer = { name: start_path
   , extended: true
+  , retract: false
   // Custom function used to recursively determine the node path
   , getPath: function(self){
       // If we don't have any parent, we are at tree root, so return the base case
@@ -66,12 +68,13 @@ var explorer = { name: start_path
               // result[child] = { name: child, getPath: self.getPath, extended: false };
                 //add path to array?
                 //create .timetrap-sheet if not exist?
-                if ( child.match(/.timetrap-sheet/) ) {
-                    // result[child] = { name: 'thing', getPath: self.getPath, extended: false };
-                    result[child] = { name: child, getPath: self.getPath, extended: true };
-                    //console.log("xxxxxx\n");
-                    //set something to perform other operations
-                }
+                // if ( child.match(/.timetrap-sheet/) ) {
+                //     // result[child] = { name: 'thing', getPath: self.getPath, extended: false };
+                //     result[child] = { name: child, getPath: self.getPath, extended: true };
+                //     //console.log("xxxxxx\n");
+                //     //set something to perform other operations
+                // }
+                ;
             }
           }
         }else{

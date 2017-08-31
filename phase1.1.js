@@ -27,6 +27,7 @@ var table =  grid.set(0, 1, 1, 1, contrib.table,
   { keys: true
   , fg: 'green'
   , label: 'Informations'
+  , vi: true
   , columnWidth: [24, 10, 10]})
 
 var start_path = '/home/karl/timetrap'
@@ -61,6 +62,10 @@ var explorer = { name: start_path
             if( fs.lstatSync(completePath).isDirectory() ){
               // If it's a directory we generate the child with the children generation function
               result[child] = { name: child, getPath: self.getPath, extended: true, children: self.children };
+              
+                //
+                for (var lchild in children){
+                }
             }else{
               // Otherwise children is not set (you can also set it to "{}" or "null" if you want)
               // result[child] = { name: child, getPath: self.getPath, extended: false };
