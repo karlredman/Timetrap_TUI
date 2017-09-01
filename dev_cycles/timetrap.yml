@@ -18,3 +18,6 @@ day_length_hours: 8     # normal work day
 progress_width: 32      # 15 min inc.
 day_countdown: false
 pay_rate: 1
+tui_projects_template_path: "/home/karl/timetrap_projects"
+tui_skip_dirs:
+- '!SKIP_THIS_DIR*'
