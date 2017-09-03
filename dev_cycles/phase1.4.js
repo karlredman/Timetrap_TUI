@@ -1,7 +1,8 @@
 var blessed = require('blessed')
-    , contrib = require('blessed-contrib')
-    , fs = require('fs')
-    , path = require('path')
+    contrib = require('blessed-contrib'),
+    fs = require('fs'),
+	util = require('util'),
+    path = require('path');
 
 var screen = blessed.screen()
 
@@ -153,7 +154,39 @@ var test1 =
 						name: 'skip_this_file' } ] } ] }
 
 
+function dirTree(filename) {
+    var stats = fs.lstatSync(filename);
+
+
+    if (stats.isDirectory()) {
+
+        // TODO: skip dirs in exclusion list
+
+
+        // TODO: check to see if dir has .timetrap-sheet and create one if it doesn't exist
+
+        var info = {
+            path: filename,
+            name: path.basename(filename),
+            type: "directory"
+        };
+
+        //next iteration
+        info.children = fs.readdirSync(filename).map(function(child) {
+            return dirTree(filename + '/' + child);
+        });
+    }
+    // else {
+    //     // Assuming it's a file. In real life it could be a symlink or
+    //     // something else!
+    //     //info.type = "file";
+    // }
+
+    return info;
+}
+
 //set tree
+tree.setData(util.inspect(dirTree("/home/karl/timetrap_projects"), false, null));
 tree.setData(test1);
 //tree.setData(explorer);
 
