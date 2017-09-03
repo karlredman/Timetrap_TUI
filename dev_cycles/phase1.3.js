@@ -115,8 +115,8 @@ var test1 = { extended: true
 
 tree.setData(explorer);
 tree.setData(test1);
-// fs.writeFile("./explorer.out", "***************************");
-// fs.writeFile("./explorer.out", "explorer:"+util.inspect(explorer));
+fs.writeFile("./explorer.out", "***************************");
+fs.writeFile("./explorer.out", "explorer:"+util.inspect(explorer));
 // fs.writeFile("./explorer.out", "tree:"+util.inspect(tree.rows));
 
 
