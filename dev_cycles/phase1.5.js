@@ -2,6 +2,8 @@
 
 var blessed = require('blessed'),
     contrib = require('blessed-contrib'),
+  	Node = blessed.Node,
+  	Box = blessed.Box,
     fs = require('fs'),
 	util = require('util'),
     path = require('path'),
@@ -36,68 +38,131 @@ var screen = blessed.screen()
 //create layout and widgets
 var grid = new contrib.grid({rows: 1, cols: 2, screen: screen})
 
+// monkeypatch contrib.tree constructor to change keyhandler
+
+// save the original
+var old_tree =  contrib.tree.prototype;
+
+//function Tree(options) {
+contrib.tree = function(options) {
+
+  if (!(this instanceof Node)) return new contrib.tree(options);
+
+  var self = this;
+  options = options || {};
+  options.bold = true;
+  this.options = options;
+  this.data = {};
+  this.nodeLines = [];
+  this.lineNbr = 0;
+  Box.call(this, options);
+
+  options.extended = options.extended || false;
+  options.keys = options.keys || ['+', 'space', 'enter'];
+
+  options.template = options.template || {};
+  options.template.extend = options.template.extend || ' [+]';
+  options.template.retract = options.template.retract || ' [-]';
+  options.template.lines = options.template.lines || false;
+
+  // Do not set height, since this create a bug where the first line is not always displayed
+  this.rows = blessed.list({
+    top: 1,
+    width: 0,
+    left: 1,
+    style: options.style,
+    padding: options.padding,
+    keys: true,
+    tags: options.tags,
+    input: options.input,
+    vi: options.vi,
+    ignoreKeys: options.ignoreKeys,
+    scrollable: options.scrollable,
+    mouse: options.mouse,
+    selectedBg: 'red',
+  });
+
+  this.append(this.rows);
+
+  this.rows.key(options.keys, function() {
+    var selectedNode = self.nodeLines[this.getItemIndex(this.selected)];
+    // if (selectedNode.children) {
+    //   selectedNode.extended = !selectedNode.extended;
+    //   self.setData(self.data);
+    //   self.screen.render();
+    // }
+
+    self.emit('select', selectedNode, this.getItemIndex(this.selected));
+  });
+
+  // this.rows.key(options.keys, function() {
+  //   var selectedNode = self.nodeLines[this.getItemIndex(this.selected)];
+  //   // if (selectedNode.children) {
+  //   //   selectedNode.extended = !selectedNode.extended;
+  //   //   self.setData(self.data);
+  //   //   self.screen.render();
+  //   // }
+
+  //   self.emit('select', selectedNode, this.getItemIndex(this.selected));
+  // });
+
+};
+contrib.tree.prototype = old_tree;
+
 var tree =  grid.set(0, 0, 1, 1, contrib.tree,
-    { style: {
+    {
+        style: {
         text: "red", fg: 'blue',
         selected: {
             bg: 'yellow', fg: 'white'
         }
-    }
-        , vi: true
-        , template: { lines: true }
-        , label: 'Filesystem Tree'
+    },
+        // keys: ['+', 'space'],
+        vi: true,
+        template: { lines: true },
+        label: 'Filesystem Tree'
     })
 
-//tree.instance.options.selectedBg = 'yellow'
+
+// //tree.rows.key = function(options_keys) {
+// tree = function(options) {
+
+//     this.rows.key(options.keys, function() {
+//         var selectedNode = self.nodeLines[this.getItemIndex(this.selected)];
+//         // if (selectedNode.children) {
+//         //   selectedNode.extended = !selectedNode.extended;
+//         //   self.setData(self.data);
+//         //   self.screen.render();
+//         // }
+
+//         self.emit('select', selectedNode, this.getItemIndex(this.selected));
+//     });
+// };
+
+
+
+// //contrib.tree.rows.key = function(options_keys, function() {
+// this.tree.rows.key = function(options_keys){
+//     var selectedNode = self.nodeLines[this.getItemIndex(this.selected)];
+//     // if (selectedNode.children) {
+//     //     selectedNode.extended = !selectedNode.extended;
+//     //     self.setData(self.data);
+//     //     self.screen.render();
+//     // }
+
+//     self.emit('select', selectedNode, this.getItemIndex(this.selected));
+// };
+
 
 var table =  grid.set(0, 1, 1, 1, contrib.table,
-    { keys: true,
+    {
+        keys: true,
         fg: 'green',
         label: 'Informations',
         vi: true,
-        columnWidth: [24, 10, 10]})
+        columnWidth: [24, 10, 10]
+    })
 
-var test3 =
-{ path: '/home/karl/timetrap_projects',
-  name: 'timetrap_projects',
-  type: 'directory',
-  extended: true,
-  children:
-   [ { path: '/home/karl/timetrap_projects/Personal',
-       name: 'Personal',
-       type: 'directory',
-       extended: true,
-       children:
-        [ { path: '/home/karl/timetrap_projects/Personal/Computer',
-            name: 'Computer',
-            type: 'directory',
-            extended: true,
-            children:
-             [ { path: '/home/karl/timetrap_projects/Personal/Computer/Administration',
-                 name: 'Administration',
-                 type: 'directory',
-                 extended: true,
-                 children: [] } ] } ] },
-     { path: '/home/karl/timetrap_projects/Projects',
-       name: 'Projects',
-       type: 'directory',
-       extended: true,
-       children:
-        [ { path: '/home/karl/timetrap_projects/Projects/Timetrap_TUI',
-            name: 'Timetrap_TUI',
-            type: 'directory',
-            extended: true,
-            children: [] },
-          { path: '/home/karl/timetrap_projects/Projects/Vimwiki_Gollum',
-            name: 'Vimwiki_Gollum',
-            type: 'directory',
-            extended: true,
-            children: [] } ] },
-     { path: '/home/karl/timetrap_projects/x',
-       name: 'x',
-       type: 'directory',
-       extended: true,
-       children: [] } ] }
 
 function dirTree(filename) {
 	var stats = fs.lstatSync(filename);
@@ -188,7 +253,7 @@ function dirTree(filename) {
 }
 
 // tree.setData(test3);
-tree.setData(test3);
+tree.setData(dirTree(timetrap_config.tui_projects_template_path));
 
 // Handling select event. Every custom property that was added to node is
 // available like the "node.getPath" defined above
