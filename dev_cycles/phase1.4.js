@@ -24,11 +24,11 @@ var tree =  grid.set(0, 0, 1, 1, contrib.tree,
 //tree.instance.options.selectedBg = 'yellow'
 
 var table =  grid.set(0, 1, 1, 1, contrib.table,
-    { keys: true
-        , fg: 'green'
-        , label: 'Informations'
-        , vi: true
-        , columnWidth: [24, 10, 10]})
+    { keys: true,
+        fg: 'green',
+        label: 'Informations',
+        vi: true,
+        columnWidth: [24, 10, 10]})
 
 var start_path = '/home/karl/timetrap_projects'
 
@@ -92,7 +92,6 @@ var explorer = { name: start_path
 
 var test1 =
 	{
-	name: 'test1 projects thing',
 	extended: true,
 	path: '/home/karl/timetrap_projects/',
 		name: 'timetrap_projects',
@@ -153,6 +152,92 @@ var test1 =
 					{ path: '/home/karl/timetrap_projects//Projects/skip_this_file',
 						name: 'skip_this_file' } ] } ] }
 
+var test2 =
+	{
+		extended: true,
+		path: '/home/karl/timetrap_projects/',
+		name: 'timetrap_projects',
+		type: 'directory',
+		children:
+		[ { path: '/home/karl/timetrap_projects//Personal',
+			name: 'Personal',
+			type: 'directory',
+			children:
+			[ undefined,
+				{ path: '/home/karl/timetrap_projects//Personal/Computer',
+					name: 'Computer',
+					type: 'directory',
+					children:
+					[ undefined,
+						{ path: '/home/karl/timetrap_projects//Personal/Computer/Administration',
+							name: 'Administration',
+							type: 'directory',
+							children: [ undefined ] } ] },
+				{ path: '/home/karl/timetrap_projects//Personal/SKIP_THIS_DIR_a',
+					name: 'SKIP_THIS_DIR_a',
+					type: 'directory',
+					children: [ undefined ] },
+				undefined ] },
+			{ path: '/home/karl/timetrap_projects//Projects',
+				name: 'Projects',
+				type: 'directory',
+				children:
+				[ undefined,
+					{ path: '/home/karl/timetrap_projects//Projects/SKIP_THIS_DIR',
+						name: 'SKIP_THIS_DIR',
+						type: 'directory',
+						children: [ undefined ] },
+					{ path: '/home/karl/timetrap_projects//Projects/Timetrap_TUI',
+						name: 'Timetrap_TUI',
+						type: 'directory',
+						children: [ undefined, undefined ] },
+					{ path: '/home/karl/timetrap_projects//Projects/Vimwiki_Gollum',
+						name: 'Vimwiki_Gollum',
+						type: 'directory',
+						children: [ undefined ] },
+					undefined ] } ] }
+
+var test3 =
+{ path: '/home/karl/timetrap_projects',
+  name: 'timetrap_projects',
+  type: 'directory',
+  extended: true,
+  children:
+   [ { path: '/home/karl/timetrap_projects/Personal',
+       name: 'Personal',
+       type: 'directory',
+       extended: true,
+       children:
+        [ { path: '/home/karl/timetrap_projects/Personal/Computer',
+            name: 'Computer',
+            type: 'directory',
+            extended: true,
+            children:
+             [ { path: '/home/karl/timetrap_projects/Personal/Computer/Administration',
+                 name: 'Administration',
+                 type: 'directory',
+                 extended: true,
+                 children: [] } ] } ] },
+     { path: '/home/karl/timetrap_projects/Projects',
+       name: 'Projects',
+       type: 'directory',
+       extended: true,
+       children:
+        [ { path: '/home/karl/timetrap_projects/Projects/Timetrap_TUI',
+            name: 'Timetrap_TUI',
+            type: 'directory',
+            extended: true,
+            children: [] },
+          { path: '/home/karl/timetrap_projects/Projects/Vimwiki_Gollum',
+            name: 'Vimwiki_Gollum',
+            type: 'directory',
+            extended: true,
+            children: [] } ] },
+     { path: '/home/karl/timetrap_projects/x',
+       name: 'x',
+       type: 'directory',
+       extended: true,
+       children: [] } ] }
 
 function dirTree(filename) {
     var stats = fs.lstatSync(filename);
@@ -166,6 +251,7 @@ function dirTree(filename) {
         // TODO: check to see if dir has .timetrap-sheet and create one if it doesn't exist
 
         var info = {
+			extended: true,
             path: filename,
             name: path.basename(filename),
             type: "directory"
@@ -186,10 +272,25 @@ function dirTree(filename) {
 }
 
 //set tree
-tree.setData(util.inspect(dirTree("/home/karl/timetrap_projects"), false, null));
-tree.setData(test1);
-//tree.setData(explorer);
+// var dirtree = {};
+// dirtree["extended"] = true;
+// dirtree += dirTree("/home/karl/timetrap_projects");
+//dirtree ={ name: start_path, extended: true}+dirtree;
+//dirtree.push({ name: start_path, extended: true});
 
+// dirtree = dirTree("/home/karl/timetrap_projects");
+// tree.setData(util.inspect(dirtree, false, null));
+// fs.writeFile("./out", "######################\ndirtree:"+util.inspect(dirtree, false, null));
+
+// fs.writeFile("./out", "***************************");
+// fs.writeFile("./out", "explorer:"+JSON.stringify(dirtree, null, 2));
+
+//tree.setData(util.inspect(dirTree("/home/karl/timetrap_projects"), false, null));
+//tree.setData(dirTree("/home/karl/timetrap_projects"), false, null);
+// tree.setData(explorer);
+
+//tree.setData(JSON.stringify(dirTree("/home/karl/timetrap_projects", null, 4), false, null));
+tree.setData(test3);
 
 // Handling select event. Every custom property that was added to node is
 // available like the "node.getPath" defined above
@@ -207,7 +308,10 @@ tree.on('select',function(node){
     data.push(['']);
     try {
         // Add results
-        data = data.concat(JSON.stringify(fs.lstatSync(path),null,2).split("\n").map(function(e){return [e]}));
+        var stat = fs.lstatSync(path);
+		if ( stat.isDirectory() ){
+			data = data.concat(JSON.stringify(fs.lstatSync(path),null,2).split("\n").map(function(e){return [e]}));
+		}
         //console.log(tree.options.vi)
         // tree.options.fg = "yellow";
         // tree.options.vi=false;
@@ -236,3 +340,6 @@ screen.key(['tab'], function(ch, key) {
 
 tree.focus()
 screen.render()
+
+//################################################
+

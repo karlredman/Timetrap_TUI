@@ -6,6 +6,7 @@ var blessed = require('blessed'),
     fs = require('fs'),
     readdirp = require('readdirp');
 
+var readdirp_control = true;
 
 // default config_file
 var conf_file = process.env.HOME+"/.timetrap.yml";
@@ -16,7 +17,7 @@ if (process.env.TIMETRAP_CONFIG_FILE) {
 }
 
 try {
-    // git the config object
+    // get the config object
     var timetrap_config = yaml.safeLoad(fs.readFileSync(conf_file, 'utf8'));
     console.log(timetrap_config);
 } catch(e) {
@@ -36,8 +37,7 @@ console.log("-----------------------------------------------------");
 
 
 var entries = [];
-var data;
-readdirp({ root: timetrap_config.tui_projects_template_path,
+var dirstream = readdirp({ root: timetrap_config.tui_projects_template_path,
     entryType: 'directories', directoryFilter: timetrap_config.tui_skip_dirs
     }).on('data',
     function(entry) {
@@ -72,8 +72,24 @@ readdirp({ root: timetrap_config.tui_projects_template_path,
 
         // save the entry
         entries.push(entry);
-        console.log("entry: "+entries[entries.length-1].path);
-    });
+		console.log("entries: "+entries.length);
+        // console.log("entry: "+entries[entries.length-1].path);
+		//console.log(JSON.stringify(entries, null, 2));
+    }).on('end',
+	function(){
+		// console.log("-----------------------------------------------------");
+		readdirp_control = false
+	});
 
-console.log("-----------------------------------------------------");
-console.log("entries: "+entries);
+continueExec();
+
+function continueExec() {
+    //here is the trick, wait until var callbackCount is set number of callback functions
+    if (readdirp_control == true) {
+        setTimeout(continueExec, 1000);
+        return;
+    }
+    //Finally, do what you need
+	console.log("final entries: "+entries.length);
+	console.log("final entries data: "+JSON.stringify(entries, null, 4));
+}
