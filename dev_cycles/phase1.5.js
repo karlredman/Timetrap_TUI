@@ -94,18 +94,6 @@ contrib.tree = function(options) {
 
     self.emit('select', selectedNode, this.getItemIndex(this.selected));
   });
-
-  // this.rows.key(options.keys, function() {
-  //   var selectedNode = self.nodeLines[this.getItemIndex(this.selected)];
-  //   // if (selectedNode.children) {
-  //   //   selectedNode.extended = !selectedNode.extended;
-  //   //   self.setData(self.data);
-  //   //   self.screen.render();
-  //   // }
-
-  //   self.emit('select', selectedNode, this.getItemIndex(this.selected));
-  // });
-
 };
 contrib.tree.prototype = old_tree;
 
