@@ -120,7 +120,7 @@ function dirTree(filename) {
 if (module.parent == undefined) {
 	// node dirTree.js ~/foo/bar
 	var util = require('util');
-	//console.log(util.inspect(dirTree(timetrap_config.tui_projects_template_path), false, null));
-	dirTree(timetrap_config.tui_projects_template_path);
+	console.log(util.inspect(dirTree(timetrap_config.tui_projects_template_path), false, null));
+	//dirTree(timetrap_config.tui_projects_template_path);
 
 }
