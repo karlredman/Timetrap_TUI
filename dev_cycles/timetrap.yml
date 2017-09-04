@@ -19,5 +19,8 @@ progress_width: 32      # 15 min inc.
 day_countdown: false
 pay_rate: 1
 tui_projects_template_path: "/home/karl/timetrap_projects"
-tui_skip_dirs:
-- '!SKIP_THIS_DIR*'
+tui_create_missing_sheets: true
+tui_recreate_sheets: false
+tui_skip_paths:
+- 'SKIP_THIS_DIR*'
+- 'x'
