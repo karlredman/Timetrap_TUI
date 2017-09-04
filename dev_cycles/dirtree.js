@@ -1,9 +1,9 @@
 "use strict";
 var fs = require('fs'),
 	path = require('path'),
+	util = require('util'),
 	yaml = require('js-yaml'),
 	minimatch = require('minimatch');
-
 
 // default config_file
 var conf_file = process.env.HOME+"/.timetrap.yml";
@@ -119,7 +119,6 @@ function dirTree(filename) {
 
 if (module.parent == undefined) {
 	// node dirTree.js ~/foo/bar
-	var util = require('util');
 	console.log(util.inspect(dirTree(timetrap_config.tui_projects_template_path), false, null));
 	//dirTree(timetrap_config.tui_projects_template_path);
 
