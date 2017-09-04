@@ -86,60 +86,31 @@ contrib.tree = function(options) {
 
   this.rows.key(options.keys, function() {
     var selectedNode = self.nodeLines[this.getItemIndex(this.selected)];
-    // if (selectedNode.children) {
-    //   selectedNode.extended = !selectedNode.extended;
-    //   self.setData(self.data);
-    //   self.screen.render();
-    // }
+    if (selectedNode.children) {
+      selectedNode.extended = !selectedNode.extended;
+      self.setData(self.data);
+      self.screen.render();
+    }
 
-    self.emit('select', selectedNode, this.getItemIndex(this.selected));
+    // self.emit('select', selectedNode, this.getItemIndex(this.selected));
   });
 };
+
 contrib.tree.prototype = old_tree;
 
 var tree =  grid.set(0, 0, 1, 1, contrib.tree,
     {
         style: {
-        text: "red", fg: 'blue',
+        text: "red", fg: 'white', bg: 'red',
         selected: {
-            bg: 'yellow', fg: 'white'
+            bg: 'yellow', fg: 'black'
         }
     },
-        // keys: ['+', 'space'],
+        keys: ['+', 'space'],
         vi: true,
         template: { lines: true },
         label: 'Filesystem Tree'
     })
-
-
-// //tree.rows.key = function(options_keys) {
-// tree = function(options) {
-
-//     this.rows.key(options.keys, function() {
-//         var selectedNode = self.nodeLines[this.getItemIndex(this.selected)];
-//         // if (selectedNode.children) {
-//         //   selectedNode.extended = !selectedNode.extended;
-//         //   self.setData(self.data);
-//         //   self.screen.render();
-//         // }
-
-//         self.emit('select', selectedNode, this.getItemIndex(this.selected));
-//     });
-// };
-
-
-
-// //contrib.tree.rows.key = function(options_keys, function() {
-// this.tree.rows.key = function(options_keys){
-//     var selectedNode = self.nodeLines[this.getItemIndex(this.selected)];
-//     // if (selectedNode.children) {
-//     //     selectedNode.extended = !selectedNode.extended;
-//     //     self.setData(self.data);
-//     //     self.screen.render();
-//     // }
-
-//     self.emit('select', selectedNode, this.getItemIndex(this.selected));
-// };
 
 
 var table =  grid.set(0, 1, 1, 1, contrib.table,
@@ -272,6 +243,14 @@ tree.on('select',function(node){
         table.setData({headers: ['Info'], data: [[e.toString()]]});
     }
 
+    // node.style.fg = 'green';                              //set the current element  color
+    // var selectedNode = tree.nodeLines[tree.rows.getItemIndex(tree.rows.selected)];
+    // tree.rows.selected.style = 'green';                              //set the current element  color
+    // tree.rows.style.selected = 'green';                              //set the current element  color
+
+    var selectedNode = tree.nodeLines[tree.rows.getItemIndex(tree.rows.selected)];
+	selectedNode.style = {selected: {fg:"red"}};
+
     screen.render();
 });
 
@@ -287,6 +266,13 @@ screen.key(['tab'], function(ch, key) {
         table.focus();
     else
         tree.focus();
+});
+
+tree.rows.key(['enter'], function(ch, key) {
+    var selectedNode = tree.nodeLines[tree.rows.getItemIndex(tree.rows.selected)];
+    //selectedNode.style.fg = 'green';                              //set the current element  color
+    tree.emit('action', selectedNode, tree.rows.getItemIndex(tree.rows.selected));
+    tree.emit('select', selectedNode, tree.rows.getItemIndex(tree.rows.selected));
 });
 
 tree.focus()

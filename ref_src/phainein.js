@@ -281,7 +281,7 @@ var mainw = blessed.scrollabletext({
 //// side menue focus
 screen.setEffects(sepv, side, 'focus', 'blur', { fg: 'green' });
 screen.setEffects(seph, side, 'focus', 'blur', { fg: 'red' });
-//// top bar 
+//// top bar
 screen.setEffects(sepv, bar, 'focus', 'blur', { fg: 'red' });
 screen.setEffects(seph, bar, 'focus', 'blur', { fg: 'green' });
 //// main textarea focus
@@ -377,7 +377,7 @@ side.on('select', function(el) {
     bar.style.prefix['fg'] = 'white';
 
     appsmap('func')[side.items.indexOf(el)](bar);       //set the topbar fields
-    el.style.fg = 'green';                              //set the current element  color
+    el.style.fg = 'yellow';                              //set the current element  color
 
     if(prevSideEl != null && prevSideEl != el){
         prevSideEl.style.fg = 'light-blue';
@@ -392,7 +392,7 @@ side.on('select', function(el) {
 });
 
 //if(bar.Xkeys) {
-//alert("thing"); 
+//alert("thing");
 //console.log("thing");
 //}
 
@@ -453,7 +453,7 @@ screen.render();
 /**************************************/
 /**************************************/
 // Quit on `q`, or `Control-C` when the focus is on the screen.
-screen.key(['q', 'C-c'], function(ch, key) {  
+screen.key(['q', 'C-c'], function(ch, key) {
     process.exit(0);
 });
 /**************************************/
@@ -477,7 +477,7 @@ function main(argv, callback) {
     var data = {};
     data.sidew = getMaxSideNameLen();   //side menu width
     data.numwnd = 3;                    //number of windows
-    data.curwind = 1;                   //current window (starts at 1, screen === 0) 
+    data.curwind = 1;                   //current window (starts at 1, screen === 0)
 
     return start(data, function(err) {
         if (err) return callback(err);
