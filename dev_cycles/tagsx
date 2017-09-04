@@ -1,0 +1,156 @@
+Apple	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.3.js	/'Apple'/;"	v	lineno:97	namespace:test1.children.Fruit.children
+Banana	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.3.js	/'Banana'/;"	v	lineno:96	namespace:test1.children.Fruit.children
+blessed	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.1.js	/blessed/;"	v	lineno:1
+blessed	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.2.js	/blessed/;"	v	lineno:3
+blessed	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.3.js	/blessed/;"	v	lineno:1
+blessed	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.4.js	/blessed/;"	v	lineno:1
+blessed	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.5.js	/blessed/;"	v	lineno:3
+Cherry	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.3.js	/'Cherry'/;"	v	lineno:98	namespace:test1.children.Fruit.children
+child	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.1.js	/child/;"	v	lineno:59	namespace:explorer.children
+child	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.3.js	/child/;"	v	lineno:60	namespace:explorer.children
+child	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.4.js	/child/;"	v	lineno:58	namespace:explorer.children
+children	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.1.js	/children/;"	f	lineno:49	namespace:explorer	type:? function(?)
+children	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.1.js	/children/;"	v	lineno:54	namespace:explorer.children
+children	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.3.js	/children/;"	f	lineno:50	namespace:explorer	type:? function(?)
+children	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.3.js	/children/;"	v	lineno:100	namespace:test1.children.Fruit.children.Exotics
+children	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.3.js	/children/;"	v	lineno:107	namespace:test1.children.Vegetables
+children	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.3.js	/children/;"	v	lineno:55	namespace:explorer.children
+children	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.3.js	/children/;"	v	lineno:92	namespace:test1
+children	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.3.js	/children/;"	v	lineno:95	namespace:test1.children.Fruit
+children	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.4.js	/children/;"	f	lineno:48	namespace:explorer	type:? function(?)
+children	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.4.js	/children/;"	v	lineno:161	namespace:test2	type:[test2.children.0, test2.children.1]
+children	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.4.js	/children/;"	v	lineno:205	namespace:test3	type:[test3.children.0, test3.children.1, test3.children.2]
+children	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.4.js	/children/;"	v	lineno:53	namespace:explorer.children
+children	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.4.js	/children/;"	v	lineno:99	namespace:test1	type:[test1.children.0, test1.children.1]
+children	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.5.js	/children/;"	v	lineno:65	namespace:test3	type:[test3.children.0, test3.children.1, test3.children.2]
+completePath	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.1.js	/completePath/;"	v	lineno:61	namespace:explorer.children	type:string
+completePath	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.3.js	/completePath/;"	v	lineno:62	namespace:explorer.children	type:string
+completePath	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.4.js	/completePath/;"	v	lineno:60	namespace:explorer.children	type:string
+conf_file	/home/karl/Projects/timetrap_tui/dev_cycles/dirtree.js	/conf_file/;"	v	lineno:10	type:string
+conf_file	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.2.js	/conf_file/;"	v	lineno:12	type:string
+conf_file	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.5.js	/conf_file/;"	v	lineno:12	type:string
+continueExec	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.2.js	/continueExec/;"	f	lineno:86	type:void function()
+contrib	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.1.js	/contrib/;"	v	lineno:2
+contrib	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.3.js	/contrib/;"	v	lineno:2
+contrib	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.4.js	/contrib/;"	v	lineno:2
+contrib	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.5.js	/contrib/;"	v	lineno:4
+dirstream	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.2.js	/dirstream/;"	v	lineno:40
+dirTree	/home/karl/Projects/timetrap_tui/dev_cycles/dirtree.js	/dirTree/;"	f	lineno:34	type:dirTree.!ret function(string)
+dirTree	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.4.js	/dirTree/;"	f	lineno:242	type:dirTree.!ret function(string)
+dirTree	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.5.js	/dirTree/;"	f	lineno:102	type:dirTree.!ret function(string)
+entries	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.2.js	/entries/;"	v	lineno:39	type:[?]
+exclude_dirs	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.4.js	/exclude_dirs/;"	v	lineno:63	namespace:explorer.children	type:[string]
+Exotics	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.3.js	/'Exotics'/;"	v	lineno:99	namespace:test1.children.Fruit.children
+explorer	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.1.js	/explorer/;"	v	lineno:37
+explorer	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.3.js	/explorer/;"	v	lineno:38
+explorer	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.4.js	/explorer/;"	v	lineno:36
+extended	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.1.js	/extended/;"	v	lineno:38	namespace:explorer	type:boolean
+extended	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.3.js	/extended/;"	v	lineno:39	namespace:explorer	type:boolean
+extended	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.3.js	/extended/;"	v	lineno:91	namespace:test1	type:boolean
+extended	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.4.js	/extended/;"	v	lineno:157	namespace:test2	type:boolean
+extended	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.4.js	/extended/;"	v	lineno:204	namespace:test3	type:boolean
+extended	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.4.js	/extended/;"	v	lineno:37	namespace:explorer	type:boolean
+extended	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.4.js	/extended/;"	v	lineno:95	namespace:test1	type:boolean
+extended	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.5.js	/extended/;"	v	lineno:64	namespace:test3	type:boolean
+filename	/home/karl/Projects/timetrap_tui/dev_cycles/dirtree.js	/filename/;"	v	lineno:34	namespace:dirTree	type:string
+filename	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.4.js	/filename/;"	v	lineno:242	namespace:dirTree	type:string
+filename	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.5.js	/filename/;"	v	lineno:102	namespace:dirTree	type:string
+Fruit	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.3.js	/'Fruit'/;"	v	lineno:94	namespace:test1.children
+fs	/home/karl/Projects/timetrap_tui/dev_cycles/dirtree.js	/fs/;"	v	lineno:2
+fs	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.1.js	/fs/;"	v	lineno:4
+fs	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.2.js	/fs/;"	v	lineno:6
+fs	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.3.js	/fs/;"	v	lineno:4
+fs	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.4.js	/fs/;"	v	lineno:3
+fs	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.5.js	/fs/;"	v	lineno:5
+getPath	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.1.js	/getPath/;"	f	lineno:40	namespace:explorer	type:string function(?)
+getPath	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.3.js	/getPath/;"	f	lineno:41	namespace:explorer	type:string function(?)
+getPath	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.4.js	/getPath/;"	f	lineno:39	namespace:explorer	type:string function(?)
+grid	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.1.js	/grid/;"	v	lineno:10
+grid	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.3.js	/grid/;"	v	lineno:11
+grid	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.4.js	/grid/;"	v	lineno:10
+grid	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.5.js	/grid/;"	v	lineno:37
+i	/home/karl/Projects/timetrap_tui/dev_cycles/dirtree.js	/i/;"	v	lineno:40	namespace:dirTree	type:number
+i	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.5.js	/i/;"	v	lineno:108	namespace:dirTree	type:number
+Kiwi	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.3.js	/'Kiwi'/;"	v	lineno:103	namespace:test1.children.Fruit.children.Exotics.children
+lchild	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.1.js	/lchild/;"	v	lineno:67	namespace:explorer.children
+len	/home/karl/Projects/timetrap_tui/dev_cycles/dirtree.js	/len/;"	v	lineno:40	namespace:dirTree
+len	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.5.js	/len/;"	v	lineno:108	namespace:dirTree
+Lettuce	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.3.js	/'Lettuce'/;"	v	lineno:109	namespace:test1.children.Vegetables.children
+Mango	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.3.js	/'Mango'/;"	v	lineno:101	namespace:test1.children.Fruit.children.Exotics.children
+minimatch	/home/karl/Projects/timetrap_tui/dev_cycles/dirtree.js	/minimatch/;"	v	lineno:6
+minimatch	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.5.js	/minimatch/;"	v	lineno:9
+myCustomProperty	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.3.js	/myCustomProperty/;"	v	lineno:103	namespace:test1.children.Fruit.children.Exotics.children.Kiwi	type:string
+name	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.1.js	/name/;"	v	lineno:37	namespace:explorer	type:string
+name	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.3.js	/name/;"	v	lineno:103	namespace:test1.children.Fruit.children.Exotics.children.Kiwi	type:string
+name	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.3.js	/name/;"	v	lineno:38	namespace:explorer	type:string
+name	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.4.js	/name/;"	v	lineno:159	namespace:test2	type:string
+name	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.4.js	/name/;"	v	lineno:202	namespace:test3	type:string
+name	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.4.js	/name/;"	v	lineno:36	namespace:explorer	type:string
+name	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.4.js	/name/;"	v	lineno:97	namespace:test1	type:string
+name	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.5.js	/name/;"	v	lineno:62	namespace:test3	type:string
+Papaya	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.3.js	/'Papaya'/;"	v	lineno:102	namespace:test1.children.Fruit.children.Exotics.children
+path	/home/karl/Projects/timetrap_tui/dev_cycles/dirtree.js	/path/;"	v	lineno:3
+path	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.1.js	/path/;"	v	lineno:5
+path	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.3.js	/path/;"	v	lineno:6
+path	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.4.js	/path/;"	v	lineno:158	namespace:test2	type:string
+path	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.4.js	/path/;"	v	lineno:201	namespace:test3	type:string
+path	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.4.js	/path/;"	v	lineno:5
+path	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.4.js	/path/;"	v	lineno:96	namespace:test1	type:string
+path	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.5.js	/path/;"	v	lineno:61	namespace:test3	type:string
+path	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.5.js	/path/;"	v	lineno:7
+pattern	/home/karl/Projects/timetrap_tui/dev_cycles/dirtree.js	/pattern/;"	v	lineno:42	namespace:dirTree
+pattern	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.5.js	/pattern/;"	v	lineno:110	namespace:dirTree
+Pear	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.3.js	/'Pear'/;"	v	lineno:105	namespace:test1.children.Fruit.children
+Peas	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.3.js	/'Peas'/;"	v	lineno:108	namespace:test1.children.Vegetables.children
+Pepper	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.3.js	/'Pepper'/;"	v	lineno:110	namespace:test1.children.Vegetables.children
+readdirp_control	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.2.js	/readdirp_control/;"	v	lineno:9	type:boolean
+readdirp	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.2.js	/readdirp/;"	v	lineno:7
+result	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.1.js	/result/;"	v	lineno:50	namespace:explorer.children
+result	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.3.js	/result/;"	v	lineno:51	namespace:explorer.children
+result	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.4.js	/result/;"	v	lineno:49	namespace:explorer.children
+self	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.1.js	/self/;"	v	lineno:40	namespace:explorer.getPath
+self	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.1.js	/self/;"	v	lineno:49	namespace:explorer.children
+self	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.3.js	/self/;"	v	lineno:41	namespace:explorer.getPath
+self	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.3.js	/self/;"	v	lineno:50	namespace:explorer.children
+self	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.4.js	/self/;"	v	lineno:39	namespace:explorer.getPath
+self	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.4.js	/self/;"	v	lineno:48	namespace:explorer.children
+selfPath	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.1.js	/selfPath/;"	v	lineno:51	namespace:explorer.children
+selfPath	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.3.js	/selfPath/;"	v	lineno:52	namespace:explorer.children
+selfPath	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.4.js	/selfPath/;"	v	lineno:50	namespace:explorer.children
+start_path	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.1.js	/start_path/;"	v	lineno:33	type:string
+start_path	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.3.js	/start_path/;"	v	lineno:34	type:string
+start_path	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.4.js	/start_path/;"	v	lineno:33	type:string
+stats	/home/karl/Projects/timetrap_tui/dev_cycles/dirtree.js	/stats/;"	v	lineno:35	namespace:dirTree
+stats	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.4.js	/stats/;"	v	lineno:243	namespace:dirTree
+stats	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.5.js	/stats/;"	v	lineno:103	namespace:dirTree
+table	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.1.js	/table/;"	v	lineno:26
+table	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.3.js	/table/;"	v	lineno:27
+table	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.4.js	/table/;"	v	lineno:26
+table	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.5.js	/table/;"	v	lineno:53
+test1	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.3.js	/test1/;"	v	lineno:91
+test1	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.4.js	/test1/;"	v	lineno:93
+test2	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.4.js	/test2/;"	v	lineno:155
+test3	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.4.js	/test3/;"	v	lineno:200
+test3	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.5.js	/test3/;"	v	lineno:60
+timetrap_config	/home/karl/Projects/timetrap_tui/dev_cycles/dirtree.js	/timetrap_config/;"	v	lineno:20
+timetrap_config	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.2.js	/timetrap_config/;"	v	lineno:21
+timetrap_config	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.5.js	/timetrap_config/;"	v	lineno:21
+tree	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.1.js	/tree/;"	v	lineno:12
+tree	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.3.js	/tree/;"	v	lineno:13
+tree	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.4.js	/tree/;"	v	lineno:12
+tree	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.5.js	/tree/;"	v	lineno:39
+tui_projects_template_path	/home/karl/Projects/timetrap_tui/dev_cycles/dirtree.js	/tui_projects_template_path/;"	v	lineno:29	namespace:timetrap_config	type:string
+tui_projects_template_path	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.2.js	/tui_projects_template_path/;"	v	lineno:30	namespace:timetrap_config	type:string
+tui_projects_template_path	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.5.js	/tui_projects_template_path/;"	v	lineno:30	namespace:timetrap_config	type:string
+type	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.4.js	/type/;"	v	lineno:160	namespace:test2	type:string
+type	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.4.js	/type/;"	v	lineno:203	namespace:test3	type:string
+type	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.4.js	/type/;"	v	lineno:98	namespace:test1	type:string
+type	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.5.js	/type/;"	v	lineno:63	namespace:test3	type:string
+util	/home/karl/Projects/timetrap_tui/dev_cycles/dirtree.js	/util/;"	v	lineno:4
+util	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.3.js	/util/;"	v	lineno:5
+util	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.4.js	/util/;"	v	lineno:4
+util	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.5.js	/util/;"	v	lineno:6
+Vegetables	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.3.js	/'Vegetables'/;"	v	lineno:106	namespace:test1.children
+yaml	/home/karl/Projects/timetrap_tui/dev_cycles/dirtree.js	/yaml/;"	v	lineno:5
+yaml	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.2.js	/yaml/;"	v	lineno:5
+yaml	/home/karl/Projects/timetrap_tui/dev_cycles/phase1.5.js	/yaml/;"	v	lineno:8

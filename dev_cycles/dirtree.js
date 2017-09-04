@@ -4,9 +4,11 @@ var fs = require('fs'),
 	util = require('util'),
 	yaml = require('js-yaml'),
 	minimatch = require('minimatch');
+require(.)
 
 // default config_file
 var conf_file = process.env.HOME+"/.timetrap.yml";
+
 
 // preference over default
 if (process.env.TIMETRAP_CONFIG_FILE) {
