@@ -107,6 +107,9 @@ var old_tree_walk = contrib.tree.walk;
 contrib.tree.walk = function(node, treeDepth){
     var ret = old_tree_walk.apply(node, treeDepth);
 
+    // TODO: needs a handler to manage when trees collaps
+    // might be solved temporarily by just not allowing the tree to collapse
+
     if( typeof tree_item_selected_idx != 'undefined' ){
         var child = tree.rows.items[tree_item_selected_idx];
         child.style.fg = "white";
