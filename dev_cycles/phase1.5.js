@@ -1,5 +1,6 @@
 "use strict";
 
+// packages
 var blessed = require('blessed'),
     contrib = require('blessed-contrib'),
   	Node = blessed.Node,
@@ -9,6 +10,9 @@ var blessed = require('blessed'),
     path = require('path'),
 	yaml = require('js-yaml'),
 	minimatch = require('minimatch');
+
+//local includes
+tree_monkey = require('./tree_monkey')
 
 // tree item that is selected
 var tree_item_selected_idx;
