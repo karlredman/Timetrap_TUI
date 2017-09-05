@@ -98,18 +98,20 @@ contrib.tree = function(options) {
     // self.emit('select', selectedNode, this.getItemIndex(this.selected));
   });
 };
-
 contrib.tree.prototype = old_tree;
 
 
 var old_tree_walk = contrib.tree.walk;
-
 contrib.tree.walk = function(node, treeDepth){
+
+    //call the original function
     var ret = old_tree_walk.apply(node, treeDepth);
 
     // TODO: needs a handler to manage when trees collaps
     // might be solved temporarily by just not allowing the tree to collapse
 
+    //set the fg color if we didn't just collapse the position
+    //not sure how to do that yet.
     if( typeof tree_item_selected_idx != 'undefined' ){
         var child = tree.rows.items[tree_item_selected_idx];
         child.style.fg = "white";
@@ -117,8 +119,6 @@ contrib.tree.walk = function(node, treeDepth){
     screen.render();
     return ret;
 }
-
-
 
 var tree =  grid.set(0, 0, 1, 1, contrib.tree,
     {
