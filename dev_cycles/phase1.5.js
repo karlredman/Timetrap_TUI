@@ -10,6 +10,9 @@ var blessed = require('blessed'),
 	yaml = require('js-yaml'),
 	minimatch = require('minimatch');
 
+// tree item that is selected
+var tree_item_selected_idx;
+
 // default config_file
 var conf_file = process.env.HOME+"/.timetrap.yml";
 
@@ -98,6 +101,22 @@ contrib.tree = function(options) {
 
 contrib.tree.prototype = old_tree;
 
+
+var old_tree_walk = contrib.tree.walk;
+
+contrib.tree.walk = function(node, treeDepth){
+    var ret = old_tree_walk.apply(node, treeDepth);
+
+    if( typeof tree_item_selected_idx != 'undefined' ){
+        var child = tree.rows.items[tree_item_selected_idx];
+        child.style.fg = "white";
+    }
+    screen.render();
+    return ret;
+}
+
+
+
 var tree =  grid.set(0, 0, 1, 1, contrib.tree,
     {
         style: {
@@ -119,7 +138,8 @@ var table =  grid.set(0, 1, 1, 1, contrib.table,
         fg: 'green',
         label: 'Informations',
         vi: true,
-        columnWidth: [24, 10, 10]
+        //columnWidth: [24, 10, 10]
+        columnWidth: [100, 10, 10]
     })
 
 
@@ -214,9 +234,24 @@ function dirTree(filename) {
 // tree.setData(test3);
 tree.setData(dirTree(timetrap_config.tui_projects_template_path));
 
+function set_tree_item_selected(){
+    // restore old item
+    if( typeof tree_item_selected_idx != 'undefined' ){
+        var child = tree.rows.items[tree_item_selected_idx];
+        child.style.fg = "white";
+    }
+
+    // set new selection
+    var i = tree.rows.getItemIndex(tree.rows.selected);
+    tree_item_selected_idx = i;
+    var child = tree.rows.items[i];
+    child.style.fg = "green";
+}
+
 // Handling select event. Every custom property that was added to node is
 // available like the "node.getPath" defined above
 tree.on('select',function(node){
+
     //var path = node.getPath(node);
     var path = node.path;
     var data = [];
@@ -232,24 +267,30 @@ tree.on('select',function(node){
         // Add results
         var stat = fs.lstatSync(path);
 		if ( stat.isDirectory() ){
-			data = data.concat(JSON.stringify(fs.lstatSync(path),null,2).split("\n").map(function(e){return [e]}));
-		}
-        //console.log(tree.options.vi)
-        // tree.options.fg = "yellow";
-        // tree.options.vi=false;
+            data = data.concat(JSON.stringify(fs.lstatSync(path),null,2).split("\n").map(function(e){return [e]}));
+            set_tree_item_selected();
 
+            //var inspect = tree.nodeLines[tree.rows.getItemIndex(tree.rows.selected)];
+            //var inspect = node;
+            //data = util.inspect(inspect,false,null).split("\n").map(function(e){return [e]});
+		}
         table.setData({headers: ['Info'], data: data});
     }catch(e){
         table.setData({headers: ['Info'], data: [[e.toString()]]});
     }
 
-    // node.style.fg = 'green';                              //set the current element  color
     // var selectedNode = tree.nodeLines[tree.rows.getItemIndex(tree.rows.selected)];
     // tree.rows.selected.style = 'green';                              //set the current element  color
     // tree.rows.style.selected = 'green';                              //set the current element  color
 
-    var selectedNode = tree.nodeLines[tree.rows.getItemIndex(tree.rows.selected)];
-	selectedNode.style = {selected: {fg:"red"}};
+    tree.rows.style.selected.bg = 'blue';                              //set the current element  color
+
+    //get the item index and find the item object
+
+
+
+    //tree.rows.selected = true;
+
 
     screen.render();
 });
