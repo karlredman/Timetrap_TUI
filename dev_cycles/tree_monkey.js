@@ -4,6 +4,9 @@ var blessed = require('blessed'),
   	Box = blessed.Box;
 
 // monkeypatch contrib.tree constructor to change keyhandler
+//
+// Note: This file originally was meant to be monkey patches for tree.js
+// but I figured out that it wasn't needed. Kept for historical reference.
 
 // save the original
 var old_tree =  contrib.tree.prototype;

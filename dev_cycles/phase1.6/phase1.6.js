@@ -14,10 +14,12 @@ var blessed = require('blessed'),
 //local includes
 var config = require('./config.js')
 var dirtree = require('./dirtree.js')
-//var tree_monkey = require('./tree_monkey.js')
 
 // tree item that is selected
 var tree_item_selected_idx;
+
+//get config data
+config.fetch_config();
 
 //create screen object
 var screen = blessed.screen()
@@ -28,17 +30,24 @@ var grid = new contrib.grid({rows: 1, cols: 2, screen: screen})
 var tree =  grid.set(0, 0, 1, 1, contrib.tree,
     {
         style: {
-        text: "red", fg: 'white', bg: 'red',
-        selected: {
-            bg: 'yellow', fg: 'black'
-        }
-    },
-        keys: ['+', 'space'],
-        vi: true,
-        template: { lines: true },
+            text: "red",
+            fg: config.timetrap_config.tui_fg,
+            bg: config.timetrap_config.tui_bg,
+            selected: {
+                bg: config.timetrap_config.tui_hl_bg,
+                fg: config.timetrap_config.tui_hl_fg,
+                bold: true,
+            }
+        },
+        keys: [],       //prevent expand / collapse
+        vi: config.timetrap_config.tui_vi_keys,
+        template: {
+            lines: true,
+            extend: ' ',
+            retract: ' ',
+        },
         label: 'Filesystem Tree'
     })
-
 
 var table =  grid.set(0, 1, 1, 1, contrib.table,
     {
@@ -52,24 +61,32 @@ var table =  grid.set(0, 1, 1, 1, contrib.table,
 
 
 
-//get config data
-config.fetch_config();
-
 // tree.setData(test3);
 tree.setData(dirtree.dirTree(config.timetrap_config.tui_projects_template_path));
 
 function set_tree_item_selected(){
+
+    var child;
+
     // restore old item
     if( typeof tree_item_selected_idx != 'undefined' ){
-        var child = tree.rows.items[tree_item_selected_idx];
-        child.style.fg = "white";
+        child = tree.rows.items[tree_item_selected_idx];
+        child.style.fg = config.timetrap_config.tui_hl_fg;
     }
 
     // set new selection
-    var i = tree.rows.getItemIndex(tree.rows.selected);
-    tree_item_selected_idx = i;
-    var child = tree.rows.items[i];
-    child.style.fg = "green";
+    tree_item_selected_idx = tree.rows.getItemIndex(tree.rows.selected);
+    child = tree.rows.items[tree_item_selected_idx];
+        child.style.fg = config.timetrap_config.tui_active_fg;
+
+    if ( tree_item_selected_idx == tree.rows.getItemIndex(tree.rows.selected) ){
+        child.style.fg = config.timetrap_config.tui_active_hl_fg;
+    }
+    else{
+        child.style.fg = config.timetrap_config.tui_active_fg;
+    }
+
+    screen.render();
 }
 
 // Handling select event. Every custom property that was added to node is
@@ -93,10 +110,6 @@ tree.on('select',function(node){
 		if ( stat.isDirectory() ){
             data = data.concat(JSON.stringify(fs.lstatSync(path),null,2).split("\n").map(function(e){return [e]}));
             set_tree_item_selected();
-
-            //var inspect = tree.nodeLines[tree.rows.getItemIndex(tree.rows.selected)];
-            //var inspect = node;
-            //data = util.inspect(inspect,false,null).split("\n").map(function(e){return [e]});
 		}
         table.setData({headers: ['Info'], data: data});
     }catch(e){
@@ -104,8 +117,8 @@ tree.on('select',function(node){
     }
 
     //set's the bar to blue if something has been selected
-    tree.rows.style.selected.bg = 'blue';                              //set the current element  color
-    tree.rows.style.selected.fg = 'white';                              //set the current element  color
+    // tree.rows.style.selected.bg = 'blue';                              //set the current element  color
+    // tree.rows.style.selected.fg = 'white';                              //set the current element  color
 
     screen.render();
 });
@@ -130,6 +143,38 @@ tree.rows.key(['enter'], function(ch, key) {
     tree.emit('action', selectedNode, tree.rows.getItemIndex(tree.rows.selected));
     tree.emit('select', selectedNode, tree.rows.getItemIndex(tree.rows.selected));
 });
+
+var old_blessed_list_up = blessed.List.prototype.up;
+blessed.List.prototype.up = function(offset) {
+    this.move(-(offset || 1));
+
+    if( typeof tree_item_selected_idx != 'undefined' ){
+        var child = tree.rows.items[tree_item_selected_idx];
+        if ( tree_item_selected_idx == tree.rows.getItemIndex(tree.rows.selected) ){
+            child.style.fg = config.timetrap_config.tui_active_hl_fg;
+        }
+        else{
+            child.style.fg = config.timetrap_config.tui_active_fg;
+        }
+        screen.render();
+    }
+};
+
+var old_blessed_list_up = blessed.List.prototype.up;
+blessed.List.prototype.down = function(offset) {
+    this.move(+(offset || 1));
+
+    if( typeof tree_item_selected_idx != 'undefined' ){
+        var child = tree.rows.items[tree_item_selected_idx];
+        if ( tree_item_selected_idx == tree.rows.getItemIndex(tree.rows.selected) ){
+            child.style.fg = config.timetrap_config.tui_active_hl_fg;
+        }
+        else{
+            child.style.fg = config.timetrap_config.tui_active_fg;
+        }
+        screen.render();
+    }
+};
 
 tree.focus()
 screen.render()
