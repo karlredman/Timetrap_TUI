@@ -11,9 +11,6 @@ var blessed = require('blessed'),
 	yaml = require('js-yaml'),
 	minimatch = require('minimatch');
 
-//local includes
-tree_monkey = require('./tree_monkey')
-
 // tree item that is selected
 var tree_item_selected_idx;
 
