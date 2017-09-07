@@ -1,9 +1,9 @@
 "use strict"
 var fs = require('fs'),
-util = require('util'),
-path = require('path'),
-yaml = require('js-yaml'),
-minimatch = require('minimatch');
+    util = require('util'),
+    path = require('path'),
+    yaml = require('js-yaml'),
+    minimatch = require('minimatch');
 
 // default config_file
 var timetrap_config;

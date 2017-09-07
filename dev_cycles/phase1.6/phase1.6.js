@@ -3,13 +3,13 @@
 // packages
 var blessed = require('blessed'),
     contrib = require('blessed-contrib'),
-  	Node = blessed.Node,
-  	Box = blessed.Box,
-    fs = require('fs'),
-	util = require('util'),
-    path = require('path'),
-	yaml = require('js-yaml'),
-	minimatch = require('minimatch');
+    Node = blessed.Node,
+    Box = blessed.Box,
+    fs = require('fs');
+
+//debugging
+var util = require('util');
+
 
 //local includes
 var config = require('./config.js')
@@ -36,7 +36,7 @@ var tree =  grid.set(0, 0, 1, 1, contrib.tree,
             selected: {
                 bg: config.timetrap_config.tui_hl_bg,
                 fg: config.timetrap_config.tui_hl_fg,
-                bold: true,
+                bold: config.timetrap_config.tui_hl_bold,
             }
         },
         keys: [],       //prevent expand / collapse
@@ -77,17 +77,25 @@ function set_tree_item_selected(){
     // set new selection
     tree_item_selected_idx = tree.rows.getItemIndex(tree.rows.selected);
     child = tree.rows.items[tree_item_selected_idx];
-        child.style.fg = config.timetrap_config.tui_active_fg;
+    child.style.fg = config.timetrap_config.tui_active_fg;
 
-    if ( tree_item_selected_idx == tree.rows.getItemIndex(tree.rows.selected) ){
-        child.style.fg = config.timetrap_config.tui_active_hl_fg;
-    }
-    else{
-        child.style.fg = config.timetrap_config.tui_active_fg;
-    }
-
+    set_selected_hl();
     screen.render();
 }
+
+function set_selected_hl(){
+    if( typeof tree_item_selected_idx != 'undefined' ){
+        var child = tree.rows.items[tree_item_selected_idx];
+        if ( tree_item_selected_idx == tree.rows.getItemIndex(tree.rows.selected) ){
+            child.style.fg = config.timetrap_config.tui_active_hl_fg;
+        }
+        else{
+            child.style.fg = config.timetrap_config.tui_active_fg;
+        }
+        screen.render();
+    }
+}
+
 
 // Handling select event. Every custom property that was added to node is
 // available like the "node.getPath" defined above
@@ -107,18 +115,14 @@ tree.on('select',function(node){
     try {
         // Add results
         var stat = fs.lstatSync(path);
-		if ( stat.isDirectory() ){
+        if ( stat.isDirectory() ){
             data = data.concat(JSON.stringify(fs.lstatSync(path),null,2).split("\n").map(function(e){return [e]}));
             set_tree_item_selected();
-		}
+        }
         table.setData({headers: ['Info'], data: data});
     }catch(e){
         table.setData({headers: ['Info'], data: [[e.toString()]]});
     }
-
-    //set's the bar to blue if something has been selected
-    // tree.rows.style.selected.bg = 'blue';                              //set the current element  color
-    // tree.rows.style.selected.fg = 'white';                              //set the current element  color
 
     screen.render();
 });
@@ -147,33 +151,13 @@ tree.rows.key(['enter'], function(ch, key) {
 var old_blessed_list_up = blessed.List.prototype.up;
 blessed.List.prototype.up = function(offset) {
     this.move(-(offset || 1));
-
-    if( typeof tree_item_selected_idx != 'undefined' ){
-        var child = tree.rows.items[tree_item_selected_idx];
-        if ( tree_item_selected_idx == tree.rows.getItemIndex(tree.rows.selected) ){
-            child.style.fg = config.timetrap_config.tui_active_hl_fg;
-        }
-        else{
-            child.style.fg = config.timetrap_config.tui_active_fg;
-        }
-        screen.render();
-    }
+    set_selected_hl();
 };
 
 var old_blessed_list_up = blessed.List.prototype.up;
 blessed.List.prototype.down = function(offset) {
     this.move(+(offset || 1));
-
-    if( typeof tree_item_selected_idx != 'undefined' ){
-        var child = tree.rows.items[tree_item_selected_idx];
-        if ( tree_item_selected_idx == tree.rows.getItemIndex(tree.rows.selected) ){
-            child.style.fg = config.timetrap_config.tui_active_hl_fg;
-        }
-        else{
-            child.style.fg = config.timetrap_config.tui_active_fg;
-        }
-        screen.render();
-    }
+    set_selected_hl();
 };
 
 tree.focus()
