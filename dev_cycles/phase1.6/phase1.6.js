@@ -71,7 +71,12 @@ function set_tree_item_selected(){
     // restore old item
     if( typeof tree_item_selected_idx != 'undefined' ){
         child = tree.rows.items[tree_item_selected_idx];
-        child.style.fg = config.timetrap_config.tui_hl_fg;
+        if ( tree_item_selected_idx == tree.rows.getItemIndex(tree.rows.selected) ){
+            child.style.fg = config.timetrap_config.tui_hl_fg;
+        }
+        else{
+            child.style.fg = config.timetrap_config.tui_fg
+        }
     }
 
     // set new selection
