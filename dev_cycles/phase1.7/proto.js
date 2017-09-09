@@ -2,14 +2,16 @@
 var blessed = require('blessed'),
 	contrib = require('blessed-contrib');
 
+//global screen
+var screen = blessed.screen();
+
 // app modules
 var config = require('./config'),
 	dirtree = require('./dirtree');
 // panels
-//var actionBar = require('./actionbar.js')
+var ActionBar = require('./actionbar');
+var MenuBar = require('./menubar');
 
-//global screen
-var screen = blessed.screen();
 
 //program window
 var pwin ={};
@@ -21,96 +23,12 @@ pwin.last = pwin.top-1;
 
 var curWin = 1;
 
-function ActionBar(options) {
-
-	//if (!(this instanceof blessed.textarea)) return new actionBar(options);
-
-	// init
-	var self = this;
-	options = options || {};
-
-	//defaults
-	options.parent = screen;
-	options.bg = 'none';
-	options.fg = 'white';
-
-	//replace
-	options.height = 1;
-
-	//overwrite defaults with passed in value
-	this.options=options;
-
-	//um, wtf
-	//blessed.textarea.call(this, options);
-	//Box.call(this, options);
-
-	this.widget = blessed.textarea(this.options);
-}
-
-ActionBar.prototype.setvalue = function(str){
-	this.options.value=str;
-	this.widget.value=str;
-	screen.render();
-}
 
 
 // program init/startup
 function start(data, callback) {
 
 
-	//menubar at top
-	var menubar = blessed.listbar({
-		parent: screen,
-		mouse: true,
-		//keys: true,
-		Xkeys: true,
-		vi: true,
-		//shrinkBox: true,
-		left: data.sidew,
-		right: 0,
-		top: 0,
-		/*
-		   items: [
-		   'New',
-		   'Edit',
-		   'PreView',
-		   'Browse',
-		   'Search',
-		   'Profile'
-		   ],
-		   */
-		items: [],
-		style: {
-			bg: 'none',
-			//fg: 'green',
-			item: {
-				bg: 'none',
-				//fg: 'white',
-				fg: 'none',
-			},
-			hover: {
-				bg: 'orange',
-				fg: 'orange',
-			},
-			focus: {
-				bg: 'none',
-				fg: 'none',
-			},
-			selected: {
-				//bg: 'green',
-				bg: 'none',
-				fg: 'none',
-				//fg: 'white',
-			},
-			prefix: {
-				//bg: 'white',
-				bg: 'lightblack',
-				//fg: 'black',
-				fg: 'lightblack',
-			}
-		},
-		height: 1
-	});
 
 	// the menu on the side
 	// var side = blessed.list({
@@ -203,16 +121,16 @@ bg: 'yellow'
 		right: 0
 	});
 
-	//seperator  bar color change on focus chage
-	//// side menue focus
-	screen.setEffects(sepv, side, 'focus', 'blur', { fg: 'green' });
-	screen.setEffects(seph, side, 'focus', 'blur', { fg: 'red' });
-	//// top bar
-	screen.setEffects(sepv, menubar, 'focus', 'blur', { fg: 'red' });
-	screen.setEffects(seph, menubar, 'focus', 'blur', { fg: 'green' });
-	//// main textarea focus
-	screen.setEffects(sepv, mainw, 'focus', 'blur', { fg: 'red' });
-	screen.setEffects(seph, mainw, 'focus', 'blur', { fg: 'red' });
+	// //seperator  bar color change on focus chage
+	// //// side menue focus
+	// screen.setEffects(sepv, side, 'focus', 'blur', { fg: 'green' });
+	// screen.setEffects(seph, side, 'focus', 'blur', { fg: 'red' });
+	// //// top bar
+	// screen.setEffects(sepv, menubar, 'focus', 'blur', { fg: 'red' });
+	// screen.setEffects(seph, menubar, 'focus', 'blur', { fg: 'green' });
+	// //// main textarea focus
+	// screen.setEffects(sepv, mainw, 'focus', 'blur', { fg: 'red' });
+	// screen.setEffects(seph, mainw, 'focus', 'blur', { fg: 'red' });
 
 	function setWinFocus(win){
 		switch(win){
@@ -285,23 +203,11 @@ bg: 'yellow'
    });
    */
 
-	menubar.on('select', function(el) {
-		console.log(bar.items.indexOf(el));
-
-		//verify side menu object -and use to grab function
-		//apps.prevSideEl               //?? how
-	});
 
 	var prevSideEl;
 	side.on('select', function(el) {
 
-		menubar.style.item['fg'] = 'white';
-		menubar.style.selected['bg'] = 'blue';
-		menubar.style.selected['fg'] = 'white';
-		//bar.style.prefix['bg'] = 'white';
-		menubar.style.prefix['fg'] = 'white';
-
-		appsmap('func')[side.items.indexOf(el)](bar);       //set the topbar fields
+        //appsmap('func')[side.items.indexOf(el)](bar);       //set the topbar fields
 		el.style.fg = 'yellow';                              //set the current element  color
 
 		if(prevSideEl != null && prevSideEl != el){
@@ -313,7 +219,7 @@ bg: 'yellow'
 
 		pwin.last = pwin.top;
 		curWin = pwin.top;
-		menubar.focus();                                        //set focus to the top menubar menu
+        //menubar.focus();                                        //set focus to the top menubar menu
 	});
 
 	//if(bar.Xkeys) {
@@ -323,48 +229,6 @@ bg: 'yellow'
 
 	//bar.style.item['fg'] = 'white';
 	//console.log("thing: " +bar.options['Xkeys']);
-
-	if (menubar.options['Xkeys']) {
-		menubar.on('keypress', function(ch, key) {
-			if (key.name === 'left'
-				|| (bar.options['vi'] && key.name === 'h')
-				//|| (key.shift && key.name === 'tab')
-			) {
-				menubar.moveLeft();
-				screen.render();
-				// Stop propagation if we're in a form.
-				if (key.name === 'tab') return false;
-				return;
-			}
-			if (key.name === 'right'
-				|| (bar.options['vi'] && key.name === 'l')
-				//|| key.name === 'tab'
-			) {
-				menubar.moveRight();
-				screen.render();
-				// Stop propagation if we're in a form.
-				if (key.name === 'tab') return false;
-				return;
-			}
-			if (key.name === 'enter'
-				|| (bar.options['vi'] && key.name === 'k' && !key.shift)) {
-				menubar.emit('action', menubar.items[bar.selected], menubar.selected);
-				menubar.emit('select', menubar.items[bar.selected], menubar.selected);
-				var item = menubar.items[bar.selected];
-				if (item._.cmd.callback) {
-					item._.cmd.callback();
-				}
-				screen.render();
-				return;
-			}
-			if (key.name === 'escape' || (bar.options['vi'] && key.name === 'q')) {
-				menubar.emit('action');
-				menubar.emit('cancel');
-				return;
-			}
-		});
-	}
-
 
 	//get config data
 	config.fetch_config();
@@ -377,7 +241,6 @@ bg: 'yellow'
 	//side.select(0);
 
 	screen.render();
-
 }
 
 function getMaxSideNameLen()
@@ -406,13 +269,25 @@ function main(argv, callback) {
 	data.numwnd = 3;                    //number of windows
 	data.curwind = 1;                   //current window (starts at 1, screen === 0)
 
-	var bar = new ActionBar(
+	var actionbar = new ActionBar(
 		{
-			width:25,
+            parent: screen,
 			top:0,
 			left:0,
-			value:"Timetrap TUI:"}
+			width:25,
+            value:"Timetrap TUI:",
+            fg: "blue"
+        }
 	);
+
+    //menubar at top
+    var menubar = new MenuBar({
+        parent: screen,
+        left: data.sidew,
+        right: 0,
+        top: 0,
+    });
+
 
 	return start(data, function(err) {
 		if (err) return callback(err);
