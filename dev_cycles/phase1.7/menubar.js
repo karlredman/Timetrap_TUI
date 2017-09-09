@@ -7,9 +7,12 @@ function MenuBar(options) {
 
 	// set overridable defaults
     options = options || {};
+    //options.keys = true;
+    options.xkeys = true;
     options.height = options.height || 1;
     options.mouse = options.mouse || true;
     options.vi = options.vi || true;
+    options.autoCommandKeys = options.autoCommandKeys || true;
     options.items = options.items || [
         'In',
         'Out',
@@ -18,10 +21,37 @@ function MenuBar(options) {
         'Display',
         'StopAll',
     ];
-    options.autoCommandKeys = options.autoCommandKeys || true;
+
+    //manage styles
     options.style = options.style || {};
-    // options.style.seleced = options.style.item || {};
-    // options.style.item = options.style.item || {};
+
+    if ( !(options.style.hasOwnProperty("item") ) ) {
+        options.style["item"] = {
+            bg: null,
+            fg: "white"
+        }
+    }
+
+    if ( !(options.style.hasOwnProperty("prefix") ) ) {
+        options.style["prefix"] = {
+            bg: null,
+            fg: 'lightblack'
+        }
+    }
+
+    if ( !(options.style.hasOwnProperty("selected") ) )  {
+        options.style.selected =
+            {
+                bg: 'white',
+                fg: 'blue'
+            }
+    }
+
+
+    // if (options.commands || options.items) {
+    //     this.setItems(options.commands || options.items);
+    // }
+
 
     // failsafe: in case parent is not passed in options
     options.parent = options.parent || screen;
@@ -29,6 +59,49 @@ function MenuBar(options) {
     //inherit from textarea
 	blessed.listbar.call(this, options);
 
+    this.on('keypress', function(ch, key) {
+        if (key.name === 'left'
+            || (this.options['vi'] && key.name === 'h')
+            //|| (key.shift && key.name === 'tab')
+        ) {
+            this.moveLeft();
+            this.screen.render();
+            // Stop propagation if we're in a form.
+            if (key.name === 'tab') return false;
+            return;
+        }
+        if (key.name === 'right'
+            || (this.options['vi'] && key.name === 'l')
+            //|| key.name === 'tab'
+        ) {
+            this.moveRight();
+            this.screen.render();
+            // Stop propagation if we're in a form.
+            if (key.name === 'tab') return false;
+            return;
+        }
+        if (key.name === 'enter'
+            || (this.options['vi'] && key.name === 'k' && !key.shift)) {
+            this.emit('action', this.items[this.selected], this.selected);
+            this.emit('select', this.items[this.selected], this.selected);
+            var item = this.items[this.selected];
+            if (item._.cmd.callback) {
+                item._.cmd.callback();
+            }
+            this.screen.render();
+            return;
+        }
+        if (key.name === 'escape' || (this.options['vi'] && key.name === 'q')) {
+            this.emit('action');
+            this.emit('cancel');
+            return;
+        }
+        //});
+    });
+
+
+
+    this.screen.render();
 }
 MenuBar.prototype = Object.create(blessed.listbar.prototype);
 MenuBar.prototype.constructor = MenuBar;
@@ -40,46 +113,7 @@ MenuBar.prototype.constructor = MenuBar;
 //     //apps.prevSideEl               //?? how
 // });
 
-// if (menubar.options['Xkeys']) {
-//     menubar.on('keypress', function(ch, key) {
-//         if (key.name === 'left'
-//             || (bar.options['vi'] && key.name === 'h')
-//             //|| (key.shift && key.name === 'tab')
-//         ) {
-//             menubar.moveLeft();
-//             screen.render();
-//             // Stop propagation if we're in a form.
-//             if (key.name === 'tab') return false;
-//             return;
-//         }
-//         if (key.name === 'right'
-//             || (bar.options['vi'] && key.name === 'l')
-//             //|| key.name === 'tab'
-//         ) {
-//             menubar.moveRight();
-//             screen.render();
-//             // Stop propagation if we're in a form.
-//             if (key.name === 'tab') return false;
-//             return;
-//         }
-//         if (key.name === 'enter'
-//             || (bar.options['vi'] && key.name === 'k' && !key.shift)) {
-//             menubar.emit('action', menubar.items[bar.selected], menubar.selected);
-//             menubar.emit('select', menubar.items[bar.selected], menubar.selected);
-//             var item = menubar.items[bar.selected];
-//             if (item._.cmd.callback) {
-//                 item._.cmd.callback();
-//             }
-//             screen.render();
-//             return;
-//         }
-//         if (key.name === 'escape' || (bar.options['vi'] && key.name === 'q')) {
-//             menubar.emit('action');
-//             menubar.emit('cancel');
-//             return;
-//         }
-//     });
-// }
+//if (menubar.options['Xkeys']) {
 
 
 
