@@ -7,7 +7,7 @@ function MenuBar(options) {
 
 	// set overridable defaults
     options = options || {};
-    //options.keys = true;
+    options.keys = null;            //we're overriding keys
     options.xkeys = true;
     options.height = options.height || 1;
     options.mouse = options.mouse || true;
@@ -31,6 +31,9 @@ function MenuBar(options) {
             fg: "white"
         }
     }
+    // options.style.item = options.style.item | {};
+    // options.style.item.bg = options.style.item.bg | null;
+    // options.style.item.fg = options.style.item.fg | "white";
 
     if ( !(options.style.hasOwnProperty("prefix") ) ) {
         options.style["prefix"] = {
@@ -38,6 +41,9 @@ function MenuBar(options) {
             fg: 'lightblack'
         }
     }
+    // options.style.prefix = options.style.prefix | {};
+    // options.style.prefix.bg = options.style.prefix.bg | null;
+    // options.style.prefix.fg = options.style.prefix.fg | "lightblack";
 
     if ( !(options.style.hasOwnProperty("selected") ) )  {
         options.style.selected =
@@ -46,6 +52,11 @@ function MenuBar(options) {
                 fg: 'blue'
             }
     }
+    // options.style.selected = options.style.selected | {};
+    // options.style.selected.bg = options.style.selected.bg | "white";
+    // options.style.selected.fg = options.style.selected.fg | "blue";
+
+
 
 
     // if (options.commands || options.items) {

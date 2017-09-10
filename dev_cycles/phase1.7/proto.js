@@ -11,6 +11,7 @@ var config = require('./config'),
 // panels
 var ActionBar = require('./actionbar');
 var MenuBar = require('./menubar');
+var SideBar = require('./sidebar');
 
 
 //program window
@@ -24,58 +25,7 @@ pwin.last = pwin.menu;
 var curWin = 1;
 
 // program init/startup
-function start(data, menubar, callback) {
-
-    // the menu on the side
-    // var side = blessed.list({
-    var side = contrib.tree({
-        parent: screen,
-        mouse: true,
-        keys: false,
-        vi: true,
-        left: 0,
-        top: 2,
-        bottom: 0,
-        //width: data.sidew,
-        align: 'left',
-        tags: true,
-        items: [],
-        template: {
-            lines: true,
-        },
-        style: {
-            fg: 'light-blue',
-            selected: {
-                bg: 'blue'
-            },
-            item: {
-                hover: {
-                    bg: 'blue'
-                }
-            },
-        }
-    });
-
-    // horizontal seperator line
-    var seph = blessed.line({
-        parent: screen,
-        orientation: 'horizontal',
-        left: data.sidew,
-        top: 1,
-        left: 0,
-        right: 0
-    });
-
-    // verticle seperator line
-    var sepv = blessed.line({
-        parent: screen,
-        orientation: 'vertical',
-        left: data.sidew,
-        top: 2,
-        bottom: 0,
-        fg: "green",
-        //bg: "black"
-    });
+function start(data, menubar, side, callback) {
 
     // the main area
     var mainw = blessed.box({
@@ -98,6 +48,29 @@ function start(data, menubar, callback) {
         bottom: 0,
         right: 0
     });
+
+    // horizontal seperator line
+    var seph = blessed.line({
+        parent: screen,
+        orientation: 'horizontal',
+        left: data.sidew,
+        top: 1,
+        left: 0,
+        right: 0,
+        fg: "red"
+    });
+
+    // verticle seperator line
+    var sepv = blessed.line({
+        parent: screen,
+        orientation: 'vertical',
+        left: data.sidew,
+        top: 2,
+        bottom: 0,
+        fg: "green",
+        //bg: "black"
+    });
+
 
     //seperator  bar color change on focus chage
     //// side menue focus
@@ -168,51 +141,8 @@ function start(data, menubar, callback) {
         }
     });
 
-    /*
-   menubar.on('keypress', function(ch, key) {
-   if (key.name === 'tab') {
-   if (!key.shift) {
-   menubar.select(bar.selected-1);
-   } else {
-   menubar.select(bar.selected+1);
-   }
-   return;
-   }
-   });
-   */
 
 
-    // var prevSideEl;
-    // side.on('select', function(el) {
-
-    //     //appsmap('func')[side.items.indexOf(el)](bar);       //set the topbar fields
-    //     el.style.fg = 'yellow';                              //set the current element  color
-
-    //     if(prevSideEl != null && prevSideEl != el){
-    //         prevSideEl.style.fg = 'light-blue';
-    //     }
-
-    //     prevSideEl = el;                                    //set the element index for later
-    //     screen.render();                                    //render the screen
-
-    //     pwin.last = pwin.top;
-    //     curWin = pwin.top;
-    //     //menubar.focus();                                        //set focus to the top menubar menu
-    // });
-
-    //if(bar.Xkeys) {
-    //alert("thing");
-    //console.log("thing");
-    //}
-
-    //bar.style.item['fg'] = 'white';
-    //console.log("thing: " +bar.options['Xkeys']);
-
-    //get config data
-    config.fetch_config();
-
-    // get the tree data
-    side.setData(dirtree.dirTree(config.timetrap_config.tui_projects_template_path));
 
     side.focus();
     curWin=pwin.side;
@@ -247,26 +177,41 @@ function main(argv, callback) {
     data.curwind = 1;                   //current window (starts at 1, screen === 0)
 
     // logo -useless
-    var actionbar = new ActionBar(
+    let actionbar = new ActionBar(
         {
             parent: screen,
             top:0,
             left:0,
-            width:25,
+            width: data.sidew,
             value:"Timetrap TUI:",
             fg: "blue"
         }
     );
 
     //menubar at top
-    var menubar = new MenuBar({
+    let menubar = new MenuBar({
         parent: screen,
         left: data.sidew,
         right: 0,
         top: 0,
     });
 
-    return start(data, menubar, function(err) {
+    //project tree on the left
+    let sidebar = new SideBar({
+        parent: screen,
+        left: 0,
+        top: 2,
+        bottom: 0,
+        width: data.sidew,
+    });
+
+    //get config data
+    config.fetch_config();
+
+    // get the tree data
+    sidebar.setData(dirtree.dirTree(config.timetrap_config.tui_projects_template_path));
+
+    return start(data, menubar, sidebar, function(err) {
         if (err) return callback(err);
         return callback();
     });
