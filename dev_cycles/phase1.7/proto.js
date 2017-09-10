@@ -12,6 +12,7 @@ var config = require('./config'),
 var ActionBar = require('./actionbar');
 var MenuBar = require('./menubar');
 var SideBar = require('./sidebar');
+var Workspace = require('./Workspace');
 
 
 //program window
@@ -25,29 +26,7 @@ pwin.last = pwin.menu;
 var curWin = 1;
 
 // program init/startup
-function start(data, menubar, side, callback) {
-
-    // the main area
-    var mainw = blessed.box({
-        parent: screen,
-        mouse: true,
-        keys: true,
-        vi: true,
-        //shrinkBox: true,
-        scrollbar: {
-            ch: ' '
-        },
-        style: {
-            scrollbar: {
-                inverse: true
-            }
-        },
-        tags: true,
-        left: data.sidew + 1,
-        top: 2,
-        bottom: 0,
-        right: 0
-    });
+function start(data, menubar, side, mainwin, callback) {
 
     // horizontal seperator line
     var seph = blessed.line({
@@ -196,6 +175,33 @@ function main(argv, callback) {
         top: 0,
     });
 
+    // the main area
+    //var mainw = blessed.box({
+    let workspace = Workspace({
+        parent: screen,
+        left: data.sidew + 1,
+        top: 2,
+        bottom: 0,
+        right: 0
+        // mouse: true,
+        // keys: true,
+        // vi: true,
+        // //shrinkBox: true,
+        // scrollbar: {
+        //     ch: ' '
+        // },
+        // style: {
+        //     scrollbar: {
+        //         inverse: true
+        //     }
+        // },
+        // tags: true,
+        // left: data.sidew + 1,
+        // top: 2,
+        // bottom: 0,
+        // right: 0
+    });
+
     //project tree on the left
     let sidebar = new SideBar({
         parent: screen,
@@ -211,7 +217,7 @@ function main(argv, callback) {
     // get the tree data
     sidebar.setData(dirtree.dirTree(config.timetrap_config.tui_projects_template_path));
 
-    return start(data, menubar, sidebar, function(err) {
+    return start(data, menubar, sidebar, workspace, function(err) {
         if (err) return callback(err);
         return callback();
     });
