@@ -8,6 +8,8 @@ var blessed = require('blessed'),
 // program init/startup
 function View(data, screen, menubar, side, mainw, callback) {
 
+    //if (!(this instanceof Node)) return new Workspace(options);
+
     //program window
     var pwin ={};
     pwin.mainw = 1;

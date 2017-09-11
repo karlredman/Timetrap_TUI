@@ -1,18 +1,20 @@
 "use strict";
-var contrib = require('blessed-contrib');
-    // Node = blessed.Node,
-    // Box = blessed.Box,
+var blessed = require('blessed'),
+    contrib = require('blessed-contrib'),
+    Node = blessed.Node;
+// Box = blessed.Box,
 
 
 function SideBar(options) {
+    if (!(this instanceof Node)) return new SideBar(options);
 
     //options
-	// set overridable defaults
+    // set overridable defaults
     options = options || {};
 
-    //DO NOT SETH HEIGHT -there's a bug according to blessed-contrib/tree.js
+    //DO NOT SET HEIGHT -there's a bug according to blessed-contrib/tree.js
     //options.height = options.height || 1;
-    options.width = options.width || "shrink";
+    //options.width = options.width || "shrink";
 
     // to be overridden
     // default to undefined so parent takes over
@@ -27,15 +29,16 @@ function SideBar(options) {
 
     options.data = options.data || {};
 
-    options.scrollable = options.scrollable || true;
-    options.scrollbar = options.scrollbar || true;
+    // causes crash
+    // options.scrollable = options.scrollable || true;
+    // options.scrollbar = options.scrollbar || true;
 
     options.template = options.template || {};
     options.template.lines = options.template.lines || true;
 
     options.style = options.style || {};
-    options.style.fg = options.style.fg || "blue";
     options.style.bg = options.style.bg || null;
+    options.style.fg = options.style.fg || "blue";
 
     options.style.selected = options.style.selected || {};
     options.style.selected.bg = options.style.selected.bg || "blue";
@@ -44,7 +47,7 @@ function SideBar(options) {
     options.style.item = options.style.item || {};
     options.style.item.hover = options.style.item.hover || {};
     options.style.item.hover.bg = options.style.item.hover.bg || "green";
-    options.style.item.hover.fg = options.style.item.hover.fg || null;
+    //options.style.item.hover.fg = options.style.item.hover.fg || null;
 
     // failsafe: in case parent is not passed in options
     options.parent = options.parent || screen;

@@ -4,7 +4,7 @@ var blessed = require('blessed'),
     Box = blessed.Box;
 
 function Workspace(options) {
-  if (!(this instanceof Node)) return new Workspace(options);
+    if (!(this instanceof Node)) return new Workspace(options);
 
 	// set overridable defaults
     options = options || {};
@@ -26,11 +26,13 @@ function Workspace(options) {
     options.parent = options.parent || screen;
 
     // inherit from box
-  this.data = {};
-  this.nodeLines = [];
-  this.lineNbr = 0;
-	Box.call(this, options);
+    this.data = {};
+    this.nodeLines = [];
+    this.lineNbr = 0;
 
+	blessed.Box.call(this, options);
+
+    // options.parent.render();
     this.screen.render();
 }
 
@@ -39,7 +41,6 @@ Workspace.prototype = Object.create(Box.prototype);
 Workspace.prototype.constructor = Workspace;
 
 // function prototypes go here
-
 
 Workspace.prototype.type = 'Workspace';
 module.exports = Workspace;

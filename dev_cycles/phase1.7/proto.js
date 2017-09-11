@@ -3,7 +3,8 @@ var blessed = require('blessed'),
     contrib = require('blessed-contrib');
 
 //global screen
-var screen = blessed.screen({smartCSR: true});
+//var screen = blessed.screen({smartCSR: true});
+var screen = blessed.screen();
 
 // app modules
 var config = require('./config'),
@@ -56,7 +57,7 @@ function main(argv, callback) {
 
     // the main area
     //var mainw = blessed.box({
-    let workspace = Workspace({
+    let workspace = new Workspace({
         parent: screen,
         left: data.sidew + 1,
         top: 2,
@@ -85,7 +86,7 @@ function main(argv, callback) {
 
 // Process loop
 if (!module.parent) {
-    process.title = 'phainein';
+    process.title = 'Timetrap TUI';
     main(process.argv.slice(), function(err) {
         if (err) throw err;
         return process.exit(0);
