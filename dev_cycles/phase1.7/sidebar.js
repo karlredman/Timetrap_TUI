@@ -14,11 +14,11 @@ function SideBar(options) {
 
     //DO NOT SET HEIGHT -there's a bug according to blessed-contrib/tree.js
     //options.height = options.height || 1;
-    //options.width = options.width || "shrink";
+    options.width = options.width || "shrink";
 
     // to be overridden
     // default to undefined so parent takes over
-    // options.keys = options.keys || [];
+    options.keys = options.keys || ['space'];
 
     options.vi = options.vi || true;
     options.mouse = options.mouse || true;
@@ -56,15 +56,38 @@ function SideBar(options) {
     contrib.tree.call(this, options);
 
     //custom funcs go here
+	//this.register_actions();
 
-
-    this.screen.render();
+    //this.screen.render();
 }
 SideBar.prototype = Object.create(contrib.tree.prototype);
 SideBar.prototype.constructor = SideBar;
 
 
-//function prototypes go here
+SideBar.prototype.register_actions = function(view){
+
+	let self = this;
+	this.view = view;
+
+	this.rows.key(['enter'], function(ch, key) {
+		let selectedNode = self.nodeLines[this.getItemIndex(this.selected)];
+		self.emit('action', selectedNode, this.getItemIndex(this.selected));
+		self.emit('select', selectedNode, this.getItemIndex(this.selected));
+		self.view.widgets.workspace.emit('thing', selectedNode, this.getItemIndex(this.selected));
+	});
+
+    this.on('thing', function(node) {
+		console.log("sidebar thing received");
+	});
+
+    this.on('action', function(node) {
+		console.log("sidebar action received");
+	});
+
+    this.on('select', function(node) {
+		console.log("sidebar select received");
+	});
+}
 
 
 SideBar.prototype.type = 'SideBar';

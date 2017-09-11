@@ -6,21 +6,25 @@ var blessed = require('blessed'),
 
 
 // program init/startup
-function View(data, screen, menubar, side, mainw, callback) {
+function View(data, screen, config, widgets) {
 
-    //if (!(this instanceof Node)) return new Workspace(options);
+	this.widgets = widgets;
+	this.config = config;
+	this.data = config;
 
     //program window
-    var pwin ={};
-    pwin.mainw = 1;
-    pwin.side = 2;
-    pwin.menu = 3;
-    pwin.first = pwin.mainw;
-    pwin.last = pwin.menu;
+	let pwin ={
+		mainw: 1,
+		side: 2,
+		menu: 3,
+	};
+	pwin.first = pwin.mainw;
+	pwin.last = pwin.menu;
 
-    var curWin = 1;
+    let curWin = 1;
+
     // horizontal seperator line
-    var seph = blessed.line({
+    let seph = blessed.line({
         parent: screen,
         orientation: 'horizontal',
         left: data.sidew,
@@ -31,7 +35,7 @@ function View(data, screen, menubar, side, mainw, callback) {
     });
 
     // verticle seperator line
-    var sepv = blessed.line({
+    let sepv = blessed.line({
         parent: screen,
         orientation: 'vertical',
         left: data.sidew,
@@ -44,31 +48,25 @@ function View(data, screen, menubar, side, mainw, callback) {
 
     //seperator  bar color change on focus chage
     //// side menue focus
-    screen.setEffects(sepv, side, 'focus', 'blur', { fg: 'green' });
-    screen.setEffects(seph, side, 'focus', 'blur', { fg: 'red' });
+    screen.setEffects(sepv, widgets.sidebar, 'focus', 'blur', { fg: 'green' });
+    screen.setEffects(seph, widgets.sidebar, 'focus', 'blur', { fg: 'red' });
     //// top bar
-    screen.setEffects(sepv, menubar, 'focus', 'blur', { fg: 'red' });
-    screen.setEffects(seph, menubar, 'focus', 'blur', { fg: 'green' });
+    screen.setEffects(sepv, widgets.menubar, 'focus', 'blur', { fg: 'red' });
+    screen.setEffects(seph, widgets.menubar, 'focus', 'blur', { fg: 'green' });
     //// main textarea focus
-    screen.setEffects(sepv, mainw, 'focus', 'blur', { fg: 'red' });
-    screen.setEffects(seph, mainw, 'focus', 'blur', { fg: 'red' });
+    screen.setEffects(sepv, widgets.workspace, 'focus', 'blur', { fg: 'red' });
+    screen.setEffects(seph, widgets.workspace, 'focus', 'blur', { fg: 'red' });
 
     function setWinFocus(win){
         switch(win){
             case pwin.mainw:
-                mainw.focus();
+                widgets.workspace.focus();
                 break;
             case pwin.side:
-                side.focus();
+                widgets.sidebar.focus();
                 break;
             case pwin.menu:
-                menubar.focus();
-                // if(prevSideEl != null) {
-                //     menubar.focus();
-                // }
-                // else {
-                //     setWinFocus(pwin.side);
-                // }
+                widgets.menubar.focus();
                 break;
         }
     }
@@ -111,9 +109,15 @@ function View(data, screen, menubar, side, mainw, callback) {
         }
     });
 
-    side.focus();
+    widgets.sidebar.focus();
     curWin=pwin.side;
+
+	for (let key in widgets) {
+	 	widgets[key].register_actions(this)
+	}
 
     screen.render();
 }
-exports.View = View;
+
+View.prototype.type = 'View';
+module.exports = View;

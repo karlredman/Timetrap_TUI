@@ -1,7 +1,7 @@
 "use strict"
 var blessed = require('blessed'),
-    Node = blessed.Node,
-    Box = blessed.Box;
+    Box = blessed.Box,
+    Node = blessed.Node;
 
 function Workspace(options) {
     if (!(this instanceof Node)) return new Workspace(options);
@@ -32,15 +32,22 @@ function Workspace(options) {
 
 	blessed.Box.call(this, options);
 
-    // options.parent.render();
-    this.screen.render();
+    //this.screen.render();
 }
 
 
 Workspace.prototype = Object.create(Box.prototype);
 Workspace.prototype.constructor = Workspace;
 
-// function prototypes go here
+Workspace.prototype.register_actions = function(view){
+
+	this.view = view;
+
+    this.on('thing', function(node) {
+		console.log("workspace thing received");
+	});
+
+}
 
 Workspace.prototype.type = 'Workspace';
 module.exports = Workspace;

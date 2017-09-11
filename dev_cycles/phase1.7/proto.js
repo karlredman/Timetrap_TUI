@@ -69,19 +69,23 @@ function main(argv, callback) {
     let sidebar = new SideBar({
         parent: screen,
         left: 0,
-        top: 2,
+        top: 1,
         bottom: 0,
         width: data.sidew,
     });
 
-    // get the tree data
+    // set the tree data
     sidebar.setData(proj_tree);
     //sidebar.setData(dirtree.dirTree(config.timetrap_config.tui_projects_template_path));
 
-    return View.View(data, screen, menubar, sidebar, workspace, function(err) {
-        if (err) return callback(err);
-        return callback();
-    });
+	//set the layout
+	data.config = config;
+	let view = new View(data, screen, {menubar: menubar, sidebar: sidebar, workspace: workspace});
+
+    // return start(data, function(err) {
+    //     if (err) return callback(err);
+    //     return callback();
+    // });
 }
 
 // Process loop

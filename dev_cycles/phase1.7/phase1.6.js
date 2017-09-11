@@ -198,7 +198,7 @@ blessed.List.prototype.up = function(offset) {
     set_selected_hl();
 };
 
-var old_blessed_list_up = blessed.List.prototype.up;
+var old_blessed_list_down = blessed.List.prototype.down;
 blessed.List.prototype.down = function(offset) {
     this.move(+(offset || 1));
     set_selected_hl();
