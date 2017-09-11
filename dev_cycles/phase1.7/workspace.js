@@ -1,8 +1,10 @@
 "use strict"
-var blessed = require('blessed');
-
+var blessed = require('blessed'),
+    Node = blessed.Node,
+    Box = blessed.Box;
 
 function Workspace(options) {
+  if (!(this instanceof Node)) return new Workspace(options);
 
 	// set overridable defaults
     options = options || {};
@@ -24,17 +26,20 @@ function Workspace(options) {
     options.parent = options.parent || screen;
 
     // inherit from box
-	blessed.box.call(this, options);
+  this.data = {};
+  this.nodeLines = [];
+  this.lineNbr = 0;
+	Box.call(this, options);
 
     this.screen.render();
 }
 
 
-MainWin.prototype = Object.create(blessed.listbar.prototype);
-MainWin.prototype.constructor = MainWin;
+Workspace.prototype = Object.create(Box.prototype);
+Workspace.prototype.constructor = Workspace;
 
 // function prototypes go here
 
 
-MainWin.prototype.type = 'MainWin';
-module.exports = MainWin;
+Workspace.prototype.type = 'Workspace';
+module.exports = Workspace;

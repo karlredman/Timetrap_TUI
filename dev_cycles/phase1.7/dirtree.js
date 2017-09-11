@@ -94,4 +94,19 @@ function dirTree(filename) {
     return info;
 }
 
+function getMaxSideNameLen()
+{
+    // var toolong=25;
+    // var maxlen=0;
+    // Object.keys(apps).forEach(function ( key, index) {
+    //     var len = apps[key]['name'].length;
+    //     if(len > maxlen) {
+    //         maxlen=len;
+    //     }
+    // });
+    // return maxlen > toolong ? toolong : maxlen;
+    return 25;
+}
+
 exports.dirTree = dirTree;
+exports.getMaxSideNameLen = getMaxSideNameLen;

@@ -14,7 +14,10 @@ function SideBar(options) {
     //options.height = options.height || 1;
     options.width = options.width || "shrink";
 
-    options.keys = options.keys || [];
+    // to be overridden
+    // default to undefined so parent takes over
+    // options.keys = options.keys || [];
+
     options.vi = options.vi || true;
     options.mouse = options.mouse || true;
     options.autoCommandKeys = options.autoCommandKeys || true;
@@ -42,7 +45,6 @@ function SideBar(options) {
     options.style.item.hover = options.style.item.hover || {};
     options.style.item.hover.bg = options.style.item.hover.bg || "green";
     options.style.item.hover.fg = options.style.item.hover.fg || null;
-
 
     // failsafe: in case parent is not passed in options
     options.parent = options.parent || screen;
