@@ -6,11 +6,10 @@ var blessed = require('blessed'),
 
 
 // program init/startup
-function View(data, screen, config, widgets) {
+function View(data, screen, widgets) {
 
 	this.widgets = widgets;
-	this.config = config;
-	this.data = config;
+	this.data = data;
 
     //program window
 	let pwin ={

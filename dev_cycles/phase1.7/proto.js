@@ -22,6 +22,8 @@ screen.key(['q', 'C-c'], function(ch, key) {
 });
 
 function main(argv, callback) {
+
+	//console.log("loading...");
     var data = {};
 
     //get config data
