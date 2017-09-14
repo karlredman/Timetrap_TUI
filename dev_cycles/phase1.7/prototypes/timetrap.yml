@@ -28,19 +28,34 @@ tui_create_missing_sheets: true
 tui_recreate_sheets: false
 tui_skip_paths:
 - 'SKIP_THIS_DIR*'
-# tui colors
-tui_active_hl_fg: "yellow"
-tui_active_fg: "yellow"
-tui_hl_bg: "blue"
-tui_hl_fg: "white"
-tui_hl_bold: true
-tui_bg:
-tui_fg: "blue"
-# tui program controll
-tui_update_poll_sec: 10
-tui_vi_keys: true
-## Future version
-#tui_active_pane_line
-#tui_inactive_pane_line
-#tui_menu_fg
-#tui_menu_bg
+##############
+## tui colors
+tui_tree_color_bg:
+tui_tree_color_fg: blue
+#
+tui_tree_color_active_running_bg:
+tui_tree_color_active_running_fg: yellow
+#
+tui_tree_color_active_Nrunning_bg:
+tui_tree_color_active_Nrunning_fg: blue
+#
+tui_tree_color_Nactive_running_bg:
+tui_tree_color_Nactive_running_fg: yellow
+#
+tui_tree_color_Nactive_Nrunning_bg:
+tui_tree_color_Nactive_Nrunning_fg: blue
+#
+tui_tree_color_hl_bg: blue
+tui_tree_color_hl_fg: white
+#
+tui_tree_color_hl_active_running_bg: blue
+tui_tree_color_hl_active_running_fg: yellow
+#
+tui_tree_color_hl_active_Nrunning_bg: blue
+tui_tree_color_hl_active_Nrunning_fg: white
+#
+tui_tree_color_hl_Nactive_running_bg: blue
+tui_tree_color_hl_Nactive_running_fg: yellow
+#
+tui_tree_color_hl_Nactive_Nrunning_bg: blue
+tui_tree_color_hl_Nactive_Nrunning_fg: white
