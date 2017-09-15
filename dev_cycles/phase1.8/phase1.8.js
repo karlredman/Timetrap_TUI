@@ -6,9 +6,9 @@ var blessed = require('blessed'),
 //var screen = blessed.screen({smartCSR: true});
 var screen = blessed.screen();
 
-// app modules
-var config = require('./config'),
-    dirtree = require('./dirtree');
+// app packages
+var Configuration = require('./config'),
+    DirTree = require('./dirtree');
 
 // panels
 var ActionBar = require('./actionbar');
@@ -30,10 +30,12 @@ function main(argv, callback) {
     var data = {};
 
     //get config data
-    config.fetch_config();
+    // config.fetch();
+    let config = new Configuration();
 
     //fetch projects list
-    var proj_tree = dirtree.dirTree(config.timetrap_config.tui_projects_template_path);
+    let dirtree = new DirTree(config);
+    var proj_tree = dirtree.fetch(config.timetrap_config.tui_projects_template_path);
 
     data.sidew = dirtree.getMaxSideNameLen();   //side menu width
     data.numwnd = 3;                    //number of windows

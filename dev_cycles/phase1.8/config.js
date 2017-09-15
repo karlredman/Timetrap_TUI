@@ -5,10 +5,17 @@ var fs = require('fs'),
     yaml = require('js-yaml'),
     minimatch = require('minimatch');
 
-// default config_file
-var timetrap_config;
 
-function fetch_config() {
+function Configuration(){
+    this.timetrap_config;
+
+    this.fetch();
+}
+
+Configuration.prototype.fetch = function() {
+    var self=this;
+
+    //default
     var conf_file = process.env.HOME+"/.timetrap.yml";
 
     // preference over default
@@ -18,18 +25,21 @@ function fetch_config() {
 
     try {
         // get the config object
-        this.timetrap_config = yaml.safeLoad(fs.readFileSync(conf_file, 'utf8'));
+        self.timetrap_config = yaml.safeLoad(fs.readFileSync(conf_file, 'utf8'));
     } catch(e) {
         console.log(e);
         process.exit(1);
         //throw(e);
     }
 
-    if (!this.timetrap_config.tui_projects_template_path){
+    if (!self.timetrap_config.tui_projects_template_path){
         //set the default
-        timetrap_config.tui_projects_template_path = process.env.HOME+"/.timetrap/tui_projects_template"
+        self.timetrap_config.tui_projects_template_path = process.env.HOME+"/.timetrap/tui_projects_template"
     }
 }
 
-exports.timetrap_config = timetrap_config;
-exports.fetch_config = fetch_config;
+// exports.timetrap_config = timetrap_config;
+// exports.fetch_config = fetch_config;
+//
+Configuration.prototype.type = 'Configuration';
+module.exports = Configuration;

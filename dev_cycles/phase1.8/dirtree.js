@@ -4,17 +4,22 @@ var fs = require('fs'),
     path = require('path'),
     yaml = require('js-yaml'),
     minimatch = require('minimatch');
-var config = require('./config.js');
 
-function dirTree(filename) {
+function DirTree(config){
+    this.config = config;
+}
+
+DirTree.prototype.fetch = function(filename) {
+    var self=this;
+
     var stats = fs.lstatSync(filename);
 
     if (stats.isDirectory()) {
 
-        if ( Array.isArray(config.timetrap_config.tui_skip_paths) ){
-            var i, len = config.timetrap_config.tui_skip_paths.length;		//because of caching
+        if ( Array.isArray(this.config.timetrap_config.tui_skip_paths) ){
+            var i, len = this.config.timetrap_config.tui_skip_paths.length;		//because of caching
             for ( i=0; i<len; ++i ) {
-                var pattern = config.timetrap_config.tui_skip_paths[i];
+                var pattern = this.config.timetrap_config.tui_skip_paths[i];
                 if( minimatch(filename, pattern, { matchBase: true})){
                     return;
                 }
@@ -23,7 +28,7 @@ function dirTree(filename) {
 
         var info = {
             path: filename,
-            rpath: filename.replace(config.timetrap_config.tui_projects_template_path+'/',''),
+            rpath: filename.replace(this.config.timetrap_config.tui_projects_template_path+'/',''),
             name: path.basename(filename),
             type: "directory",
             extended: true
@@ -33,9 +38,9 @@ function dirTree(filename) {
             //verify that a .timetrap-sheet file exists
             var timesheet_file = path.join(filename, ".timetrap-sheet");
 
-            if ( ! fs.existsSync(timesheet_file) || config.timetrap_config.tui_recreate_sheets ) {
+            if ( ! fs.existsSync(timesheet_file) || self.config.timetrap_config.tui_recreate_sheets ) {
 
-                if ( config.timetrap_config.tui_create_missing_sheets || config.timetrap_config.tui_recreate_sheets ){
+                if ( this.config.timetrap_config.tui_create_missing_sheets || this.config.timetrap_config.tui_recreate_sheets ){
                     //file doesn't exist. attempt to creat it.
 
                     var timesheet_content = info.rpath.replace(/\//g,'.');
@@ -60,7 +65,7 @@ function dirTree(filename) {
                             });
                         fs.close(fd);
                     });
-                    return dirTree(filename + '/' + child);
+                    return this.fetch(filename + '/' + child);
                 }
                 else{
                     //return undefined and ignore the record
@@ -69,9 +74,9 @@ function dirTree(filename) {
             }
             else {
                 //create a .timetrap-sheet file if configured
-                if( config.timetrap_config.tui_create_missing_sheets ) {
+                if( self.config.timetrap_config.tui_create_missing_sheets ) {
                     // create sheet in dir
-                    return dirTree(filename + '/' + child);
+                    return self.fetch(filename + '/' + child);
                 }
                 else {
                     //return undefined and ignore the record
@@ -94,7 +99,7 @@ function dirTree(filename) {
     return info;
 }
 
-function getMaxSideNameLen()
+DirTree.prototype.getMaxSideNameLen = function()
 {
     // var toolong=25;
     // var maxlen=0;
@@ -108,5 +113,5 @@ function getMaxSideNameLen()
     return 25;
 }
 
-exports.dirTree = dirTree;
-exports.getMaxSideNameLen = getMaxSideNameLen;
+DirTree.prototype.type = 'DirTree';
+module.exports = DirTree;
