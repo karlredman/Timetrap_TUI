@@ -10,7 +10,7 @@ var screen = blessed.screen({
 });
 // app packages
 var Configuration = require('./config'),
-    DirTree = require('./dirtree2');
+    DirTree = require('./dirtree');
 
 // panels
 var ActionBar = require('./actionbar');
