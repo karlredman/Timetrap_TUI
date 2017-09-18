@@ -52,6 +52,14 @@ function SideBar(options) {
     // failsafe: in case parent is not passed in options
     options.parent = options.parent || screen;
 
+
+
+    options.wrap = false;
+    options.hidden = false;
+    options.style.inverse = true;
+    options.fixed = true;
+
+
     //inherit from textarea
     contrib.tree.call(this, options);
 
@@ -66,8 +74,8 @@ SideBar.prototype.constructor = SideBar;
 
 SideBar.prototype.register_actions = function(view){
 
-	let self = this;
 	this.view = view;
+	let self = this;
 
 	this.rows.key(['enter'], function(ch, key) {
 		let selectedNode = self.nodeLines[this.getItemIndex(this.selected)];

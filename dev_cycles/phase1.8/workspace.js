@@ -9,6 +9,7 @@ function Workspace(options) {
 	// set overridable defaults
     options = options || {};
 
+
     options.keys = true;
     options.mouse = options.mouse || true;
     options.vi = options.vi || true;
@@ -25,10 +26,13 @@ function Workspace(options) {
     // failsafe: in case parent is not passed in options
     options.parent = options.parent || screen;
 
+    options.wrap = true;
+
     // inherit from box
-    this.data = {};
+    this.data = {"text here": "things"};
     this.nodeLines = [];
     this.lineNbr = 0;
+
 
 	blessed.Box.call(this, options);
 

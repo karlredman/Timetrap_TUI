@@ -10,22 +10,25 @@ function DirTree(config){
 }
 
 DirTree.prototype.fetch = function(filename) {
-    var self=this;
+    let self=this;
 
-    var stats = fs.lstatSync(filename);
+    let stats = fs.lstatSync(filename);
 
     if (stats.isDirectory()) {
 
         if ( Array.isArray(this.config.timetrap_config.tui_skip_paths) ){
-            var i, len = this.config.timetrap_config.tui_skip_paths.length;		//because of caching
+            //the setting is required to be an array
+            let i, len = this.config.timetrap_config.tui_skip_paths.length;
             for ( i=0; i<len; ++i ) {
-                var pattern = this.config.timetrap_config.tui_skip_paths[i];
+                let pattern = this.config.timetrap_config.tui_skip_paths[i];
                 if( minimatch(filename, pattern, { matchBase: true})){
+                    //filename is in the skip list
                     return;
                 }
             }
         }
 
+        //our base info
         var info = {
             path: filename,
             rpath: filename.replace(this.config.timetrap_config.tui_projects_template_path+'/',''),
@@ -36,14 +39,17 @@ DirTree.prototype.fetch = function(filename) {
 
         info.children = fs.readdirSync(filename).map(function(child) {
             //verify that a .timetrap-sheet file exists
-            var timesheet_file = path.join(filename, ".timetrap-sheet");
+            let timesheet_file = path.join(filename, ".timetrap-sheet");
 
-            if ( ! fs.existsSync(timesheet_file) || self.config.timetrap_config.tui_recreate_sheets ) {
 
-                if ( this.config.timetrap_config.tui_create_missing_sheets || this.config.timetrap_config.tui_recreate_sheets ){
+            if ( (! fs.existsSync(timesheet_file)) || self.config.timetrap_config.tui_recreate_sheets ) {
+
+                if ( self.config.timetrap_config.tui_create_missing_sheets || self.config.timetrap_config.tui_recreate_sheets ){
+
+
                     //file doesn't exist. attempt to creat it.
 
-                    var timesheet_content = info.rpath.replace(/\//g,'.');
+                    let timesheet_content = info.rpath.replace(/\//g,'.');
 
                     // console.log("creating file: "+timesheet_file);
                     // console.log("setting content: "+timesheet_content);
@@ -65,24 +71,27 @@ DirTree.prototype.fetch = function(filename) {
                             });
                         fs.close(fd);
                     });
-                    return this.fetch(filename + '/' + child);
+                    info.sheet = timesheet_content;
+                    console.log("sheet: "+info.sheet);
+                    return self.fetch(filename + '/' + child);
                 }
                 else{
                     //return undefined and ignore the record
-                    return;
+					console.log("############## file not found got here ##################");
+                    return undefined;
                 }
             }
             else {
-                //create a .timetrap-sheet file if configured
-                if( self.config.timetrap_config.tui_create_missing_sheets ) {
-                    // create sheet in dir
-                    return self.fetch(filename + '/' + child);
-                }
-                else {
-                    //return undefined and ignore the record
-                    return;
-                }
+                // timesheet_file exists
 
+                // read and save contents
+				self.get_line(timesheet_file, 0, function(err, line){
+					info.sheet = line;
+                    //console.log("############################ "+line+" ###########################################################################################");
+				})
+
+                // next iteration
+                return self.fetch(filename + '/' + child);
             }
         });
 
@@ -96,8 +105,27 @@ DirTree.prototype.fetch = function(filename) {
     // info.type = "file";
     // }
 
-    return info;
+	if( typeof info !== 'undefined' ){
+		return info;
+	}
+	else {
+		return undefined;
+	}
 }
+
+//shamelessly stolen from
+//[node.js - Read Nth line of file in NodeJS - Stack Overflow](https://stackoverflow.com/questions/6394951/read-nth-line-of-file-in-nodejs)
+DirTree.prototype.get_line = function(filename, line_no, callback) {
+    var data = fs.readFileSync(filename, 'utf8');
+    var lines = data.split("\n");
+
+    if(+line_no > lines.length){
+      throw new Error('File end reached without finding line');
+    }
+    callback(null, lines[+line_no]);
+}
+
+
 
 DirTree.prototype.getMaxSideNameLen = function()
 {

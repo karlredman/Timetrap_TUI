@@ -6,10 +6,9 @@ var blessed = require('blessed'),
 
 
 // program init/startup
-function View(data, screen, widgets) {
+function View(config, screen, widgets) {
 
 	this.widgets = widgets;
-	this.data = data;
 
     //program window
 	let pwin ={
@@ -26,7 +25,7 @@ function View(data, screen, widgets) {
     let seph = blessed.line({
         parent: screen,
         orientation: 'horizontal',
-        left: data.sidew,
+        left: config.view.sidew,
         top: 1,
         left: 0,
         right: 0,
@@ -37,7 +36,7 @@ function View(data, screen, widgets) {
     let sepv = blessed.line({
         parent: screen,
         orientation: 'vertical',
-        left: data.sidew,
+        left: config.view.sidew,
         top: 2,
         bottom: 0,
         fg: "green",

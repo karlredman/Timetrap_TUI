@@ -8,8 +8,7 @@ var fs = require('fs'),
 
 function Configuration(){
     this.timetrap_config;
-
-    this.fetch();
+    this.view = {};
 }
 
 Configuration.prototype.fetch = function() {

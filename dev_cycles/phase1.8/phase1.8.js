@@ -4,11 +4,13 @@ var blessed = require('blessed'),
 
 //global screen
 //var screen = blessed.screen({smartCSR: true});
-var screen = blessed.screen();
-
+var screen = blessed.screen({
+	autoPadding: true,
+	smartCSR: true
+});
 // app packages
 var Configuration = require('./config'),
-    DirTree = require('./dirtree');
+    DirTree = require('./dirtree2');
 
 // panels
 var ActionBar = require('./actionbar');
@@ -27,19 +29,18 @@ function main(argv, callback) {
     // TODO: move widget ownership to view?
 
 	//console.log("loading...");
-    var data = {};
 
     //get config data
-    // config.fetch();
     let config = new Configuration();
+    config.fetch();
 
     //fetch projects list
     let dirtree = new DirTree(config);
-    var proj_tree = dirtree.fetch(config.timetrap_config.tui_projects_template_path);
+    let proj_tree = dirtree.fetch(config.timetrap_config.tui_projects_template_path);
 
-    data.sidew = dirtree.getMaxSideNameLen();   //side menu width
-    data.numwnd = 3;                    //number of windows
-    data.curwind = 1;                   //current window (starts at 1, screen === 0)
+    config.view.sidew = dirtree.getMaxSideNameLen();   //side menu width
+    config.view.numwnd = 3;                    //number of windows
+    config.view.curwind = 1;                   //current window (starts at 1, screen === 0)
 
     // logo -useless
     let actionbar = new ActionBar(
@@ -47,7 +48,7 @@ function main(argv, callback) {
             parent: screen,
             top:0,
             left:0,
-            width: data.sidew,
+            width: config.view.sidew,
             value: "Timetrap TUI:",
             align: "center",
             fg: "blue"
@@ -57,7 +58,7 @@ function main(argv, callback) {
     //menubar at top
     let menubar = new MenuBar({
         parent: screen,
-        left: data.sidew,
+        left: config.view.sidew,
         right: 0,
         top: 0,
     });
@@ -66,7 +67,7 @@ function main(argv, callback) {
     //var mainw = blessed.box({
     let workspace = new Workspace({
         parent: screen,
-        left: data.sidew + 1,
+        left: config.view.sidew + 1,
         top: 2,
         bottom: 0,
         right: 0
@@ -78,7 +79,7 @@ function main(argv, callback) {
         left: 0,
         top: 1,
         bottom: 0,
-        width: data.sidew,
+        width: config.view.sidew,
     });
 
     // set the tree data
@@ -86,8 +87,7 @@ function main(argv, callback) {
     //sidebar.setData(dirtree.dirTree(config.timetrap_config.tui_projects_template_path));
 
 	//set the layout
-	data.config = config;
-	let view = new View(data, screen, {menubar: menubar, sidebar: sidebar, workspace: workspace});
+	let view = new View(config, screen, {menubar: menubar, sidebar: sidebar, workspace: workspace});
 
     // return start(data, function(err) {
     //     if (err) return callback(err);
