@@ -9,10 +9,13 @@ function DirTree(config){
     this.config = config;
     this.max_name_length=0;
     this.data;
+    this.depth_adjustment = 0;
+    this.max_depth = 0;
 }
 
 DirTree.prototype.walk = function(dir) {
     let self=this;
+    let local_depth = 0;
 
     let stats = fs.lstatSync(dir);
     if (stats.isDirectory()) {
@@ -46,6 +49,10 @@ DirTree.prototype.walk = function(dir) {
 
             info.children = fs.readdirSync(dir).map(function(child){
 
+                if(local_depth > self.max_depth){
+                    self.max_depth++;
+                }
+                local_depth++;
                 return self.walk(path.join(dir,child));
             });
 
@@ -131,21 +138,39 @@ DirTree.prototype.genMaxNameLen = function(len) {
 
     //TODO: move these calculations - add depth adjustment to tree / sidebar width calc.
     let tree_toggle_indicator_width = 3;
-    let depth_char_width = 3;
-    let depth_adjustment = depth_char_width + tree_toggle_indicator_width;
-    if(this.max_name_length < (len + depth_adjustment )){
+    let depth_char_width = 2;
+    self.depth_adjustment = (depth_char_width*self.max_depth) + tree_toggle_indicator_width;
+    if(this.max_name_length < (len + self.depth_adjustment )){
     // if(this.max_name_length < len) {
-        this.max_name_length = len;
+        this.max_name_length = 1+len;
     }
 }
 
+// xxxxxxxxx
+// xxxxx│x└┬somereallylongprojectname [-]xx
+// somereallylongprojectname
+
 DirTree.prototype.getMaxSideNameLen = function()
 {
+    let self=this;
     //TODO: this needs more work -the tree widget needs a viewport probably
-    return 25;
+    return 40;
+
+    return this.max_name_length+self.depth_adjustment
 
     let active_indicator = 1;
-    return this.max_name_length+15+active_indicator;
+    return this.max_name_length+self.depth_adjustment+active_indicator;
+}
+
+DirTree.prototype.register_actions = function(view){
+
+	this.view = view;
+
+    // this.on('thing', function(node) {
+		// console.log("workspace thing received");
+    //     this.setContent("thing: "+view.dirtree.max_depth)
+    //     this.screen.render();
+	// });
 }
 
 DirTree.prototype.type = 'DirTree';

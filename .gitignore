@@ -10,6 +10,7 @@ node_modules/**/*
 
 # Development
 tags
+session.vim
 
 # Compiled source #
 ###################

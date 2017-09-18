@@ -87,7 +87,8 @@ function main(argv, callback) {
     //sidebar.setData(dirtree.dirTree(config.timetrap_config.tui_projects_template_path));
 
 	//set the layout
-	let view = new View(config, screen, {menubar: menubar, sidebar: sidebar, workspace: workspace});
+    let view = new View(config, screen, {menubar: menubar, sidebar: sidebar,
+        workspace: workspace, dirtree: dirtree});
 
     // return start(data, function(err) {
     //     if (err) return callback(err);

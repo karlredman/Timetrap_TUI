@@ -8,6 +8,7 @@ var blessed = require('blessed'),
 // program init/startup
 function View(config, screen, widgets) {
 
+    let self=this;
 	this.widgets = widgets;
 
     //program window
@@ -111,10 +112,16 @@ function View(config, screen, widgets) {
     curWin=pwin.side;
 
 	for (let key in widgets) {
-	 	widgets[key].register_actions(this)
+	 	widgets[key].register_actions(self)
 	}
 
+    widgets.dirtree.register_actions(this);
+
     screen.render();
+}
+
+View.prototype.test = function(){
+    return "view.test"
 }
 
 View.prototype.type = 'View';

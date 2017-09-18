@@ -49,8 +49,13 @@ Workspace.prototype.register_actions = function(view){
 
     this.on('thing', function(node) {
 		console.log("workspace thing received");
-	});
 
+        let content = "dirthree.max_depth: "+this.view.widgets.dirtree.max_depth+"\n"
+            +"dirtree.depth_adjustment: "+this.view.widgets.dirtree.depth_adjustment+"\n";
+        this.setContent(content);
+
+        this.screen.render();
+	});
 }
 
 Workspace.prototype.type = 'Workspace';
