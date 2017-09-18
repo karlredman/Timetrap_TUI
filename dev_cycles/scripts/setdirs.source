@@ -1,0 +1,5 @@
+THISDIR=`pwd`
+pushd /home/karl/Projects/timetrap_tui/dev_cycles/phase1.8 > /dev/null 2>&1
+pushd /home/karl/Scratch/blessed/lib/widgets > /dev/null 2>&1
+pushd /home/karl/Scratch/blessed-contrib/lib/widget > /dev/null 2>&1
+cd $THISDIR
