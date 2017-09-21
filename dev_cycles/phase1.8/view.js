@@ -8,7 +8,7 @@ var blessed = require('blessed'),
 // program init/startup
 function View(config, screen, widgets) {
 
-    let self=this;
+    let _this=this;
 	this.widgets = widgets;
 
     //program window
@@ -112,7 +112,7 @@ function View(config, screen, widgets) {
     curWin=pwin.side;
 
 	for (let key in widgets) {
-	 	widgets[key].register_actions(self)
+	 	widgets[key].register_actions(_this)
 	}
 
     widgets.dirtree.register_actions(this);

@@ -12,7 +12,7 @@ function Configuration(){
 }
 
 Configuration.prototype.fetch = function() {
-    var self=this;
+    var _this=this;
 
     //default
     var conf_file = process.env.HOME+"/.timetrap.yml";
@@ -24,16 +24,16 @@ Configuration.prototype.fetch = function() {
 
     try {
         // get the config object
-        self.timetrap_config = yaml.safeLoad(fs.readFileSync(conf_file, 'utf8'));
+        _this.timetrap_config = yaml.safeLoad(fs.readFileSync(conf_file, 'utf8'));
     } catch(e) {
         console.log(e);
         process.exit(1);
         //throw(e);
     }
 
-    if (!self.timetrap_config.tui_projects_template_path){
+    if (!_this.timetrap_config.tui_projects_template_path){
         //set the default
-        self.timetrap_config.tui_projects_template_path = process.env.HOME+"/.timetrap/tui_projects_template"
+        _this.timetrap_config.tui_projects_template_path = process.env.HOME+"/.timetrap/tui_projects_template"
     }
 }
 

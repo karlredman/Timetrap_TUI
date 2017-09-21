@@ -14,7 +14,7 @@ function DirTree(config){
 }
 
 DirTree.prototype.walk = function(dir) {
-    let self=this;
+    let _this=this;
     let local_depth = 0;
 
     let stats = fs.lstatSync(dir);
@@ -32,7 +32,7 @@ DirTree.prototype.walk = function(dir) {
         }
 
         let timesheet_file = path.join(dir, ".timetrap-sheet");
-        let sheet = self.getSheet(timesheet_file);
+        let sheet = _this.getSheet(timesheet_file);
 
         let info = {
             path: dir,
@@ -49,11 +49,11 @@ DirTree.prototype.walk = function(dir) {
 
             info.children = fs.readdirSync(dir).map(function(child){
 
-                if(local_depth > self.max_depth){
-                    self.max_depth++;
+                if(local_depth > _this.max_depth){
+                    _this.max_depth++;
                 }
                 local_depth++;
-                return self.walk(path.join(dir,child));
+                return _this.walk(path.join(dir,child));
             });
 
             // get rid of undefined entries
@@ -69,7 +69,7 @@ DirTree.prototype.walk = function(dir) {
 
                 let stats = fs.lstatSync(path.join(dir,child));
                 if (stats.isDirectory()) {
-                    return self.walk(path.join(dir,child));
+                    return _this.walk(path.join(dir,child));
                 }
                 else {
                     return undefined;
@@ -98,7 +98,8 @@ DirTree.prototype.walk = function(dir) {
 }
 
 DirTree.prototype.getSheet = function(filename) {
-    // get a sheet (first line of file) -return null if sheet does not exist or is empty
+    // get a sheet (first line of file):
+    // return null if sheet does not exist or is empty
 
     let returnval = null;
     if(fs.existsSync(filename)){
@@ -134,13 +135,13 @@ DirTree.prototype.fetch = function(dir) {
 //DirTree.prototype.genMaxNameLen = function(len, depth) {
 DirTree.prototype.genMaxNameLen = function(len) {
 
-    let self=this;
+    let _this=this;
 
     //TODO: move these calculations - add depth adjustment to tree / sidebar width calc.
     let tree_toggle_indicator_width = 3;
     let depth_char_width = 2;
-    self.depth_adjustment = (depth_char_width*self.max_depth) + tree_toggle_indicator_width;
-    if(this.max_name_length < (len + self.depth_adjustment )){
+    _this.depth_adjustment = (depth_char_width*_this.max_depth) + tree_toggle_indicator_width;
+    if(this.max_name_length < (len + _this.depth_adjustment )){
     // if(this.max_name_length < len) {
         this.max_name_length = 1+len;
     }
@@ -152,14 +153,14 @@ DirTree.prototype.genMaxNameLen = function(len) {
 
 DirTree.prototype.getMaxSideNameLen = function()
 {
-    let self=this;
+    let _this=this;
     //TODO: this needs more work -the tree widget needs a viewport probably
     return 40;
 
-    return this.max_name_length+self.depth_adjustment
+    return this.max_name_length+_this.depth_adjustment
 
     let active_indicator = 1;
-    return this.max_name_length+self.depth_adjustment+active_indicator;
+    return this.max_name_length+_this.depth_adjustment+active_indicator;
 }
 
 DirTree.prototype.register_actions = function(view){

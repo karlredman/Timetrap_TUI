@@ -37,7 +37,7 @@ function SideBar(options) {
     options.template.lines = options.template.lines || true;
 
     options.style = options.style || {};
-    options.style.bg = options.style.bg || null;
+    options.style.bg = options.style.bg || undefined;
     options.style.fg = options.style.fg || "blue";
 
     options.style.selected = options.style.selected || {};
@@ -47,7 +47,7 @@ function SideBar(options) {
     options.style.item = options.style.item || {};
     options.style.item.hover = options.style.item.hover || {};
     options.style.item.hover.bg = options.style.item.hover.bg || "green";
-    //options.style.item.hover.fg = options.style.item.hover.fg || null;
+    options.style.item.hover.fg = options.style.item.hover.fg || null;
 
     // failsafe: in case parent is not passed in options
     options.parent = options.parent || screen;
@@ -56,7 +56,7 @@ function SideBar(options) {
 
     options.wrap = false;
     options.hidden = false;
-    options.style.inverse = true;
+    options.style.inverse = false;
     options.fixed = true;
 
 
@@ -75,13 +75,13 @@ SideBar.prototype.constructor = SideBar;
 SideBar.prototype.register_actions = function(view){
 
 	this.view = view;
-	let self = this;
+	let _this = this;
 
 	this.rows.key(['enter'], function(ch, key) {
-		let selectedNode = self.nodeLines[this.getItemIndex(this.selected)];
-		self.emit('action', selectedNode, this.getItemIndex(this.selected));
-		self.emit('select', selectedNode, this.getItemIndex(this.selected));
-		self.view.widgets.workspace.emit('thing', selectedNode, this.getItemIndex(this.selected));
+		let selectedNode = _this.nodeLines[this.getItemIndex(this.selected)];
+		_this.emit('action', selectedNode, this.getItemIndex(this.selected));
+		_this.emit('select', selectedNode, this.getItemIndex(this.selected));
+		_this.view.widgets.workspace.emit('thing', selectedNode, this.getItemIndex(this.selected));
 	});
 
     this.on('thing', function(node) {
