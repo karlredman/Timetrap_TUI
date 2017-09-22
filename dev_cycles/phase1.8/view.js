@@ -84,7 +84,6 @@ function View(config, screen, widgets) {
 View.prototype.register_actions = function()
 {
 	let _this = this;
-
 }
 
 View.prototype.setWinFocus = function(win){

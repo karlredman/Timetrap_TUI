@@ -21,7 +21,7 @@ var View = require('./view');
 var HelpView = require('./helpview');
 
 // Quit on `q`, or `Control-C` when the focus is on the screen.
-screen.key(['C-c'], function(ch, key) {
+screen.key(['x', 'C-c'], function(ch, key) {
     process.exit(0);
 });
 
@@ -101,39 +101,55 @@ function main(argv, callback) {
     // });
     //
 
-    // help screen
+    screen.on('destroy', function(widgetname){
+        if (widgetname === 'HelpView'){
+                _this.helpview.destroy();
+                delete helpview;
+                actionbar.show();
+                sidebar.show();
+
+                view.setWinFocus(view.curwin);
+                screen.render();
+                return;
+        }
+    });
+
+    // help window
     screen.key(['?'], function(ch, key) {
-        if (typeof _this.helpview == 'undefined'
-        )
-            // || _this.helpview == null)
-        {
-            //hide the widgets
-            view.hideAll();
-            // actionbar.hide();
-            // sidebar.hide();
+    // screen.on('keypress', function(ch, key) {
+    //     if (key.name === '?') {
+            if (typeof _this.helpview == 'undefined'
+            )
+                // || _this.helpview == null)
+            {
+                //hide the widgets
+                view.hideAll();
+                // actionbar.hide();
+                // sidebar.hide();
 
-            _this.helpview = new ActionBar({
-                parent: screen,
-                top:0,
-                left:0,
-                width: '100%',
-                height: '100%',
-                value: "The help\n\n\nThis will be a table for help",
-                align: "center",
-                fg: "yellow"
-            });
-            helpview.focus();
-            screen.render();
-        }
-        else {
-            _this.helpview.destroy();
-            delete helpview;
-            actionbar.show();
-            sidebar.show();
+                _this.helpview = new HelpView({
+                    parent: screen,
+                    top:0,
+                    left:0,
+                    width: '100%',
+                    height: '100%',
+                    value: "The help\n\n\nThis will be a table for help",
+                    align: "center",
+                    fg: "yellow"
+                });
+                helpview.focus();
+                screen.render();
+            }
+            else {
+                _this.helpview.destroy();
+                delete helpview;
+                actionbar.show();
+                sidebar.show();
 
-            view.setWinFocus(view.curwin);
-            screen.render();
-        }
+                view.setWinFocus(view.curwin);
+                screen.render();
+            }
+        // }
     });
 }
 

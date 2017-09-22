@@ -18,7 +18,7 @@ function SideBar(options) {
 
     // to be overridden
     // default to undefined so parent takes over
-    options.keys = options.keys || ['space'];
+    options.keys = options.keys || ['space', '+', '-'];
 
     options.vi = options.vi || true;
     options.mouse = options.mouse || true;
@@ -105,6 +105,16 @@ SideBar.prototype.register_actions = function(view){
             return;
         }
     });
+    // this.rows.on('keypress', function(ch, key) {
+    //     if (key.name === 'x') {
+    //         if (!key.shift) {
+    //             _this.view.setWinFocusNext();
+    //         } else {
+    //             _this.view.setWinFocusPrev();
+    //         }
+    //         return;
+    //     }
+    // });
 }
 
 
