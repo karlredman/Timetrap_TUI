@@ -15,12 +15,12 @@ function ActionBar(options) {
     // failsafe: in case parent is not passed in options
     options.parent = options.parent || screen;
 
+    this.options=options;
     //inherit from textarea
 	blessed.textarea.call(this, options);
 }
 ActionBar.prototype = Object.create(blessed.textarea.prototype);
 ActionBar.prototype.constructor = ActionBar;
-
 
 ActionBar.prototype.type = 'ActionBar';
 module.exports = ActionBar;

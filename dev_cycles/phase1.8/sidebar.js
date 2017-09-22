@@ -64,7 +64,6 @@ function SideBar(options) {
     contrib.tree.call(this, options);
 
     //custom funcs go here
-	//this.register_actions();
 
     //this.screen.render();
 }
@@ -88,13 +87,24 @@ SideBar.prototype.register_actions = function(view){
 		console.log("sidebar thing received");
 	});
 
-    this.on('action', function(node) {
-		console.log("sidebar action received");
-	});
+    // this.on('action', function(node) {
+		// console.log("sidebar action received");
+	// });
 
-    this.on('select', function(node) {
-		console.log("sidebar select received");
-	});
+    // this.on('select', function(node) {
+		// console.log("sidebar select received");
+	// });
+
+    this.rows.on('keypress', function(ch, key) {
+        if (key.name === 'tab') {
+            if (!key.shift) {
+                _this.view.setWinFocusNext();
+            } else {
+                _this.view.setWinFocusPrev();
+            }
+            return;
+        }
+    });
 }
 
 

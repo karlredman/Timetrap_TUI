@@ -64,7 +64,14 @@ MenuBar.prototype.register_actions = function(view){
 
     this.on('keypress', function(ch, key) {
 		//custom key bindings
-
+        if (key.name === 'tab') {
+            if (!key.shift) {
+                this.view.setWinFocusNext();
+            } else {
+                this.view.setWinFocusPrev();
+            }
+            return;
+        }
         if (key.name === 'left'
             || (this.options['vi'] && key.name === 'h')
             //|| (key.shift && key.name === 'tab')
@@ -72,7 +79,7 @@ MenuBar.prototype.register_actions = function(view){
             this.moveLeft();
             this.screen.render();
             // Stop propagation if we're in a form.
-            if (key.name === 'tab') return false;
+            //if (key.name === 'tab') return false;
             return;
         }
         if (key.name === 'right'
@@ -82,7 +89,7 @@ MenuBar.prototype.register_actions = function(view){
             this.moveRight();
             this.screen.render();
             // Stop propagation if we're in a form.
-            if (key.name === 'tab') return false;
+            //if (key.name === 'tab') return false;
             return;
         }
         if (key.name === 'enter'
@@ -96,11 +103,11 @@ MenuBar.prototype.register_actions = function(view){
             this.screen.render();
             return;
         }
-        if (key.name === 'escape' || (this.options['vi'] && key.name === 'q')) {
-            this.emit('action');
-            this.emit('cancel');
-            return;
-        }
+        // if (key.name === 'escape' || (this.options['vi'] && key.name === 'q')) {
+        //     this.emit('action');
+        //     this.emit('cancel');
+        //     return;
+        // }
     });
 }
 

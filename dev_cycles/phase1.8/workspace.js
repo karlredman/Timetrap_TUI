@@ -3,6 +3,8 @@ var blessed = require('blessed'),
     Box = blessed.Box,
     Node = blessed.Node;
 
+var util = require('util');
+
 function Workspace(options) {
     if (!(this instanceof Node)) return new Workspace(options);
 
@@ -47,15 +49,29 @@ Workspace.prototype.register_actions = function(view){
 
 	this.view = view;
 
-    this.on('thing', function(node) {
-		console.log("workspace thing received");
+    this.on('thing', function(elem, index) {
+        //console.log("workspace thing received");
 
         let content = "dirthree.max_depth: "+this.view.widgets.dirtree.max_depth+"\n"
-            +"dirtree.depth_adjustment: "+this.view.widgets.dirtree.depth_adjustment+"\n";
+            +"dirtree.depth_adjustment: "+this.view.widgets.dirtree.depth_adjustment+"\n"
+            +"element index: "+index+"\n"
+            +"element sheet: "+elem.sheet+"\n";
+        //+util.inspect(elem, false, null);
         this.setContent(content);
 
         this.screen.render();
 	});
+
+    this.on('keypress', function(ch, key) {
+        if (key.name === 'tab') {
+            if (!key.shift) {
+                this.view.setWinFocusNext();
+            } else {
+                this.view.setWinFocusPrev();
+            }
+            return;
+        }
+    });
 }
 
 Workspace.prototype.type = 'Workspace';

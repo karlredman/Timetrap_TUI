@@ -18,13 +18,16 @@ var MenuBar = require('./menubar');
 var SideBar = require('./sidebar');
 var Workspace = require('./workspace');
 var View = require('./view');
+var HelpView = require('./helpview');
 
 // Quit on `q`, or `Control-C` when the focus is on the screen.
-screen.key(['q', 'C-c'], function(ch, key) {
+screen.key(['C-c'], function(ch, key) {
     process.exit(0);
 });
 
+
 function main(argv, callback) {
+    let _this=this;
 
     // TODO: move widget ownership to view?
 
@@ -90,10 +93,48 @@ function main(argv, callback) {
     let view = new View(config, screen, {menubar: menubar, sidebar: sidebar,
         workspace: workspace, dirtree: dirtree});
 
+    screen.render();
+
     // return start(data, function(err) {
     //     if (err) return callback(err);
     //     return callback();
     // });
+    //
+
+    // help screen
+    screen.key(['?'], function(ch, key) {
+        if (typeof _this.helpview == 'undefined'
+        )
+            // || _this.helpview == null)
+        {
+            //hide the widgets
+            view.hideAll();
+            // actionbar.hide();
+            // sidebar.hide();
+
+            _this.helpview = new ActionBar({
+                parent: screen,
+                top:0,
+                left:0,
+                width: '100%',
+                height: '100%',
+                value: "The help\n\n\nThis will be a table for help",
+                align: "center",
+                fg: "yellow"
+            });
+            helpview.focus();
+            screen.render();
+        }
+        else {
+            _this.helpview.destroy();
+            delete helpview;
+            actionbar.show();
+            sidebar.show();
+
+            view.setWinFocus(view.curwin);
+            screen.render();
+        }
+    });
 }
 
 // Process loop
