@@ -16,11 +16,16 @@ function ActionBar(options) {
     options.parent = options.parent || screen;
 
     this.options=options;
+
     //inherit from textarea
 	blessed.textarea.call(this, options);
 }
 ActionBar.prototype = Object.create(blessed.textarea.prototype);
 ActionBar.prototype.constructor = ActionBar;
+
+ActionBar.prototype.register_actions = function(view){
+    return;
+}
 
 ActionBar.prototype.type = 'ActionBar';
 module.exports = ActionBar;

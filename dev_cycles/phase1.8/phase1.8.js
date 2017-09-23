@@ -1,156 +1,38 @@
+"use strict";
+
 // packages
 var blessed = require('blessed'),
     contrib = require('blessed-contrib');
 
-//global screen
-//var screen = blessed.screen({smartCSR: true});
-var screen = blessed.screen({
-	autoPadding: true,
-	smartCSR: true
-});
 // app packages
-var Configuration = require('./config'),
-    DirTree = require('./dirtree');
+var Configuration = require('./config');
+var ViewControl = require('./viewcontrol');
 
-// panels
-var ActionBar = require('./actionbar');
-var MenuBar = require('./menubar');
-var SideBar = require('./sidebar');
-var Workspace = require('./workspace');
-var View = require('./view');
-var HelpView = require('./helpview');
+var screen = blessed.screen({
+    autoPadding: true,
+    smartCSR: true
+});
 
 // Quit on `q`, or `Control-C` when the focus is on the screen.
 screen.key(['x', 'C-c'], function(ch, key) {
     process.exit(0);
 });
 
-
 function main(argv, callback) {
-    let _this=this;
-
-    // TODO: move widget ownership to view?
-
-	//console.log("loading...");
-
     //get config data
     let config = new Configuration();
     config.fetch();
 
-    //fetch projects list
-    let dirtree = new DirTree(config);
-    let proj_tree = dirtree.fetch(config.timetrap_config.tui_projects_template_path);
+    //adjust config with commandline
 
-    config.view.sidew = dirtree.getMaxSideNameLen();   //side menu width
-    config.view.numwnd = 3;                    //number of windows
-    config.view.curwind = 1;                   //current window (starts at 1, screen === 0)
-
-    // logo -useless
-    let actionbar = new ActionBar(
-        {
-            parent: screen,
-            top:0,
-            left:0,
-            width: config.view.sidew,
-            value: "Timetrap TUI:",
-            align: "center",
-            fg: "blue"
-        }
-    );
-
-    //menubar at top
-    let menubar = new MenuBar({
-        parent: screen,
-        left: config.view.sidew,
-        right: 0,
-        top: 0,
-    });
-
-    // the main area
-    //var mainw = blessed.box({
-    let workspace = new Workspace({
-        parent: screen,
-        left: config.view.sidew + 1,
-        top: 2,
-        bottom: 0,
-        right: 0
-    });
-
-    //project tree on the left
-    let sidebar = new SideBar({
-        parent: screen,
-        left: 0,
-        top: 1,
-        bottom: 0,
-        width: config.view.sidew,
-    });
-
-    // set the tree data
-    sidebar.setData(proj_tree);
-    //sidebar.setData(dirtree.dirTree(config.timetrap_config.tui_projects_template_path));
-
-	//set the layout
-    let view = new View(config, screen, {menubar: menubar, sidebar: sidebar,
-        workspace: workspace, dirtree: dirtree});
-
-    screen.render();
+    // the controller of views
+    ViewControl.viewcontrol = new ViewControl(config, screen);
 
     // return start(data, function(err) {
     //     if (err) return callback(err);
     //     return callback();
     // });
     //
-
-    screen.on('destroy', function(widgetname){
-        if (widgetname === 'HelpView'){
-                _this.helpview.destroy();
-                delete helpview;
-                actionbar.show();
-                sidebar.show();
-
-                view.setWinFocus(view.curwin);
-                screen.render();
-                return;
-        }
-    });
-
-    // help window
-    screen.key(['?'], function(ch, key) {
-    // screen.on('keypress', function(ch, key) {
-    //     if (key.name === '?') {
-            if (typeof _this.helpview == 'undefined'
-            )
-                // || _this.helpview == null)
-            {
-                //hide the widgets
-                view.hideAll();
-                // actionbar.hide();
-                // sidebar.hide();
-
-                _this.helpview = new HelpView({
-                    parent: screen,
-                    top:0,
-                    left:0,
-                    width: '100%',
-                    height: '100%',
-                    value: "The help\n\n\nThis will be a table for help",
-                    align: "center",
-                    fg: "yellow"
-                });
-                helpview.focus();
-                screen.render();
-            }
-            else {
-                _this.helpview.destroy();
-                delete helpview;
-                actionbar.show();
-                sidebar.show();
-
-                view.setWinFocus(view.curwin);
-                screen.render();
-            }
-        // }
-    });
 }
 
 // Process loop

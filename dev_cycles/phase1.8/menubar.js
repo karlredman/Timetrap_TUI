@@ -39,7 +39,6 @@ function MenuBar(options) {
     options.style.selected.bg = options.style.selected.bg || "white";
     options.style.selected.fg = options.style.selected.fg || "blue";
 
-
     // if (options.commands || options.items) {
     //     this.setItems(options.commands || options.items);
     // }

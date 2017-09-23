@@ -7,7 +7,8 @@ var blessed = require('blessed'),
     Node = blessed.Node;
 
 function HelpView(options) {
-    this.classname = "HelpView";
+    let _this=this;
+
     if (!(this instanceof Node)) return new HelpView(options);
 
     // set overridable defaults
@@ -20,20 +21,17 @@ function HelpView(options) {
 	options.fg = options.fg || 'white';
     options.align = options.align || 'left',
 
-    // failsafe: in case parent is not passed in options
-    options.parent = options.parent || screen;
-
-    let _this=this;
-    this.screen = options.screen;
+    // failsafe: in case parent is not passed in options -set to fail
+    options.parent = options.parent || undefined;
 
     //data="this is my data for help";
     //options.value = data;
 
 	blessed.textarea.call(this, options);
 
-    this.on('keypress', function(ch, key) {
+    _this.on('keypress', function(ch, key) {
         if (key.name === 'q') {
-            _this.screen.emit('destroy', this.classname );
+            _this.options.parent.emit('destroy', "HelpView");
             return;
         }
     });

@@ -54,7 +54,7 @@ function SideBar(options) {
 
 
 
-    options.wrap = false;
+    options.wrap = true;
     options.hidden = false;
     options.style.inverse = false;
     options.fixed = true;
