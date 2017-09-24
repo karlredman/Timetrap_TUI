@@ -106,23 +106,27 @@ View.prototype.create_widgets = function()
     let _this=this;
 
     // logo -status? (might get rid of this)
-    this.widgets.actionbar = new ActionBar(
-        {
-            parent: _this.screen,
-            top:0,
-            left:0,
-            width: _this.config.view.sidew,
-            value: "Timetrap TUI:",
-            align: "center",
-            fg: "blue"
-        }
-    );
+    // let actionbar_text="Timetrap TUI"
+    // this.widgets.actionbar = new ActionBar(
+    //     {
+    //         parent: _this.screen,
+    //         top:0,
+    //         left:0,
+    //         //width: _this.config.view.sidew,
+   //         width: actionbar_text.length+4,
+    //         value: "Timetrap TUI:",
+    //         align: "center",
+    //         fg: "blue"
+    //     }
+    // );
 
     //menubar at top
     this.widgets.menubar = new MenuBar({
+        autoCommandKeys: true,
         parent: _this.screen,
-        left: _this.config.view.sidew,
-        right: 0,
+        //left: _this.config.view.sidew,
+        //       left: actionbar_text.length+5,
+        left: 0,
         top: 0,
     });
 

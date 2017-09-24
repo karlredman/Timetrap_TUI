@@ -30,6 +30,11 @@ function HelpView(options) {
 	blessed.textarea.call(this, options);
 
     _this.on('keypress', function(ch, key) {
+        if (key.name === 'escape') {
+            //requires 2 key presses
+            _this.options.parent.emit('destroy', "HelpView");
+            return;
+        }
         if (key.name === 'q') {
             _this.options.parent.emit('destroy', "HelpView");
             return;
