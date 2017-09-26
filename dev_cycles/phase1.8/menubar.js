@@ -61,7 +61,33 @@ function MenuBar(options) {
             }
             _this.parent.emit('key '+nkey.full, 'C-c', nkey);
         },
-        Test: function(){
+        TestPrompt: function(){
+            let prompt = blessed.prompt({
+                parent: _this.screen,
+                keys: true,
+                left: 'center',
+                top: 'center',
+                width: '50%',
+                height: '50%',
+                bg: null,
+                border: {
+                    type: 'line',
+                },
+                content: 'Submit or cancel?'
+            })
+
+            prompt.input('would you like to play a game?', 't i ', function(err, data){
+                //console.log("input - got here: er=%s, c=%s",er, c);
+				let response = {
+					type: 'prompt',
+					err: err,
+					data: data
+				}
+                //_this.options.parent.emit('xdestroy', response);
+                _this.emit('testprompt', response);
+            })
+        },
+        TestDialog: function(){
             // let nkey = {
             //     sequence: "m",
             //     name: "m",
@@ -192,6 +218,10 @@ MenuBar.prototype.register_actions = function(view){
         //     return;
         // }
     });
+    _this.on('testprompt', function(data){
+		//console.log(JSON.stringify(data, null, 2));
+		_this.screen.render();
+	});
 }
 
 MenuBar.prototype.type = 'MenuBar';

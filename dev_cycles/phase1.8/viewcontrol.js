@@ -1,4 +1,4 @@
-"use strict";
+//"use strict";
 
 var blessed = require('blessed'),
     contrib = require('blessed-contrib');
@@ -31,6 +31,16 @@ ViewControl.prototype.register_actions = function(obj){
     let _this = this;
 
     //view destroyers
+    //_this.screen.on('xdestroy', function(widgetname, type, err, data){
+    _this.screen.on('xdestroy', function(data){
+		console.log("screen: got here");
+		//obj.destory();
+		//delete obj;
+		//_this.view.showAll(true);
+
+
+		_this.screen.render();
+	});
     _this.screen.on('destroy', function(widgetname){
         if (widgetname === 'HelpView'){
             if (typeof _this.helpview !== 'undefined'){
