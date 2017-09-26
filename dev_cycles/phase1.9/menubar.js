@@ -68,7 +68,7 @@ function MenuBar(options) {
                 left: 'center',
                 top: 'center',
                 width: '50%',
-                height: '50%',
+                height: 10,
                 bg: null,
                 border: {
                     type: 'line',
@@ -78,37 +78,15 @@ function MenuBar(options) {
 
             prompt.input('would you like to play a game?', 't i ', function(err, data){
                 //console.log("input - got here: er=%s, c=%s",er, c);
-				let response = {
-					type: 'prompt',
-					err: err,
-					data: data
-				}
+                let response = {
+                    type: 'prompt',
+                    err: err,
+                    data: data
+                }
                 //_this.options.parent.emit('xdestroy', response);
                 _this.emit('testprompt', response);
             })
         },
-        TestDialog: function(){
-            // let nkey = {
-            //     sequence: "m",
-            //     name: "m",
-            //     ctrl: false,
-            //     meta: false,
-            //     shift: false,
-            //     full: "m"
-            // }
-            // _this.parent.emit('key '+nkey.full, nkey.full, nkey);
-            options = {
-                content: "this is my dialog content",
-                dialog: {
-                    submitBtn: true,
-                    caller: _this,
-                    submitBtn: true,
-                    input: false,
-                    inputTxt: ''
-                }
-            }
-            _this.options.parent.emit('ModalDialog', options);
-        }
     }
 
     //manage styles
@@ -148,28 +126,11 @@ function MenuBar(options) {
 MenuBar.prototype = Object.create(blessed.listbar.prototype);
 MenuBar.prototype.constructor = MenuBar;
 
-MenuBar.prototype.restoreFromModal = function(){
-
-    let _this = this;
-
-    _this.onScreenEvent('keypress', function(ch) {
-        if (/^[0-9]$/.test(ch)) {
-            var i = +ch - 1;
-            if (!~i) i = 9;
-            //console.log("screenEvent keypress: got here");
-            return _this.selectTab(i);
-        }
-    });
-}
 
 MenuBar.prototype.register_actions = function(view){
 
     let _this = this;
     this.view = view;
-
-    _this.on('modal', function(data) {
-        console.log("################# got here #####################");
-    });
 
     _this.on('keypress', function(ch, key) {
         //custom key bindings
@@ -212,16 +173,11 @@ MenuBar.prototype.register_actions = function(view){
             _this.screen.render();
             return;
         }
-        // if (key.name === 'escape' || (this.options['vi'] && key.name === 'q')) {
-        //     this.emit('action');
-        //     this.emit('cancel');
-        //     return;
-        // }
     });
     _this.on('testprompt', function(data){
-		//console.log(JSON.stringify(data, null, 2));
-		_this.screen.render();
-	});
+        //console.log(JSON.stringify(data, null, 2));
+        _this.screen.render();
+    });
 }
 
 MenuBar.prototype.type = 'MenuBar';

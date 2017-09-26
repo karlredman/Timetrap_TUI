@@ -16,7 +16,7 @@ var DirTree = require('./dirtree');
 function View(config, screen) {
 
     let _this=this;
-	this.widgets = {};
+    this.widgets = {};
     this.screen = screen;
     this.config = config;
 
@@ -29,18 +29,17 @@ function View(config, screen) {
     this.config.view.curwind = 1;                   //current window (starts at 1, screen === 0)
 
 
-
     /////////////////////////////////////////////////////
     // this view's layout
 
     //this view's window panes
-	this.pwin ={
-		mainw: 1,
-		side: 2,
-		menu: 3,
-	};
-	this.pwin.first = this.pwin.mainw;
-	this.pwin.last = this.pwin.menu;
+    this.pwin ={
+        mainw: 1,
+        side: 2,
+        menu: 3,
+    };
+    this.pwin.first = this.pwin.mainw;
+    this.pwin.last = this.pwin.menu;
 
     //the current pane default
     this.curWin = 1;
@@ -105,21 +104,6 @@ View.prototype.create_widgets = function()
 {
     let _this=this;
 
-    // logo -status? (might get rid of this)
-    // let actionbar_text="Timetrap TUI"
-    // this.widgets.actionbar = new ActionBar(
-    //     {
-    //         parent: _this.screen,
-    //         top:0,
-    //         left:0,
-    //         //width: _this.config.view.sidew,
-   //         width: actionbar_text.length+4,
-    //         value: "Timetrap TUI:",
-    //         align: "center",
-    //         fg: "blue"
-    //     }
-    // );
-
     //menubar at top
     this.widgets.menubar = new MenuBar({
         autoCommandKeys: true,
@@ -152,11 +136,11 @@ View.prototype.create_widgets = function()
 
 View.prototype.register_actions = function()
 {
-	let _this = this;
+    let _this = this;
 }
 
 View.prototype.setWinFocus = function(win){
-	let _this = this;
+    let _this = this;
     switch(win){
         case _this.pwin.mainw:
             _this.widgets.workspace.focus();
@@ -171,7 +155,7 @@ View.prototype.setWinFocus = function(win){
 }
 
 View.prototype.setWinFocusNext = function(){
-	let _this = this;
+    let _this = this;
     if((_this.curWin+1) > _this.pwin.last){
         _this.curWin = _this.pwin.first;
         _this.setWinFocus(_this.pwin.first);
@@ -185,7 +169,7 @@ View.prototype.setWinFocusNext = function(){
 }
 
 View.prototype.setWinFocusPrev = function(){
-	let _this = this;
+    let _this = this;
     if((_this.curWin-1) < _this.pwin.first){
         _this.curWin = _this.pwin.last;
         _this.setWinFocus(_this.pwin.last);

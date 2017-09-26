@@ -1,4 +1,4 @@
-//"use strict";
+"use strict";
 
 var blessed = require('blessed'),
     contrib = require('blessed-contrib');
@@ -31,43 +31,12 @@ ViewControl.prototype.register_actions = function(obj){
     let _this = this;
 
     //view destroyers
-    //_this.screen.on('xdestroy', function(widgetname, type, err, data){
-    _this.screen.on('xdestroy', function(data){
-		console.log("screen: got here");
-		//obj.destory();
-		//delete obj;
-		//_this.view.showAll(true);
-
-
-		_this.screen.render();
-	});
     _this.screen.on('destroy', function(widgetname){
         if (widgetname === 'HelpView'){
             if (typeof _this.helpview !== 'undefined'){
                 _this.helpview.destroy();
                 delete _this.helpview;
                 _this.view.showAll(true);
-                return;
-            }
-        }
-        if (widgetname === 'ModalView'){
-            if (typeof _this.modalview !== 'undefined'){
-                _this.modalview.destroy();
-                delete _this.modalview;
-
-                // TODO: should be restored from modalView .destroy()
-                _this.view.widgets.menubar.restoreFromModal();
-
-                _this.view.showAll(true);
-                return;
-            }
-        }
-        if (widgetname === 'Dialog'){
-            if (typeof _this.dialog !== 'undefined'){
-                _this.dialog.destroy();
-                delete _this.dialog;
-                _this.view.showAll(true);
-                _this.screen.emit("destroy", "ModalView")
                 return;
             }
         }
@@ -105,59 +74,6 @@ ViewControl.prototype.register_actions = function(obj){
         }
     });
 
-    // _this.screen.key(['m'], function(ch, key) {
-    //     if (typeof _this.modalview == 'undefined')
-    //     {
-    //         _this.modalview = new ModalView({
-    //             parent: _this.screen,
-    //         });
-
-    //         _this.modalview.focus();
-    //         _this.screen.render();
-    //     }
-    // });
-    _this.screen.on('ModalDialog', function(options) {
-        if (_this.modalview === undefined)
-        {
-            _this.modalview = new ModalView({ parent: _this.screen, });
-
-            _this.modalview.focus();
-            //_this.screen.render();
-        }
-        if (_this.dialog === undefined)
-        {
-            //hide the widgets
-            //_this.view.hideAll();
-            options.parent = _this.screen;
-            _this.dialog = new Dialog(options);
-            _this.dialog.focus();
-
-            if (options.dialog.submitBtn){
-                _this.dialog.submit.focus()
-            }
-            else{
-                _this.dialog.cancel.focus()
-            }
-
-            if(options.input){
-                _this.dialog.input.focus()
-            }
-        }
-            _this.screen.render();
-    });
-    // _this.screen.key(['d'], function(ch, key) {
-    //     if (typeof _this.dialog == 'undefined')
-    //     {
-    //         //hide the widgets
-    //         //_this.view.hideAll();
-
-    //         _this.dialog = new Dialog({
-    //             parent: _this.screen,
-    //         });
-    //         _this.dialog.focus();
-    //         _this.screen.render();
-    //     }
-    // });
 }
 
 
