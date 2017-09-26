@@ -57,6 +57,7 @@ ViewControl.prototype.register_actions = function(obj){
                 _this.dialog.destroy();
                 delete _this.dialog;
                 _this.view.showAll(true);
+                _this.screen.emit("destroy", "ModalView")
                 return;
             }
         }
@@ -94,44 +95,59 @@ ViewControl.prototype.register_actions = function(obj){
         }
     });
 
-    _this.screen.key(['m'], function(ch, key) {
-        if (typeof _this.modalview == 'undefined')
+    // _this.screen.key(['m'], function(ch, key) {
+    //     if (typeof _this.modalview == 'undefined')
+    //     {
+    //         _this.modalview = new ModalView({
+    //             parent: _this.screen,
+    //         });
+
+    //         _this.modalview.focus();
+    //         _this.screen.render();
+    //     }
+    // });
+    _this.screen.on('ModalDialog', function(options) {
+        if (_this.modalview === undefined)
         {
-            _this.modalview = new ModalView({
-                parent: _this.screen,
-                // top:0,
-                // left:0,
-                // width: '100%',
-                // height: '100%',
-                // value: "The help\n\n\nThis will be a table for help",
-                // align: "center",
-                // fg: "yellow"
-            });
+            _this.modalview = new ModalView({ parent: _this.screen, });
 
             _this.modalview.focus();
-            _this.screen.render();
+            //_this.screen.render();
         }
-    });
-    _this.screen.key(['d'], function(ch, key) {
-        if (typeof _this.dialog == 'undefined')
+        if (_this.dialog === undefined)
         {
             //hide the widgets
             //_this.view.hideAll();
-
-            _this.dialog = new Dialog({
-                parent: _this.screen,
-                // top:0,
-                // left:0,
-                // width: '100%',
-                // height: '100%',
-                // value: "The help\n\n\nThis will be a table for help",
-                // align: "center",
-                // fg: "yellow"
-            });
+            options.parent = _this.screen;
+            _this.dialog = new Dialog(options);
             _this.dialog.focus();
-            _this.screen.render();
+
+            if (options.dialog.submitBtn){
+                _this.dialog.submit.focus()
+            }
+            else{
+                _this.dialog.cancel.focus()
+            }
+
+            if(options.input){
+                _this.dialog.input.focus()
+            }
         }
+            _this.screen.render();
     });
+    // _this.screen.key(['d'], function(ch, key) {
+    //     if (typeof _this.dialog == 'undefined')
+    //     {
+    //         //hide the widgets
+    //         //_this.view.hideAll();
+
+    //         _this.dialog = new Dialog({
+    //             parent: _this.screen,
+    //         });
+    //         _this.dialog.focus();
+    //         _this.screen.render();
+    //     }
+    // });
 }
 
 

@@ -63,21 +63,21 @@ function ModalView(options) {
     //remove screen events (i.e. menubar)
     _this.removeScreenEvent('keypress', null);
 
-    _this.on('keypress', function(ch, key) {
-        if (key.name === 'escape') {
-            //requires 2 key presses
-            _this.options.parent.emit('destroy', "ModalView");
-            return;
-        }
-        if (key.name === 'q') {
-            _this.options.parent.emit('destroy', "ModalView");
-            return;
-        }
-        if (key.name === 'enter') {
-            _this.options.parent.emit('destroy', "ModalView");
-            return;
-        }
-    });
+    // _this.on('keypress', function(ch, key) {
+    //     if (key.name === 'escape') {
+    //         //requires 2 key presses
+    //         _this.options.parent.emit('destroy', "ModalView");
+    //         return;
+    //     }
+    //     if (key.name === 'q') {
+    //         _this.options.parent.emit('destroy', "ModalView");
+    //         return;
+    //     }
+    //     if (key.name === 'enter') {
+    //         _this.options.parent.emit('destroy', "ModalView");
+    //         return;
+    //     }
+    // });
 }
 ModalView.prototype = Object.create(blessed.box.prototype);
 ModalView.prototype.constructor = ModalView;

@@ -23,8 +23,10 @@ function Dialog(options) {
 
     options.shadow = options.shadow || true;
 
-    options.bg = options.bg || null;
-    options.fg = options.fg || 'white';
+    options.bg = options.bg || "white";
+    options.fg = options.fg || "blue";
+    // options.bg = options.bg || null;
+    // options.fg = options.fg || 'white';
     //options.align = options.align || 'left';
 
     options.keys = options.keys || true;
@@ -35,8 +37,12 @@ function Dialog(options) {
 
     options.style = options.style || {};
 
+    options.style.bg = options.style.bg || "lightblue";
+    options.style.fg = options.style.fg || "black";
+
     options.style.border = options.style.border || {};
     options.style.border.type = options.style.border.type || 'line';
+    options.style.border.bg = options.style.border.bg || 'black';
 
     options.style.hover = options.style.hover || {};
     options.style.hover.bg = options.style.hover.bg || 'green';
@@ -50,32 +56,41 @@ function Dialog(options) {
 
     blessed.form.call(this, options);
 
-    _this.submit = blessed.button({
-        parent: _this,
-        mouse: true,
-        keys: true,
-        shrink: true,
-        padding: {
-            left: 1,
-            right: 1
-        },
-        //left: 10,
-        right: 10,
-        //top: 2,
-        bottom: 0,
-        shrink: true,
-        name: 'submit',
-        content: 'submit',
-        style: {
-            bg: 'blue',
-            focus: {
-                bg: 'red'
+    //_this.options = options;
+    options.dialog = options.dialog || {};
+
+    if (options.dialog.submitBtn){
+        _this.submit = blessed.button({
+            parent: _this,
+            mouse: true,
+            keys: true,
+            shrink: false,
+            padding: {
+                left: 1,
+                right: 1
             },
-            hover: {
-                bg: 'red'
+            //left: 10,
+            right: 11,
+            //top: 2,
+            bottom: 1,
+            shrink: true,
+            name: 'submit',
+            content: options.dialog.input?'Submit':'  OK  ',
+            style: {
+                bg: 'blue',
+                focus: {
+                    bg: 'red'
+                },
+                hover: {
+                    bg: 'red'
+                }
             }
-        }
-    });
+        });
+        _this.submit.on('press', function() {
+            _this.options.dialog.caller.emit('modal', {action:"submit", content:"submitted content"});
+            _this.options.parent.emit('destroy', "Dialog");
+        });
+    }
 
     _this.cancel = blessed.button({
         parent: _this,
@@ -87,12 +102,13 @@ function Dialog(options) {
             right: 1
         },
         //left: 20,
-        right: 0,
+        right: 1,
         //top: 2,
-        bottom: 0,
+        bottom: 1,
         shrink: true,
+        //name: options.submitBtn?'OK':'Cancel',
         name: 'cancel',
-        content: 'cancel',
+        content: options.submitBtn?'OK':'Cancel',
         style: {
             bg: 'blue',
             focus: {
@@ -102,6 +118,7 @@ function Dialog(options) {
                 bg: 'red'
             }
         }
+
     });
 
     // //save the current screen events
@@ -110,9 +127,6 @@ function Dialog(options) {
     // //remove screen events (i.e. menubar)
     // _this.removeScreenEvent('keypress', null);
 
-    _this.submit.on('press', function() {
-        _this.options.parent.emit('destroy', "Dialog");
-    });
 
     _this.cancel.on('press', function() {
         _this.options.parent.emit('destroy', "Dialog");
@@ -121,6 +135,7 @@ function Dialog(options) {
     _this.on('keypress', function(ch, key) {
         if (key.name === 'escape') {
             //requires 2 key presses
+            // TODO: escape is problematic
             _this.options.parent.emit('destroy', "Dialog");
             return;
         }
@@ -138,7 +153,9 @@ Dialog.prototype.destroy = function(){
     let _this=this;
 
     _this.cancel.destroy();
-    _this.submit.destroy();
+    if( ! (_this.submit === undefined) ){
+        _this.submit.destroy();
+    }
 
     return blessed.box.prototype.destroy.call(this);
 }

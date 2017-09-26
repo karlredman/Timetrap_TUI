@@ -14,7 +14,8 @@ var screen = blessed.screen({
 });
 
 // Quit on `q`, or `Control-C` when the focus is on the screen.
-screen.key(['x', 'C-c'], function(ch, key) {
+screen.key(['C-c'], function(ch, key) {
+    //console.log(JSON.stringify(ch)+":"+JSON.stringify(key))
     process.exit(0);
 });
 
