@@ -1,7 +1,8 @@
 "use strict"
 var blessed = require('blessed'),
     Node = blessed.Node;
-var Prompt = require('./DialogPrompt')
+var DialogPrompt = require('./DialogPrompt'),
+    DialogQuestion = require('./DialogQuestion');
 
 function MenuBar(options) {
 
@@ -49,23 +50,26 @@ function MenuBar(options) {
 
     options.items = options.commands || {
         In: function(){
-            let prompt = new Prompt({target: _this, parent: _this.screen});
+            let prompt = new DialogPrompt({target: _this, parent: _this.screen});
             prompt.cannedInput('checkIn');
         },
         Out: function(){
-            let prompt = new Prompt({target: _this, parent: _this.screen});
+            let prompt = new DialogPrompt({target: _this, parent: _this.screen});
             prompt.cannedInput('checkOut');
         },
         Edit: function(){
-            let prompt = new Prompt({target: _this, parent: _this.screen});
+            let prompt = new DialogPrompt({target: _this, parent: _this.screen});
             prompt.cannedInput('edit');
         },
         Resume: function(){
-            let prompt = new Prompt({target: _this, parent: _this.screen});
+            let prompt = new DialogPrompt({target: _this, parent: _this.screen});
             prompt.cannedInput('resume');
         },
         Display: function(){},
-        StopAll: function(){},
+        StopAll: function(){
+            let question = new DialogQuestion({target: _this, parent: _this.screen});
+            question.cannedInput('stopAll');
+        },
         Help: function(){
             let nkey = {
                 sequence: "?",
@@ -77,22 +81,10 @@ function MenuBar(options) {
             }
             _this.parent.emit('key '+nkey.full, nkey.full, nkey);
         },
-        Exit: function(){
-            //emit the exit key sequence
-            let nkey = {
-                sequence: "\u0003",
-                name: "c",
-                ctrl: true,
-                meta: false,
-                shift: false,
-                full: "C-c"
-            }
-            _this.parent.emit('key '+nkey.full, 'C-c', nkey);
+        eXit: function(){
+            let question = new DialogQuestion({target: _this, parent: _this.screen});
+            question.cannedInput('exit');
         },
-        TestPrompt: function(){
-            let prompt = new Prompt({target: _this.view, parent: _this.screen});
-            prompt.cannedInput('checkIn');
-        }
     }
 
     //inherit from textarea
@@ -153,24 +145,32 @@ MenuBar.prototype.register_actions = function(view){
             return;
         }
     });
-    _this.on('prompt', function(err, data){
-        //console.log(JSON.stringify(data, null, 2));
-        //_this.selectTab(0);
-        // data.obj.destroy();
-        // delete data.obj;
+    _this.on('prompt', function(data){
+        //_this.select(0)
+        _this.screen.render();
+    });
+    _this.on('question', function(data){
+        if ( data.type === 'exit' ) {
+            if(data.data) {
+                //emit the exit key sequence
+                let nkey = {
+                    sequence: "\u0003",
+                    name: "c",
+                    ctrl: true,
+                    meta: false,
+                    shift: false,
+                    full: "C-c"
+                }
+                _this.parent.emit('key '+nkey.full, 'C-c', nkey);
+            }
+        }
+        //_this.select(0)
         _this.screen.render();
     });
     _this.on('testprompt', function(data){
-        //console.log(JSON.stringify(data, null, 2));
-        _this.selectTab(0)
+        _this.select(0)
         _this.screen.render();
     });
-}
-
-MenuBar.prototype.doprompt = function(type){
-    let _this = this;
-    let prompt = new Prompt({target: _this, parent: _this.screen});
-    prompt.cannedInput('checkIn');
 }
 
 MenuBar.prototype.type = 'MenuBar';

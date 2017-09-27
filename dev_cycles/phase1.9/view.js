@@ -179,7 +179,7 @@ View.prototype.create_widgets = function()
         left: _this.config.view.sidew + 1,
         right: 0,
         top: 2,
-        bottom: 5,
+        bottom: 2,
         border: true,
         content: "starting content"
         //bottom: 2,
