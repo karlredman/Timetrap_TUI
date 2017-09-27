@@ -1,7 +1,7 @@
 "use strict"
 var blessed = require('blessed'),
     Node = blessed.Node;
-
+var Prompt = require('./DialogPrompt')
 
 function MenuBar(options) {
 
@@ -19,84 +19,6 @@ function MenuBar(options) {
     options.mouse = options.mouse || true;
     options.vi = options.vi || true;
     options.scrollable = options.scrollable || true;
-    //options.autoCommandKeys = options.autoCommandKeys || true;
-    // options.items = options.items || [
-    //     'In',
-    //     'Out',
-    //     'Edit',
-    //     'Resume',
-    //     'Display',
-    //     'StopAll',
-    //     'Exit',
-    //     'Help',
-    //     'Test'
-    // ];
-
-    options.items = options.commands || {
-        In: function(){},
-        Out: function(){},
-        Edit: function(){},
-        Resume: function(){},
-        Display: function(){},
-        StopAll: function(){},
-        Help: function(){
-            let nkey = {
-                sequence: "?",
-                name: "?",
-                ctrl: false,
-                meta: false,
-                shift: false,
-                full: "?"
-            }
-            _this.parent.emit('key '+nkey.full, nkey.full, nkey);
-        },
-        Exit: function(){
-            //emit the exit key sequence
-            let nkey = {
-                sequence: "\u0003",
-                name: "c",
-                ctrl: true,
-                meta: false,
-                shift: false,
-                full: "C-c"
-            }
-            _this.parent.emit('key '+nkey.full, 'C-c', nkey);
-        },
-        TestPrompt: function(){
-            let prompt = new blessed.prompt({
-                parent: _this.screen,
-                keys: true,
-                tags: true,
-                align: 'center',
-                left: 'center',
-                top: 'center',
-                width: '50%',
-                height: 10,
-                bg: null,
-                border: {
-                    type: 'line',
-                },
-                style: {
-                bg: 'blue',
-                fg: 'white',
-                },
-                content: 'Submit or cancel?'
-            })
-
-            //prompt._.cancel.setContent("thing")
-
-            prompt.input('\nWould you like to play a game?', 't i ', function(err, data){
-                //console.log("input - got here: er=%s, c=%s",er, c);
-                let response = {
-                    type: 'prompt',
-                    err: err,
-                    data: data
-                }
-                //_this.options.parent.emit('xdestroy', response);
-                _this.emit('testprompt', response);
-            })
-        },
-    }
 
     //manage styles
     options.style = options.style || {};
@@ -124,6 +46,54 @@ function MenuBar(options) {
     options.parent = options.parent || screen;
 
     this.options = options;
+
+    options.items = options.commands || {
+        In: function(){
+            let prompt = new Prompt({target: _this, parent: _this.screen});
+            prompt.cannedInput('checkIn');
+        },
+        Out: function(){
+            let prompt = new Prompt({target: _this, parent: _this.screen});
+            prompt.cannedInput('checkOut');
+        },
+        Edit: function(){
+            let prompt = new Prompt({target: _this, parent: _this.screen});
+            prompt.cannedInput('edit');
+        },
+        Resume: function(){
+            let prompt = new Prompt({target: _this, parent: _this.screen});
+            prompt.cannedInput('resume');
+        },
+        Display: function(){},
+        StopAll: function(){},
+        Help: function(){
+            let nkey = {
+                sequence: "?",
+                name: "?",
+                ctrl: false,
+                meta: false,
+                shift: false,
+                full: "?"
+            }
+            _this.parent.emit('key '+nkey.full, nkey.full, nkey);
+        },
+        Exit: function(){
+            //emit the exit key sequence
+            let nkey = {
+                sequence: "\u0003",
+                name: "c",
+                ctrl: true,
+                meta: false,
+                shift: false,
+                full: "C-c"
+            }
+            _this.parent.emit('key '+nkey.full, 'C-c', nkey);
+        },
+        TestPrompt: function(){
+            let prompt = new Prompt({target: _this.view, parent: _this.screen});
+            prompt.cannedInput('checkIn');
+        }
+    }
 
     //inherit from textarea
     blessed.listbar.call(this, options);
@@ -183,11 +153,24 @@ MenuBar.prototype.register_actions = function(view){
             return;
         }
     });
+    _this.on('prompt', function(err, data){
+        //console.log(JSON.stringify(data, null, 2));
+        //_this.selectTab(0);
+        // data.obj.destroy();
+        // delete data.obj;
+        _this.screen.render();
+    });
     _this.on('testprompt', function(data){
         //console.log(JSON.stringify(data, null, 2));
         _this.selectTab(0)
         _this.screen.render();
     });
+}
+
+MenuBar.prototype.doprompt = function(type){
+    let _this = this;
+    let prompt = new Prompt({target: _this, parent: _this.screen});
+    prompt.cannedInput('checkIn');
 }
 
 MenuBar.prototype.type = 'MenuBar';
