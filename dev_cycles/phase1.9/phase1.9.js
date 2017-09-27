@@ -6,6 +6,7 @@ var blessed = require('blessed'),
 
 // app packages
 var Configuration = require('./config');
+var DirTree = require('./dirtree');
 var ViewControl = require('./viewcontrol');
 
 var screen = blessed.screen({
@@ -26,8 +27,12 @@ function main(argv, callback) {
 
     //adjust config with commandline
 
+    // instantiate supporting objects
+    let dirtree = new DirTree(config);
+
     // the controller of views
-    ViewControl.viewcontrol = new ViewControl(config, screen);
+    //ViewControl.viewcontrol = new ViewControl(config, screen);
+    ViewControl.viewcontrol = new ViewControl({config: config, screen: screen, dirtree: dirtree});
 
     // return start(data, function(err) {
     //     if (err) return callback(err);

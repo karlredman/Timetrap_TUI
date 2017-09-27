@@ -9,18 +9,18 @@ var Configuration = require('./config');
 // views
 var View = require('./view');
 var HelpView = require('./helpview');
-var ModalView = require('./modalview');
-var Dialog = require('./dialog');
 var MenuBar = require('./menubar');
 
-function ViewControl(config, screen){
+//function ViewControl(config, screen){
+function ViewControl(objects){
     let _this=this;
 
-    this.config = config;
-    this.screen = screen;
+    //convenience
+    this.config = objects.config;
+    this.screen = objects.screen;
 
     //set the main view
-    this.view = new View(config, screen);
+    this.view = new View(objects);
 
     _this.register_actions(this);
     _this.screen.render();

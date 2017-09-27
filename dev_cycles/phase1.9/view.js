@@ -5,24 +5,25 @@ var blessed = require('blessed'),
     contrib = require('blessed-contrib');
 
 // panels
-var ActionBar = require('./actionbar');
 var MenuBar = require('./menubar');
 var SideBar = require('./sidebar');
 var Workspace = require('./workspace');
-var HelpView = require('./helpview');
-var DirTree = require('./dirtree');
+var Logger = require('./logger');
+//var HelpView = require('./helpview');
 
 // program init/startup
-function View(config, screen) {
+//function View(config, screen) {
+function View(objects) {
 
     let _this=this;
     this.widgets = {};
-    this.screen = screen;
-    this.config = config;
+    this.screen = objects.screen;
+    this.config = objects.config;
 
     //fetch projects list
-    this.widgets.dirtree = new DirTree(config);
-    let proj_tree = this.widgets.dirtree.fetch(config.timetrap_config.tui_projects_template_path);
+    //this.widgets.dirtree = new DirTree(config);
+    this.widgets.dirtree = objects.dirtree;
+    let proj_tree = this.widgets.dirtree.fetch(this.config.timetrap_config.tui_projects_template_path);
 
     this.config.view.sidew = this.widgets.dirtree.getMaxSideNameLen();   //side menu width
     this.config.view.numwnd = 3;                    //number of windows
@@ -34,30 +35,51 @@ function View(config, screen) {
 
     //this view's window panes
     this.pwin ={
-        mainw: 1,
-        side: 2,
-        menu: 3,
+        menu: 1,
+        logger: 2,
+        side: 3,
+        mainw: 4,
     };
-    this.pwin.first = this.pwin.mainw;
-    this.pwin.last = this.pwin.menu;
+    this.pwin.first = this.pwin.menu;
+    this.pwin.last = this.pwin.mainw;
 
     //the current pane default
     this.curWin = 1;
 
-    // horizontal seperator line
-    let seph = blessed.line({
-        parent: screen,
+    // horizontal seperator line 1
+    let seph1 = blessed.line({
+        parent: this.screen,
         orientation: 'horizontal',
-        //left: _this.config.view.sidew,
         top: 1,
         left: 0,
+        //right: _this.config.view.sidew,
+        right: 0,
+        fg: "red"
+    });
+
+    // // horizontal seperator line 2
+    // let seph2 = blessed.line({
+    //     parent: this.screen,
+    //     orientation: 'horizontal',
+    //     top: 1,
+    //     left: _this.config.view.sidew,
+    //     right: 0,
+    //     fg: "red"
+    // });
+
+    //logger seperator line
+    let sepl = blessed.line({
+        parent: this.screen,
+        orientation: 'horizontal',
+        left: _this.config.view.sidew+1,
+        bottom: 1,
         right: 0,
         fg: "red"
     });
 
     // verticle seperator line
-    let sepv = blessed.line({
-        parent: screen,
+    let sepv1 = blessed.line({
+        parent: this.screen,
         orientation: 'vertical',
         left: _this.config.view.sidew,
         top: 2,
@@ -66,18 +88,44 @@ function View(config, screen) {
         //bg: "black"
     });
 
+    // let sepv2 = blessed.line({
+    //     parent: this.screen,
+    //     orientation: 'vertical',
+    //     left: _this.config.view.sidew,
+    //     //top: 0,
+    //     bottom: 1,
+    //     fg: "green",
+    //     //bg: "black"
+    // });
+
     this.create_widgets();
 
     //seperator  bar color change on focus chage
     //// side menue focus
-    this.screen.setEffects(sepv, this.widgets.sidebar, 'focus', 'blur', { fg: 'green' });
-    this.screen.setEffects(seph, this.widgets.sidebar, 'focus', 'blur', { fg: 'red' });
+    this.screen.setEffects(sepv1, this.widgets.sidebar, 'focus', 'blur', { fg: 'green' });
+    // this.screen.setEffects(sepv2, this.widgets.sidebar, 'focus', 'blur', { fg: 'green' });
+    this.screen.setEffects(seph1, this.widgets.sidebar, 'focus', 'blur', { fg: 'red' });
+    // this.screen.setEffects(seph2, this.widgets.sidebar, 'focus', 'blur', { fg: 'red' });
+    this.screen.setEffects(sepl, this.widgets.sidebar, 'focus', 'blur', { fg: 'red' });
     //// top bar
-    this.screen.setEffects(sepv, this.widgets.menubar, 'focus', 'blur', { fg: 'red' });
-    this.screen.setEffects(seph, this.widgets.menubar, 'focus', 'blur', { fg: 'green' });
+    this.screen.setEffects(sepv1, this.widgets.menubar, 'focus', 'blur', { fg: 'red' });
+    // this.screen.setEffects(sepv2, this.widgets.menubar, 'focus', 'blur', { fg: 'red' });
+    this.screen.setEffects(seph1, this.widgets.menubar, 'focus', 'blur', { fg: 'green' });
+    // this.screen.setEffects(seph2, this.widgets.menubar, 'focus', 'blur', { fg: 'green' });
+    this.screen.setEffects(sepl, this.widgets.menubar, 'focus', 'blur', { fg: 'red' });
     //// main textarea focus
-    this.screen.setEffects(sepv, this.widgets.workspace, 'focus', 'blur', { fg: 'red' });
-    this.screen.setEffects(seph, this.widgets.workspace, 'focus', 'blur', { fg: 'red' });
+    this.screen.setEffects(sepv1, this.widgets.workspace, 'focus', 'blur', { fg: 'green' });
+    // this.screen.setEffects(sepv2, this.widgets.workspace, 'focus', 'blur', { fg: 'red' });
+    this.screen.setEffects(seph1, this.widgets.workspace, 'focus', 'blur', { fg: 'green' });
+    // this.screen.setEffects(seph2, this.widgets.workspace, 'focus', 'blur', { fg: 'green' });
+    this.screen.setEffects(sepl, this.widgets.workspace, 'focus', 'blur', { fg: 'green' });
+    //// log logger focus
+    this.screen.setEffects(sepv1, this.widgets.logger, 'focus', 'blur', { fg: 'red' });
+    // this.screen.setEffects(sepv2, this.widgets.logger, 'focus', 'blur', { fg: 'red' });
+    this.screen.setEffects(seph1, this.widgets.logger, 'focus', 'blur', { fg: 'red' });
+    // this.screen.setEffects(seph2, this.widgets.logger, 'focus', 'blur', { fg: 'red' });
+    this.screen.setEffects(sepl, this.widgets.logger, 'focus', 'blur', { fg: 'green' });
+
 
     /////////////////////////////////////////////////////
     // this view's control
@@ -108,10 +156,20 @@ View.prototype.create_widgets = function()
     this.widgets.menubar = new MenuBar({
         autoCommandKeys: true,
         parent: _this.screen,
-        //left: _this.config.view.sidew,
-        //       left: actionbar_text.length+5,
         left: 0,
         top: 0,
+    });
+
+    //the logger at bottom of main window
+    this.widgets.logger = new Logger({
+        parent: _this.screen,
+        left: _this.config.view.sidew + 1,
+        right: 0,
+        bottom: 0,
+        height: 1,
+        //content: "xxxxxxxx\nxxxxxxxxxx\nxxxxxx\nxxxxxxxx"
+        //bottom: 0,
+        //width: 30
     });
 
     // the main area
@@ -119,19 +177,24 @@ View.prototype.create_widgets = function()
     this.widgets.workspace = new Workspace({
         parent: _this.screen,
         left: _this.config.view.sidew + 1,
+        right: 0,
         top: 2,
-        bottom: 0,
-        right: 0
+        bottom: 5,
+        border: true,
+        content: "starting content"
+        //bottom: 2,
     });
+
 
     //project tree on the left
     this.widgets.sidebar = new SideBar({
         parent: _this.screen,
         left: 0,
         top: 2,
-        bottom: 0,
+        //bottom: 0,
         width: _this.config.view.sidew,
     });
+
 }
 
 View.prototype.register_actions = function()
@@ -150,6 +213,9 @@ View.prototype.setWinFocus = function(win){
             break;
         case _this.pwin.menu:
             _this.widgets.menubar.focus();
+            break;
+        case _this.pwin.logger:
+            _this.widgets.logger.focus();
             break;
     }
 }

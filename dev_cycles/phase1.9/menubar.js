@@ -18,6 +18,7 @@ function MenuBar(options) {
     options.height = options.height || 1;
     options.mouse = options.mouse || true;
     options.vi = options.vi || true;
+    options.scrollable = options.scrollable || true;
     //options.autoCommandKeys = options.autoCommandKeys || true;
     // options.items = options.items || [
     //     'In',
@@ -62,9 +63,11 @@ function MenuBar(options) {
             _this.parent.emit('key '+nkey.full, 'C-c', nkey);
         },
         TestPrompt: function(){
-            let prompt = blessed.prompt({
+            let prompt = new blessed.prompt({
                 parent: _this.screen,
                 keys: true,
+                tags: true,
+                align: 'center',
                 left: 'center',
                 top: 'center',
                 width: '50%',
@@ -73,10 +76,16 @@ function MenuBar(options) {
                 border: {
                     type: 'line',
                 },
+                style: {
+                bg: 'blue',
+                fg: 'white',
+                },
                 content: 'Submit or cancel?'
             })
 
-            prompt.input('would you like to play a game?', 't i ', function(err, data){
+            //prompt._.cancel.setContent("thing")
+
+            prompt.input('\nWould you like to play a game?', 't i ', function(err, data){
                 //console.log("input - got here: er=%s, c=%s",er, c);
                 let response = {
                     type: 'prompt',
@@ -176,6 +185,7 @@ MenuBar.prototype.register_actions = function(view){
     });
     _this.on('testprompt', function(data){
         //console.log(JSON.stringify(data, null, 2));
+        _this.selectTab(0)
         _this.screen.render();
     });
 }
