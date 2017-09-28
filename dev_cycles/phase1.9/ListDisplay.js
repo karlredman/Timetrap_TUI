@@ -30,18 +30,18 @@ function ListDispaly(options) {
         //"other",   //TODO: add user defined displays (from contrib filters)
     ];
 
-    //TODO: find max width of items
+    //TODO: find max width of items based on parent element from listbar
     var maxlen = 0;
     for( let i=0; i < options.items.length; i++){
         if ( options.items[i].length > maxlen ){
             maxlen = options.items[i].length
         }
     }
-    //options.width = maxlen + 2; // TODO: WHY +2 ??
+    maxlen = maxlen + 2;                                        //+2 for borders
 
-    //options.height = options.height || "shrink";
-    options.height = 5;
-    options.width = options.width || "shrink";
+    options.width = options.width || maxlen;
+    options.height = options.height || options.items.length+2;  //+2 for borders
+    //options.height = 5;
 
     // to be overridden
     // default to undefined so parent takes over
@@ -81,7 +81,7 @@ function ListDispaly(options) {
     options.hidden = false;
     options.style.inverse = false;
     options.fixed = true;
-    options.shadow = true;
+    options.shadow = options.shadow || false;
 
     //inherit from textarea
     blessed.list.call(this, options);

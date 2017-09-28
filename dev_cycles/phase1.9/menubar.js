@@ -4,10 +4,12 @@ var blessed = require('blessed'),
 var DialogPrompt = require('./DialogPrompt'),
     DialogQuestion = require('./DialogQuestion'),
     DialogMessage = require('./DialogMessage'),
+    DialogAlert = require('./DialogAlert'),
     ListDisplay = require('./ListDisplay');
 var util = require('util');
 
 function MenuBar(options) {
+
 
     if (!(this instanceof Node)) return new MenuBar(options);
     let _this=this;
@@ -41,7 +43,12 @@ function MenuBar(options) {
 
     options.style.selected = options.style.selected || {};
     options.style.selected.bg = options.style.selected.bg || "black";
-    options.style.selected.fg = options.style.selected.fg || "white";
+    options.style.selected.fg = options.style.selected.fg || "lightblue";
+
+    ////////////////
+    // TODO: Add 'unselected' state for items (on a timer)
+    // options.style.selected.bg = options.style.selected.bg || null;
+    // options.style.selected.fg = options.style.selected.fg || "white";
 
     // if (options.commands || options.items) {
     //     this.setItems(options.commands || options.items);
@@ -53,9 +60,9 @@ function MenuBar(options) {
 
     this.options = options;
 
+    // TODO: move these calls to view in a standardized format
     options.items = options.commands || {
         In: function(){
-            // TODO: replace these with 'commands' from view
             let prompt = new DialogPrompt({target: _this, parent: _this.screen});
             prompt.cannedInput('checkIn');
         },
@@ -72,15 +79,11 @@ function MenuBar(options) {
             prompt.cannedInput('resume');
         },
         Display: function(){
-            //console.log("+++++++++++++++++++\n"+util.inspect(_this.items[4].position,null, false));
             let display_menu = new ListDisplay({
                 parent: _this.screen,
-                //top: 'center',
-                top: _this.items[4].position.top+1, //offset one below
-                left: _this.items[4].position.left+3, //offset to the right
-                //left: _this.options.items
-                width: _this.items[4].position.width,
-                height: "50%",
+                top: _this.items[4].position.top+1,         //offset one below
+                left: _this.items[4].position.left+3,       //offset to the right
+                width: _this.items[4].position.width,       //the width of 'Display'
             });
             display_menu.focus();
             _this.screen.render();
@@ -116,8 +119,17 @@ function MenuBar(options) {
             }
         },
         Test: function() {
+            // TODO: move alert to screen level for debugging
             let m = new DialogMessage({target: _this, parent: _this.screen});
             m.alert('testing: '+ _this.view.config.timetrap_config.tui_question_prompts.value);
+            //_this.items[8].style.bg = "yellow";
+        },
+        Test2: function() {
+            // TODO: move alert to screen level for debugging
+            let output = util.inspect(_this.items[8], null, true);
+            //let alert = new DialogAlert({target: _this, parent: _this.screen});
+            //m.alert('testing: '+ _this.view.config.timetrap_config.tui_question_prompts.value);
+            _this.view.widgets.workspace.setContent(output);
         }
     }
 
@@ -149,7 +161,13 @@ MenuBar.prototype.register_actions = function(view){
             || (_this.options['vi'] && key.name === 'h')
             //|| (key.shift && key.name === 'tab')
         ) {
+            // let item = _this.items[_this.selected];
+            // item.style.bg = null;
+            // item.style.fg = "white";
             _this.moveLeft();
+            //item = _this.items[_this.selected];
+            // item.style.bg = "black";
+            // item.style.fg = "lightblue";
             _this.screen.render();
             // Stop propagation if we're in a form.
             //if (key.name === 'tab') return false;
@@ -159,7 +177,13 @@ MenuBar.prototype.register_actions = function(view){
             || (_this.options['vi'] && key.name === 'l')
             //|| key.name === 'tab'
         ) {
+            // let item = _this.items[_this.selected];
+            // item.style.bg = null;
+            // item.style.fg = "white";
             _this.moveRight();
+            // item = _this.items[_this.selected];
+            // item.style.bg = "black";
+            // item.style.fg = "lightblue";
             _this.screen.render();
             // Stop propagation if we're in a form.
             //if (key.name === 'tab') return false;
@@ -172,6 +196,14 @@ MenuBar.prototype.register_actions = function(view){
             let item = _this.items[_this.selected];
             if (item._.cmd.callback) {
                 item._.cmd.callback();
+
+                //TODO: timer to set 'unselected'
+                // setTimeout(function(){
+                //     // item.style.bg = null;
+                //     // item.style.fg = "white";
+                //     _this.select(0);
+                //     _this.screen.render();
+                // }, 1000);
             }
             _this.screen.render();
             return;
