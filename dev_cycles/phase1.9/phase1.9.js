@@ -3,36 +3,68 @@
 // packages
 var blessed = require('blessed'),
     contrib = require('blessed-contrib');
+var opt = require('commander');
 
 // app packages
-var Configuration = require('./config');
-var DirTree = require('./dirtree');
-var ViewControl = require('./viewcontrol');
+var Configuration = require('./config'),
+    DirTree = require('./dirtree'),
+    ViewControl = require('./viewcontrol'),
+    Timetrap = require('./timetrap');
 
 var screen = blessed.screen({
     autoPadding: true,
     smartCSR: true
 });
 
-// Quit on `q`, or `Control-C` when the focus is on the screen.
+// Quit on `Control-C`
 screen.key(['C-c'], function(ch, key) {
-    //console.log(JSON.stringify(ch)+":"+JSON.stringify(key))
     process.exit(0);
 });
 
 function main(argv, callback) {
+    let _this = this;
+
     //get config data
-    let config = new Configuration();
+    let config = new Configuration("0.0.0");
     config.fetch();
 
     //adjust config with commandline
 
+    let conf = config.timetrap_config //convenienc
+    opt
+        .version(config.version)
+        .description(
+            "* All boolians default to true."
+            +"\n"
+            +"  * Options override configuration file:"
+            +"\n"
+            +"    (Using: "+conf.config_file+")."
+        )
+        .option('-d, --developer_mode [true|false]',
+            conf.tui_developer_mode.desc,
+            conf.tui_developer_mode.value)
+        .option('-q, --question_prompts [true|false]',
+            conf.tui_question_prompts.desc,
+            conf.tui_question_prompts.value)
+        .option('-c, --print_config',
+            "Print the configuration in JSON and exit")  // TODO
+    opt.parse(process.argv);
+
+    // map arguments (commandline overrides config file)
+    // TODO: figure out a better way to do this
+    config.timetrap_config.tui_developer_mode.value = opt.developer_mode;
+    config.timetrap_config.tui_question_prompts.value = opt.question_prompts
+
+    //console.log(config.timetrap_config.tui_question_prompts.value); process.exit(0)
+
     // instantiate supporting objects
     let dirtree = new DirTree(config);
+    let timetrap = new Timetrap(config);
 
     // the controller of views
     //ViewControl.viewcontrol = new ViewControl(config, screen);
-    ViewControl.viewcontrol = new ViewControl({config: config, screen: screen, dirtree: dirtree});
+    ViewControl.viewcontrol = new ViewControl({config: config, screen: screen,
+        dirtree: dirtree, timetrap: timetrap});
 
     // return start(data, function(err) {
     //     if (err) return callback(err);

@@ -2,7 +2,7 @@
 var blessed = require('blessed'),
     Node = blessed.Node;
 
-function DialogQuestion(options) {
+function DialogMessage(options) {
 
     if (!(this instanceof Node)) return new MenuBar(options);
     let _this=this;
@@ -11,7 +11,7 @@ function DialogQuestion(options) {
     _this.screen = options.parent; // required
 
     //the target of the handler - required
-    _this.target = options.target;
+    _this.target = options.target || undefined;
 
     //if true: dialog is already in progress
     // not sure i want to implement this yet -needs bigger infrastructure
@@ -34,36 +34,17 @@ function DialogQuestion(options) {
     options.style.bg = options.style.bg || 'blue';
     options.style.fg = options.style.fg || 'white';
 
-    blessed.question.call(this, options);
+    blessed.message.call(this, options);
 }
-DialogQuestion.prototype = Object.create(blessed.question.prototype);
-DialogQuestion.prototype.constructor = DialogQuestion;
+DialogMessage.prototype = Object.create(blessed.message.prototype);
+DialogMessage.prototype.constructor = DialogMessage;
 
-DialogQuestion.prototype.cannedInput = function(type){
+DialogMessage.prototype.alert = function(message){
     let _this = this;
 
-    let types = {
-        stopAll:{
-			message: "Stop {bold}All{/bold} running timers.\n{bold}Are you sure?{/bold}",
-        },
-        exit:{
-			message: "{bold}EXIT{/bold}\n{bold}Are you sure?{/bold}",
-        },
-    };
-
-	let message = "\n"+types[type].message;
-
-    _this.ask(message, function(err, data){
-
-        let response = {
-            type: type,
-            data: data,
-            obj: _this
-        };
-
-        _this.target.emit('question', response);
-    });
+    let delay = 0; //until keypress
+    _this.display("\n"+message, delay, function(err, data){});
 }
 
-DialogQuestion.prototype.type = 'DialogQuestion';
-module.exports = DialogQuestion;
+DialogMessage.prototype.type = 'DialogMessage';
+module.exports = DialogMessage;

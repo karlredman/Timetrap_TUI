@@ -19,11 +19,11 @@ DirTree.prototype.walk = function(dir) {
 
     let stats = fs.lstatSync(dir);
     if (stats.isDirectory()) {
-        if ( Array.isArray(this.config.timetrap_config.tui_skip_paths) ){
+        if ( Array.isArray(this.config.timetrap_config.tui_skip_paths.value) ){
             //the setting is required to be an array
-            let i, len = this.config.timetrap_config.tui_skip_paths.length;
+            let i, len = this.config.timetrap_config.tui_skip_paths.value.length;
             for ( i=0; i<len; ++i ) {
-                let pattern = this.config.timetrap_config.tui_skip_paths[i];
+                let pattern = this.config.timetrap_config.tui_skip_paths.value[i];
                 if( minimatch(dir, pattern, { matchBase: true})){
                     //filename is in the skip list
                     return;
@@ -36,7 +36,7 @@ DirTree.prototype.walk = function(dir) {
 
         let info = {
             path: dir,
-            rpath: dir.replace(this.config.timetrap_config.tui_projects_template_path+'/',''),
+            rpath: dir.replace(this.config.timetrap_config.tui_projects_template_path.value+'/',''),
             name: path.basename(dir),
             type: "directory",
             extended: true

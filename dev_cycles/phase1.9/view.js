@@ -16,14 +16,14 @@ var Logger = require('./logger');
 function View(objects) {
 
     let _this=this;
-    this.widgets = {};
-    this.screen = objects.screen;
-    this.config = objects.config;
+    _this.widgets = {};
+    _this.screen = objects.screen;
+    _this.config = objects.config;
 
     //fetch projects list
     //this.widgets.dirtree = new DirTree(config);
     this.widgets.dirtree = objects.dirtree;
-    let proj_tree = this.widgets.dirtree.fetch(this.config.timetrap_config.tui_projects_template_path);
+    let proj_tree = this.widgets.dirtree.fetch(this.config.timetrap_config.tui_projects_template_path.value);
 
     this.config.view.sidew = this.widgets.dirtree.getMaxSideNameLen();   //side menu width
     this.config.view.numwnd = 3;                    //number of windows
