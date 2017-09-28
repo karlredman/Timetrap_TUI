@@ -85,7 +85,7 @@ function MenuBar(options) {
             display_menu.focus();
             _this.screen.render();
         },
-        StopAll: function(){
+        Stop_all: function(){
             let question = new DialogQuestion({target: _this, parent: _this.screen});
             if( _this.view.config.timetrap_config.tui_question_prompts.value === true ){
                 question.cannedInput('stopAll');

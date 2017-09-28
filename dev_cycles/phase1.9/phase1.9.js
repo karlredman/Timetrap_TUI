@@ -29,26 +29,47 @@ function main(argv, callback) {
     config.fetch();
 
     //adjust config with commandline
-
     let conf = config.timetrap_config //convenienc
     opt
         .version(config.version)
         .description(
-            "* All boolians default to true."
+            "Written by: Karl N. Redman"
             +"\n"
-            +"  * Options override configuration file:"
+            +"  http://github.com/karlredman/Timetrap_TUI"
+            +"\n"
+            +"  -----------------------------------------"
+            +"\n"
+            +"  * Default Values are shown in CAPS."
+            +"\n"
+            +"  * Configuration file entries override defaults."
+            +"\n"
+            +"  * Commandline options override configuration file:"
             +"\n"
             +"    (Using: "+conf.config_file+")."
         )
-        .option('-d, --developer_mode [true|false]',
+        .option('-d, --developer_mode [true|FALSE]',
             conf.tui_developer_mode.desc,
             conf.tui_developer_mode.value)
-        .option('-q, --question_prompts [true|false]',
+        .option('-c, --create_missing_sheets [true|FALSE]',
+            conf.tui_create_missing_sheets.desc,
+            conf.tui_create_missing_sheets.value)
+        .option('-C, --recreate_sheets [true|FALSE]',
+            conf.tui_recreate_sheets.desc,
+            conf.tui_recreate_sheets.value)
+        .option('-H, --HELP',
+            "Print full documentation help and exit")    // TODO
+        .option('-p, --print_config [true|FALSE]',
+            "Print the configuration in JSON and exit")  // TODO
+        .option('-q, --question_prompts [TRUE|false]',
             conf.tui_question_prompts.desc,
             conf.tui_question_prompts.value)
-        .option('-c, --print_config',
-            "Print the configuration in JSON and exit")  // TODO
     opt.parse(process.argv);
+
+
+    if(opt.HELP || opt.print_config) {
+        console.log("Information is supposed to be printed here. Derp!")
+        process.exit(0);
+    }
 
     // map arguments (commandline overrides config file)
     // TODO: figure out a better way to do this
