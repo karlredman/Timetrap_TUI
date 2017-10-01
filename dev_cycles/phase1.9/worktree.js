@@ -5,8 +5,8 @@ var blessed = require('blessed'),
 // Box = blessed.Box,
 
 
-function SideBar(options) {
-    if (!(this instanceof Node)) return new SideBar(options);
+function WorkTree(options) {
+    if (!(this instanceof Node)) return new WorkTree(options);
 
     //options
     // set overridable defaults
@@ -60,11 +60,11 @@ function SideBar(options) {
     //inherit from textarea
     contrib.tree.call(this, options);
 }
-SideBar.prototype = Object.create(contrib.tree.prototype);
-SideBar.prototype.constructor = SideBar;
+WorkTree.prototype = Object.create(contrib.tree.prototype);
+WorkTree.prototype.constructor = WorkTree;
 
 
-SideBar.prototype.register_actions = function(view){
+WorkTree.prototype.register_actions = function(view){
 
 	this.view = view;
     this.rows.view = view;
@@ -109,24 +109,24 @@ SideBar.prototype.register_actions = function(view){
         //     return;
         // }
         let idx = self.getItemIndex(this.selected);
-        _this.view.widgets.workspace.emit('syncSelect', idx, 'element click');
+        _this.view.widgets.sidebar.emit('syncSelect', idx, 'element click');
     });
 
     // manage mouse things
     _this.rows.on('element wheeldown', function(foo, bar) {
         let self = this;
         let idx = self.getItemIndex(this.selected);
-        _this.view.widgets.workspace.emit('syncSelect', idx, 'element wheeldown');
+        _this.view.widgets.sidebar.emit('syncSelect', idx, 'element wheeldown');
     });
     _this.rows.on('element wheelup', function(foo, bar) {
         let self = this;
         let idx = self.getItemIndex(this.selected);
-        _this.view.widgets.workspace.emit('syncSelect', idx, 'element wheelup');
+        _this.view.widgets.sidebar.emit('syncSelect', idx, 'element wheelup');
     });
     _this.rows.on('element click', function(foo, bar) {
         let self = this;
         let idx = self.getItemIndex(this.selected);
-        _this.view.widgets.workspace.emit('syncSelect', idx, 'element click');
+        _this.view.widgets.sidebar.emit('syncSelect', idx, 'element click');
     });
 
     // _this.rows.key(this.options.keys, function() {
@@ -151,5 +151,5 @@ SideBar.prototype.register_actions = function(view){
 }
 
 
-SideBar.prototype.type = 'SideBar';
-module.exports = SideBar;
+WorkTree.prototype.type = 'WorkTree';
+module.exports = WorkTree;

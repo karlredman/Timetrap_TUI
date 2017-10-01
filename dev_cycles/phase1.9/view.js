@@ -7,8 +7,9 @@ var blessed = require('blessed'),
 // panels
 var MenuBar = require('./menubar');
 var SideBar = require('./sidebar');
-var Workspace = require('./workspace');
+//var Workspace = require('./workspace');
 var WorkspaceList = require('./workspacelist');
+//var WorkspaceTree = require('./worktree');
 var Logger = require('./logger');
 //var HelpView = require('./helpview');
 
@@ -144,6 +145,7 @@ function View(objects) {
 
     // set the tree data
     this.widgets.sidebar.setData(proj_tree);
+    //this.widgets.workspace.setData(proj_tree);
 
     //screen.render();
 }
@@ -179,7 +181,7 @@ View.prototype.create_widgets = function()
         parent: _this.screen,
         left: _this.config.view.sidew + 1,
         right: 0,
-        top: 3,         // TODO: adjusted because tree is goofy about top
+        top: 3,         //compensating for weird tree layout
         bottom: 2,
         //bottom: 2,
         //border: {type: "line"},

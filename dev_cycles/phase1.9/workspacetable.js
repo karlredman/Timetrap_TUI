@@ -13,6 +13,23 @@ var util = require('util');
 function WorkspaceList(options) {
   if (!(this instanceof Node)) return new WorkspaceList(options);
 
+    options.style = options.style || {};
+    options.style.selected = options.style.selected || {};
+    options.style.selected.bg = options.style.selected.bg || "blue";
+    options.style.selected.fg = options.style.selected.fg || "white";
+
+    options.style.item = options.style.item || {};
+    options.style.item.bg = options.style.item.bg || null;
+    options.style.item.fg = options.style.item.fg || "yellow";
+
+    options.mouse = options.mouse || true;
+    // options.mouse = options.mouse || false;
+
+    options.keys = options.keys || true;
+    options.vi = options.vi || true;
+    options.interactive = options.interactive || true;
+    options.invertSelected = options.invertSelected || true;
+
     // options.items = [
     //     ["one", "stuff", "things"],
     //     ["two", "stuff", "things"],
@@ -35,9 +52,7 @@ function WorkspaceList(options) {
     //     ["nineteen", "stuff", "things"],
     //     ["twenty", "stuff", "things"],
     // ];
-    let items = {
-        headers: ["column 1", "column 2"],
-        data:[
+    let items = [
         ["one", "stuff"],
         ["two", "stuff"],
         ["three", "stuff"],
@@ -58,14 +73,12 @@ function WorkspaceList(options) {
         ["eighteen", "stuff"],
         ["nineteen", "stuff"],
         ["twenty", "stuff"]
-    ]};
+    ];
 
-	contrib.table.call(this, options);
+	blessed.listtable.call(this, options);
     this.setData(items)
-    //this.focus;
-    //this.select(0)
 }
-WorkspaceList.prototype = Object.create(contrib.table.prototype);
+WorkspaceList.prototype = Object.create(blessed.listtable.prototype);
 WorkspaceList.prototype.constructor = WorkspaceList;
 
 WorkspaceList.prototype.register_actions = function(view){

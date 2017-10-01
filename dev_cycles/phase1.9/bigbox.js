@@ -78,13 +78,13 @@ BigBox.prototype.register_actions = function(){
             || ( key.name === 'pagedown')
         )
         {
+            //console.log(util.inspect(key, true))
             _this.emit('keypress', 'C-d',{name:'d',sequence: '\u0004', ctrl: true, full:'C-d'})
         }
         if ( key.name === 'pageup')
         {
             _this.emit('keypress', 'C-u',{name:'u',sequence: '\u0015', ctrl: true, full:'C-u'})
         }
-        //console.log(util.inspect(key, true))
 
     });
 
