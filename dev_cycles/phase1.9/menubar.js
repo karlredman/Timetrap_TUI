@@ -5,7 +5,8 @@ var DialogPrompt = require('./DialogPrompt'),
     DialogQuestion = require('./DialogQuestion'),
     DialogMessage = require('./DialogMessage'),
     DialogAlert = require('./DialogAlert'),
-    ListDisplay = require('./ListDisplay');
+    ListDisplay = require('./ListDisplay'),
+    BigBox = require('./bigbox');
 var util = require('util');
 
 function MenuBar(options) {
@@ -120,9 +121,12 @@ function MenuBar(options) {
         },
         Test: function() {
             // TODO: move alert to screen level for debugging
-            let m = new DialogMessage({target: _this, parent: _this.screen});
-            m.alert('testing: '+ _this.view.config.timetrap_config.tui_question_prompts.value);
+            // let m = new DialogMessage({target: _this, parent: _this.screen});
+            // m.alert('testing: '+ _this.view.config.timetrap_config.tui_question_prompts.value);
             //_this.items[8].style.bg = "yellow";
+            let bb = new BigBox({parent: _this.screen});
+            let output = util.inspect(_this.items[8], null, true);
+            bb.setContent(output);
         },
         Test2: function() {
             // TODO: move alert to screen level for debugging

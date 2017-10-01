@@ -8,6 +8,7 @@ var blessed = require('blessed'),
 var MenuBar = require('./menubar');
 var SideBar = require('./sidebar');
 var Workspace = require('./workspace');
+var WorkspaceList = require('./workspacelist');
 var Logger = require('./logger');
 //var HelpView = require('./helpview');
 
@@ -174,24 +175,23 @@ View.prototype.create_widgets = function()
 
     // the main area
     //var mainw = blessed.box({
-    this.widgets.workspace = new Workspace({
+    this.widgets.workspace = new WorkspaceList({
         parent: _this.screen,
         left: _this.config.view.sidew + 1,
         right: 0,
-        top: 2,
+        top: 3,         // TODO: adjusted because tree is goofy about top
         bottom: 2,
-        border: true,
-        content: "starting content"
         //bottom: 2,
+        //border: {type: "line"},
+        //content: "starting content"
     });
-
 
     //project tree on the left
     this.widgets.sidebar = new SideBar({
         parent: _this.screen,
         left: 0,
         top: 2,
-        //bottom: 0,
+        bottom: 0,
         width: _this.config.view.sidew,
     });
 
