@@ -48,16 +48,16 @@ function View(objects) {
     //the current pane default
     this.curWin = 1;
 
-    // horizontal seperator line 1
-    let seph1 = blessed.line({
-        parent: this.screen,
-        orientation: 'horizontal',
-        top: 1,
-        left: 0,
-        //right: _this.config.view.sidew,
-        right: 0,
-        fg: "red"
-    });
+    // // horizontal seperator line 1
+    // let seph1 = blessed.line({
+    //     parent: this.screen,
+    //     orientation: 'horizontal',
+    //     top: 1,
+    //     left: 0,
+    //     //right: _this.config.view.sidew,
+    //     right: 0,
+    //     fg: "red"
+    // });
 
     // // horizontal seperator line 2
     // let seph2 = blessed.line({
@@ -69,26 +69,26 @@ function View(objects) {
     //     fg: "red"
     // });
 
-    //logger seperator line
-    let sepl = blessed.line({
-        parent: this.screen,
-        orientation: 'horizontal',
-        left: _this.config.view.sidew+1,
-        bottom: 1,
-        right: 0,
-        fg: "red"
-    });
+    // //logger seperator line
+    // let sepl = blessed.line({
+    //     parent: this.screen,
+    //     orientation: 'horizontal',
+    //     left: _this.config.view.sidew+1,
+    //     bottom: 1,
+    //     right: 0,
+    //     fg: "red"
+    // });
 
     // verticle seperator line
-    let sepv1 = blessed.line({
-        parent: this.screen,
-        orientation: 'vertical',
-        left: _this.config.view.sidew,
-        top: 2,
-        bottom: 0,
-        fg: "black",
-        //bg: "black"
-    });
+    // let sepv1 = blessed.line({
+    //     parent: this.screen,
+    //     orientation: 'vertical',
+    //     left: _this.config.view.sidew,
+    //     top: 0,
+    //     bottom: 0,
+    //     //fg: "green",
+    //     //bg: "black"
+    // });
 
     // let sepv2 = blessed.line({
     //     parent: this.screen,
@@ -102,31 +102,31 @@ function View(objects) {
 
     this.create_widgets();
 
-    //seperator  bar color change on focus chage
-    //// side menue focus
-    this.screen.setEffects(sepv1, this.widgets.sidebar, 'focus', 'blur', { fg: 'yellow' });
-    // this.screen.setEffects(sepv2, this.widgets.sidebar, 'focus', 'blur', { fg: 'green' });
-    this.screen.setEffects(seph1, this.widgets.sidebar, 'focus', 'blur', { fg: 'red' });
-    // this.screen.setEffects(seph2, this.widgets.sidebar, 'focus', 'blur', { fg: 'red' });
-    this.screen.setEffects(sepl, this.widgets.sidebar, 'focus', 'blur', { fg: 'red' });
-    //// top bar
-    this.screen.setEffects(sepv1, this.widgets.menubar, 'focus', 'blur', { fg: 'red' });
-    // this.screen.setEffects(sepv2, this.widgets.menubar, 'focus', 'blur', { fg: 'red' });
-    this.screen.setEffects(seph1, this.widgets.menubar, 'focus', 'blur', { fg: 'green' });
-    // this.screen.setEffects(seph2, this.widgets.menubar, 'focus', 'blur', { fg: 'green' });
-    this.screen.setEffects(sepl, this.widgets.menubar, 'focus', 'blur', { fg: 'red' });
-    //// main textarea focus
-    this.screen.setEffects(sepv1, this.widgets.workspace, 'focus', 'blur', { fg: 'blue' });
-    // this.screen.setEffects(sepv2, this.widgets.workspace, 'focus', 'blur', { fg: 'red' });
-    this.screen.setEffects(seph1, this.widgets.workspace, 'focus', 'blur', { fg: 'blue' });
-    // this.screen.setEffects(seph2, this.widgets.workspace, 'focus', 'blur', { fg: 'green' });
-    this.screen.setEffects(sepl, this.widgets.workspace, 'focus', 'blur', { fg: 'blue' });
-    //// log logger focus
-    this.screen.setEffects(sepv1, this.widgets.logger, 'focus', 'blur', { fg: 'red' });
-    // this.screen.setEffects(sepv2, this.widgets.logger, 'focus', 'blur', { fg: 'red' });
-    this.screen.setEffects(seph1, this.widgets.logger, 'focus', 'blur', { fg: 'red' });
-    // this.screen.setEffects(seph2, this.widgets.logger, 'focus', 'blur', { fg: 'red' });
-    this.screen.setEffects(sepl, this.widgets.logger, 'focus', 'blur', { fg: 'green' });
+    // //seperator  bar color change on focus chage
+    // //// side menue focus
+    // this.screen.setEffects(sepv1, this.widgets.sidebar, 'focus', 'blur', { fg: 'yellow' });
+    // // this.screen.setEffects(sepv2, this.widgets.sidebar, 'focus', 'blur', { fg: 'green' });
+    // this.screen.setEffects(seph1, this.widgets.sidebar, 'focus', 'blur', { fg: 'red' });
+    // // this.screen.setEffects(seph2, this.widgets.sidebar, 'focus', 'blur', { fg: 'red' });
+    // this.screen.setEffects(sepl, this.widgets.sidebar, 'focus', 'blur', { fg: 'red' });
+    // //// top bar
+    // this.screen.setEffects(sepv1, this.widgets.menubar, 'focus', 'blur', { fg: 'red' });
+    // // this.screen.setEffects(sepv2, this.widgets.menubar, 'focus', 'blur', { fg: 'red' });
+    // this.screen.setEffects(seph1, this.widgets.menubar, 'focus', 'blur', { fg: 'green' });
+    // // this.screen.setEffects(seph2, this.widgets.menubar, 'focus', 'blur', { fg: 'green' });
+    // this.screen.setEffects(sepl, this.widgets.menubar, 'focus', 'blur', { fg: 'red' });
+    // //// main textarea focus
+    // this.screen.setEffects(sepv1, this.widgets.workspace, 'focus', 'blur', { fg: 'green' });
+    // // this.screen.setEffects(sepv2, this.widgets.workspace, 'focus', 'blur', { fg: 'red' });
+    // this.screen.setEffects(seph1, this.widgets.workspace, 'focus', 'blur', { fg: 'green' });
+    // // this.screen.setEffects(seph2, this.widgets.workspace, 'focus', 'blur', { fg: 'green' });
+    // this.screen.setEffects(sepl, this.widgets.workspace, 'focus', 'blur', { fg: 'green' });
+    // //// log logger focus
+    // this.screen.setEffects(sepv1, this.widgets.logger, 'focus', 'blur', { fg: 'red' });
+    // // this.screen.setEffects(sepv2, this.widgets.logger, 'focus', 'blur', { fg: 'red' });
+    // this.screen.setEffects(seph1, this.widgets.logger, 'focus', 'blur', { fg: 'red' });
+    // // this.screen.setEffects(seph2, this.widgets.logger, 'focus', 'blur', { fg: 'red' });
+    // this.screen.setEffects(sepl, this.widgets.logger, 'focus', 'blur', { fg: 'green' });
 
 
     /////////////////////////////////////////////////////
@@ -148,6 +148,7 @@ function View(objects) {
     //this.widgets.workspace.setData(proj_tree);
 
     //screen.render();
+    this.setWinFocus(this.pwin.side);
 }
 
 
@@ -155,46 +156,70 @@ View.prototype.create_widgets = function()
 {
     let _this=this;
 
+    // the main area
+    //var mainw = blessed.box({
+    this.widgets.workspace = new WorkspaceList({
+        parent: _this.screen,
+        left: _this.config.view.sidew,
+        right: 0,
+        top: 1,         //compensating for weird tree layout
+        bottom: 1,
+        border: {type: "line"},
+        //bottom: 2,
+        //border: {type: "line"},
+        //content: "starting content"
+    });
+
+
+
+    //project tree on the left
+    this.widgets.sidebar = new SideBar({
+        parent: _this.screen,
+        left: 0,
+        top: 1,
+        bottom: 1,
+        width: _this.config.view.sidew,
+        border: {type: "line"},
+    });
+
     //menubar at top
     this.widgets.menubar = new MenuBar({
         autoCommandKeys: true,
         parent: _this.screen,
         left: 0,
         top: 0,
+        //width: _this.config.view.sidew,
     });
+
+
 
     //the logger at bottom of main window
     this.widgets.logger = new Logger({
         parent: _this.screen,
-        left: _this.config.view.sidew + 1,
-        right: 0,
+        //width: _this.config.view.sidew,
+        left: 0,
+        //right: 0,
         bottom: 0,
         height: 1,
+        //border: {type: "line"},
         //content: "xxxxxxxx\nxxxxxxxxxx\nxxxxxx\nxxxxxxxx"
         //bottom: 0,
         //width: 30
     });
 
-    // the main area
-    //var mainw = blessed.box({
-    this.widgets.workspace = new WorkspaceList({
+    //the logger at bottom of main window
+    this.widgets.loggerx = new Logger({
         parent: _this.screen,
-        left: _this.config.view.sidew + 1,
-        right: 0,
-        top: 2,         //compensating for weird tree layout
-        bottom: 0,
-        //bottom: 2,
+        width: _this.config.view.sidew-2,
+        left: 1,
+        //right: 0,
+        //bottom: 0,
+        height: 1,
+        top: 2,
         //border: {type: "line"},
-        //content: "starting content"
-    });
-
-    //project tree on the left
-    this.widgets.sidebar = new SideBar({
-        parent: _this.screen,
-        left: 0,
-        top: 3,
-        bottom: 0,
-        width: _this.config.view.sidew,
+        //content: "xxxxxxxx\nxxxxxxxxxx\nxxxxxx\nxxxxxxxx"
+        //bottom: 0,
+        //width: 30
     });
 
 }
@@ -208,15 +233,79 @@ View.prototype.setWinFocus = function(win){
     let _this = this;
     switch(win){
         case _this.pwin.mainw:
+            _this.widgets.workspace.options.style.border.fg = "green";
+            _this.widgets.sidebar.options.style.border.fg = "red";
+
+            _this.widgets.menubar.options.style.bg = "black";
+            _this.widgets.menubar.options.style.fg = "white"
+            _this.widgets.menubar.options.style.item.bg = "black";
+            _this.widgets.menubar.options.style.item.fg = "white"
+            _this.widgets.menubar.options.style.prefix.bg = "black";
+            _this.widgets.menubar.options.style.prefix.fg = "lightblack"
+            _this.widgets.menubar.options.style.selected.bg = "black";
+            _this.widgets.menubar.options.style.selected.fg = "white";
+
+            _this.screen.render();
             _this.widgets.workspace.focus();
             break;
         case _this.pwin.side:
+            _this.widgets.workspace.options.style.border.fg = "red";
+            _this.widgets.sidebar.options.style.border.fg = "green";
+
+            _this.widgets.menubar.options.style.bg = "black";
+            _this.widgets.menubar.options.style.fg = "white"
+            _this.widgets.menubar.options.style.item.bg = "black";
+            _this.widgets.menubar.options.style.item.fg = "white"
+            _this.widgets.menubar.options.style.prefix.bg = "black";
+            _this.widgets.menubar.options.style.prefix.fg = "lightblack"
+            _this.widgets.menubar.options.style.selected.bg = "black";
+            _this.widgets.menubar.options.style.selected.fg = "white";
+
+            _this.screen.render();
             _this.widgets.sidebar.focus();
             break;
         case _this.pwin.menu:
+            _this.widgets.workspace.options.style.border.fg = "red";
+            _this.widgets.sidebar.options.style.border.fg = "red";
+
+            // _this.widgets.menubar.options.style.bg = null;
+            // _this.widgets.menubar.options.style.fg = "white"
+            // _this.widgets.menubar.options.style.item.bg = null;
+            // _this.widgets.menubar.options.style.item.fg = "white"
+            // _this.widgets.menubar.options.style.prefix.bg = "yellow";
+            // _this.widgets.menubar.options.style.prefix.fg = "yellow"
+            // _this.widgets.menubar.options.style.selected.bg = "gray";
+            // _this.widgets.menubar.options.style.selected.fg = "white";
+
+            _this.widgets.menubar.options.style.bg = null;
+            _this.widgets.menubar.options.style.fg = "white"
+
+            _this.widgets.menubar.options.style.item.bg = null;
+            _this.widgets.menubar.options.style.item.fg = "white"
+
+            _this.widgets.menubar.options.style.prefix.bg = null;
+            _this.widgets.menubar.options.style.prefix.fg = "blue";
+
+            _this.widgets.menubar.options.style.selected.bg = null;
+            _this.widgets.menubar.options.style.selected.fg = "blue";
+
+            _this.screen.render();
             _this.widgets.menubar.focus();
             break;
         case _this.pwin.logger:
+            _this.widgets.workspace.options.style.border.fg = "red";
+            _this.widgets.sidebar.options.style.border.fg = "red";
+
+            _this.widgets.menubar.options.style.bg = "black";
+            _this.widgets.menubar.options.style.fg = "white"
+            _this.widgets.menubar.options.style.item.bg = "black";
+            _this.widgets.menubar.options.style.item.fg = "white"
+            _this.widgets.menubar.options.style.prefix.bg = "black";
+            _this.widgets.menubar.options.style.prefix.fg = "lightblack"
+            _this.widgets.menubar.options.style.selected.bg = "black";
+            _this.widgets.menubar.options.style.selected.fg = "white";
+
+            _this.screen.render();
             _this.widgets.logger.focus();
             break;
     }

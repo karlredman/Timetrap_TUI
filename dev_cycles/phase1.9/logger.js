@@ -72,7 +72,7 @@ Logger.prototype.register_actions = function(view){
     let _this = this;
 
     let i = 0
-    setInterval(function() {_this.log("new {red-fg}log{/red-fg} line " + i++); _this.screen.render()}, 5000)
+    setInterval(function() {_this.log("{center}new {red-fg}log{/red-fg} line xxxxx-xxxxx-xxxxx-xxxxx-xxxxx: {/}"+ i++); _this.screen.render()}, 5000)
 
     this.on('keypress', function(ch, key) {
         if (key.name === 'tab') {

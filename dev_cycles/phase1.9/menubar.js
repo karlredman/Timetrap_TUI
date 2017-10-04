@@ -38,7 +38,7 @@ function MenuBar(options) {
 
     options.style.prefix = options.style.prefix || {};
     options.style.prefix.bg = options.style.prefix.bg || null;
-    options.style.prefix.fg = options.style.prefix.fg || "lightblack";
+    options.style.prefix.fg = options.style.prefix.fg || "yellow";
 
     //options.invertSelected = true;
 
@@ -66,18 +66,42 @@ function MenuBar(options) {
         In: function(){
             let prompt = new DialogPrompt({target: _this, parent: _this.screen});
             prompt.cannedInput('checkIn');
+                setTimeout(function(){
+                    // item.style.bg = null;
+                    // item.style.fg = "white";
+                    _this.select(0);
+                    _this.screen.render();
+                }, 1000);
         },
         Out: function(){
             let prompt = new DialogPrompt({target: _this, parent: _this.screen});
             prompt.cannedInput('checkOut');
+                setTimeout(function(){
+                    // item.style.bg = null;
+                    // item.style.fg = "white";
+                    _this.select(0);
+                    _this.screen.render();
+                }, 1000);
         },
         Edit: function(){
             let prompt = new DialogPrompt({target: _this, parent: _this.screen});
             prompt.cannedInput('edit');
+                setTimeout(function(){
+                    // item.style.bg = null;
+                    // item.style.fg = "white";
+                    _this.select(0);
+                    _this.screen.render();
+                }, 1000);
         },
         Resume: function(){
             let prompt = new DialogPrompt({target: _this, parent: _this.screen});
             prompt.cannedInput('resume');
+                setTimeout(function(){
+                    // item.style.bg = null;
+                    // item.style.fg = "white";
+                    _this.select(0);
+                    _this.screen.render();
+                }, 1000);
         },
         Display: function(){
             let display_menu = new ListDisplay({
@@ -88,6 +112,12 @@ function MenuBar(options) {
             });
             display_menu.focus();
             _this.screen.render();
+                setTimeout(function(){
+                    // item.style.bg = null;
+                    // item.style.fg = "white";
+                    _this.select(0);
+                    _this.screen.render();
+                }, 1000);
         },
         Stop_all: function(){
             let question = new DialogQuestion({target: _this, parent: _this.screen});
@@ -98,6 +128,12 @@ function MenuBar(options) {
                 _this.emit('question', {type: 'stopAll', data: true});
             }
             //question.cannedInput('stopAll');
+                setTimeout(function(){
+                    // item.style.bg = null;
+                    // item.style.fg = "white";
+                    _this.select(0);
+                    _this.screen.render();
+                }, 1000);
         },
         Help: function(){
             let nkey = {
@@ -109,6 +145,12 @@ function MenuBar(options) {
                 full: "?"
             }
             _this.parent.emit('key '+nkey.full, nkey.full, nkey);
+                setTimeout(function(){
+                    // item.style.bg = null;
+                    // item.style.fg = "white";
+                    _this.select(0);
+                    _this.screen.render();
+                }, 1000);
         },
         eXit: function(){
             let question = new DialogQuestion({target: _this, parent: _this.screen});
@@ -118,6 +160,12 @@ function MenuBar(options) {
             else {
                 _this.emit('question', {type: 'exit', data: true});
             }
+                setTimeout(function(){
+                    // item.style.bg = null;
+                    // item.style.fg = "white";
+                    _this.select(0);
+                    _this.screen.render();
+                }, 1000);
         },
         Test: function() {
             // TODO: move alert to screen level for debugging
@@ -127,6 +175,12 @@ function MenuBar(options) {
             let bb = new BigBox({parent: _this.screen});
             let output = util.inspect(_this.items[8], null, true);
             bb.setContent(output);
+                setTimeout(function(){
+                    // item.style.bg = null;
+                    // item.style.fg = "white";
+                    _this.select(0);
+                    _this.screen.render();
+                }, 1000);
         },
         Test2: function() {
             // TODO: move alert to screen level for debugging
@@ -134,6 +188,12 @@ function MenuBar(options) {
             //let alert = new DialogAlert({target: _this, parent: _this.screen});
             //m.alert('testing: '+ _this.view.config.timetrap_config.tui_question_prompts.value);
             _this.view.widgets.workspace.setContent(output);
+                setTimeout(function(){
+                    // item.style.bg = null;
+                    // item.style.fg = "white";
+                    _this.select(0);
+                    _this.screen.render();
+                }, 1000);
         }
     }
 
@@ -201,7 +261,7 @@ MenuBar.prototype.register_actions = function(view){
             if (item._.cmd.callback) {
                 item._.cmd.callback();
 
-                //TODO: timer to set 'unselected'
+                // //TODO: timer to set 'unselected'
                 // setTimeout(function(){
                 //     // item.style.bg = null;
                 //     // item.style.fg = "white";
@@ -212,10 +272,6 @@ MenuBar.prototype.register_actions = function(view){
             _this.screen.render();
             return;
         }
-    });
-    _this.on('prompt', function(data){
-        //_this.select(0)
-        _this.screen.render();
     });
     _this.on('question', function(data){
         if ( data.type === 'exit' ) {

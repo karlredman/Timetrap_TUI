@@ -9,29 +9,33 @@ var util = require('util');
 function WorkspaceList(options) {
     if (!(this instanceof Node)) return new WorkspaceList(options);
 
+    options.style = options.style || {}
+    options.style.border = options.style.border || {}
+    options.style.border = options.style.border || {}
+
     let items = {
-        headers: ["column 1", "column 2", "column 3", "column 4", "column 5"],
+                headers: [" Running", " Today", " Total Time"],
         data: [
-        ["one", "stuff", "things", "four", "column 5"],
-        ["two", "stuff", "things", "four", "column 5"],
-        ["three", "stuff", "things", "four", "column 5"],
-        ["four", "stuff", "things", "four", "column 5"],
-        ["five", "stuff", "things", "four", "column 5"],
-        ["six", "stuff", "things", "four", "column 5"],
-        ["seven", "stuff", "things", "four", "column 5"],
-        ["eight", "stuff", "things", "four", "column 5"],
-        ["nine", "stuff", "things", "four", "column 5"],
-        ["ten", "stuff", "things", "four", "column 5"],
-        ["eleven", "stuff", "things", "four", "column 5"],
-        ["twelve", "stuff", "things", "four", "column 5"],
-        ["thirteen", "stuff", "things", "four", "column 5"],
-        ["fourteen", "stuff", "things", "four", "column 5"],
-        ["fifteen", "stuff", "things", "four", "column 5"],
-        ["sixteen", "stuff", "things", "four", "column 5"],
-        ["seventeen", "stuff", "things", "four", "column 5"],
-        ["eighteen", "stuff", "things", "four", "column 5"],
-        ["nineteen", "stuff", "things", "four", "column 5"],
-        ["twenty", "stuff", "things", "four", "column 5"],
+        ["XX000:00:00","XX000:00:00","00000:00:00"],
+        ["000:00:00","000:00:00","00000:00:00"],
+        ["000:00:00","000:00:00","00000:00:00"],
+        ["000:00:00","000:00:00","00000:00:00"],
+        ["000:00:00","000:00:00","00000:00:00"],
+        ["000:00:00","000:00:00","00000:00:00"],
+        ["000:00:00","000:00:00","00000:00:00"],
+        ["000:00:00","000:00:00","00000:00:00"],
+        ["000:00:00","000:00:00","00000:00:00"],
+        ["000:00:00","000:00:00","00000:00:00"],
+        ["000:00:00","000:00:00","00000:00:00"],
+        ["000:00:00","000:00:00","00000:00:00"],
+        ["000:00:00","000:00:00","00000:00:00"],
+        ["000:00:00","000:00:00","00000:00:00"],
+        ["000:00:00","000:00:00","00000:00:00"],
+        ["000:00:00","000:00:00","00000:00:00"],
+        ["000:00:00","000:00:00","00000:00:00"],
+        ["000:00:00","000:00:00","00000:00:00"],
+        ["000:00:00","000:00:00","00000:00:00"],
+        ["000:00:00","000:00:00","00000:00:00"],
     ]};
     // let items = {
     //     headers: ["column 1", "column 2"],
@@ -60,7 +64,8 @@ function WorkspaceList(options) {
     // ["twenty", "stuff"]
     // ]};
 
-    options.columnWidth = [10,10,10, 10, 10];
+    //["000:00:00","000:00:00","00000:00:00"],
+    options.columnWidth = [11,11,11];
     options.columnSpacing = 2;
     options.mouse = true;
     options.keys = true;
@@ -68,8 +73,8 @@ function WorkspaceList(options) {
     options.interactive = true;
     options.screen = options.parent;
 
-    this.grapKeys = true;
-    options.grapKeys = true;
+    this.grabKeys = true;
+    options.grabKeys = true;
 
     this.sendFocus = true;
     options.sendFocus = true;
@@ -84,6 +89,7 @@ function WorkspaceList(options) {
     this.focus();
     this.setData(items);
     this.rows.select(0)
+    this.options = options;
     //this.focus;
     //this.select(0)
     // this.setData(
@@ -99,34 +105,37 @@ WorkspaceList.prototype.constructor = WorkspaceList;
 WorkspaceList.prototype.register_actions = function(view){
     let _this = this;
     this.view = view;
+    this.rows.view = view;
 
     // manage mouse things
     _this.rows.on('element wheeldown', function(foo, bar) {
-        this.rows.select();
+        this.down();
         //console.log("element wheeldown")
         let idx = this.getItemIndex(this.selected);
         _this.view.widgets.sidebar.emit('syncSelect', idx, 'element wheeldown');
     });
     _this.rows.on('element wheelup', function(foo, bar) {
+        this.up();
         //console.log("element wheelup")
         let idx = this.getItemIndex(this.selected);
         //self.select(idx);
         _this.view.widgets.sidebar.emit('syncSelect', idx, 'element wheelup');
     });
-    _this.rows.on('element click', function(foo, bar) {
-        //console.log("element click")
-        let idx = this.getItemIndex(this.selected);
-        _this.focus();
-        _this.view.widgets.sidebar.emit('syncSelect', idx, 'element click');
+    _this.rows.on('element click', function(foo, data) {
+        let idx = data.y-4
+        // this.select(idx);
+        // this.view.widgets.sidebar.emit('syncSelect', idx, 'element click');
     });
-    _this.rows.on('click', function(foo, bar) {
-        this.focus();
-        let self = this;
-        //console.log("click")
+    _this.rows.on('click', function(data, bar) {
         //console.log(JSON.stringify(foo));
-        let idx = this.getItemIndex(this.selected);
-        self.select(idx);
-        _this.view.widgets.sidebar.emit('syncSelect', idx, 'element click');
+        let idx = data.y-4
+        this.select(idx);
+        this.view.widgets.sidebar.emit('syncSelect', idx, 'element click');
+        // console.log("click")
+        // console.log(JSON.stringify(foo));
+        // let idx = this.getItemIndex(this.selected);
+        // this.select(idx);
+        // this.view.widgets.sidebar.emit('syncSelect', idx, 'element click');
     });
 
 
