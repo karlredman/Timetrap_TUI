@@ -86,7 +86,7 @@ function View(objects) {
         left: _this.config.view.sidew,
         top: 2,
         bottom: 0,
-        fg: "green",
+        fg: "black",
         //bg: "black"
     });
 
@@ -104,7 +104,7 @@ function View(objects) {
 
     //seperator  bar color change on focus chage
     //// side menue focus
-    this.screen.setEffects(sepv1, this.widgets.sidebar, 'focus', 'blur', { fg: 'green' });
+    this.screen.setEffects(sepv1, this.widgets.sidebar, 'focus', 'blur', { fg: 'yellow' });
     // this.screen.setEffects(sepv2, this.widgets.sidebar, 'focus', 'blur', { fg: 'green' });
     this.screen.setEffects(seph1, this.widgets.sidebar, 'focus', 'blur', { fg: 'red' });
     // this.screen.setEffects(seph2, this.widgets.sidebar, 'focus', 'blur', { fg: 'red' });
@@ -116,11 +116,11 @@ function View(objects) {
     // this.screen.setEffects(seph2, this.widgets.menubar, 'focus', 'blur', { fg: 'green' });
     this.screen.setEffects(sepl, this.widgets.menubar, 'focus', 'blur', { fg: 'red' });
     //// main textarea focus
-    this.screen.setEffects(sepv1, this.widgets.workspace, 'focus', 'blur', { fg: 'green' });
+    this.screen.setEffects(sepv1, this.widgets.workspace, 'focus', 'blur', { fg: 'blue' });
     // this.screen.setEffects(sepv2, this.widgets.workspace, 'focus', 'blur', { fg: 'red' });
-    this.screen.setEffects(seph1, this.widgets.workspace, 'focus', 'blur', { fg: 'green' });
+    this.screen.setEffects(seph1, this.widgets.workspace, 'focus', 'blur', { fg: 'blue' });
     // this.screen.setEffects(seph2, this.widgets.workspace, 'focus', 'blur', { fg: 'green' });
-    this.screen.setEffects(sepl, this.widgets.workspace, 'focus', 'blur', { fg: 'green' });
+    this.screen.setEffects(sepl, this.widgets.workspace, 'focus', 'blur', { fg: 'blue' });
     //// log logger focus
     this.screen.setEffects(sepv1, this.widgets.logger, 'focus', 'blur', { fg: 'red' });
     // this.screen.setEffects(sepv2, this.widgets.logger, 'focus', 'blur', { fg: 'red' });
@@ -181,8 +181,8 @@ View.prototype.create_widgets = function()
         parent: _this.screen,
         left: _this.config.view.sidew + 1,
         right: 0,
-        top: 3,         //compensating for weird tree layout
-        bottom: 2,
+        top: 2,         //compensating for weird tree layout
+        bottom: 0,
         //bottom: 2,
         //border: {type: "line"},
         //content: "starting content"
@@ -192,7 +192,7 @@ View.prototype.create_widgets = function()
     this.widgets.sidebar = new SideBar({
         parent: _this.screen,
         left: 0,
-        top: 2,
+        top: 3,
         bottom: 0,
         width: _this.config.view.sidew,
     });
