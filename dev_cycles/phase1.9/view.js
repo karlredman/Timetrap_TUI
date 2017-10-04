@@ -4,23 +4,20 @@
 var blessed = require('blessed'),
     contrib = require('blessed-contrib');
 
-// panels
+// View panels
 var MenuBar = require('./menubar');
 var SideBar = require('./sidebar');
-//var Workspace = require('./workspace');
 var WorkspaceList = require('./workspacelist');
-//var WorkspaceTree = require('./worktree');
 var Logger = require('./logger');
-//var HelpView = require('./helpview');
+var ClocksRunning = require('./clocksrunning')
 
-// program init/startup
-//function View(config, screen) {
 function View(objects) {
 
     let _this=this;
     _this.widgets = {};
     _this.screen = objects.screen;
     _this.config = objects.config;
+    _this.timetrap = objects.timetrap;
 
     //fetch projects list
     //this.widgets.dirtree = new DirTree(config);
@@ -48,85 +45,8 @@ function View(objects) {
     //the current pane default
     this.curWin = 1;
 
-    // // horizontal seperator line 1
-    // let seph1 = blessed.line({
-    //     parent: this.screen,
-    //     orientation: 'horizontal',
-    //     top: 1,
-    //     left: 0,
-    //     //right: _this.config.view.sidew,
-    //     right: 0,
-    //     fg: "red"
-    // });
-
-    // // horizontal seperator line 2
-    // let seph2 = blessed.line({
-    //     parent: this.screen,
-    //     orientation: 'horizontal',
-    //     top: 1,
-    //     left: _this.config.view.sidew,
-    //     right: 0,
-    //     fg: "red"
-    // });
-
-    // //logger seperator line
-    // let sepl = blessed.line({
-    //     parent: this.screen,
-    //     orientation: 'horizontal',
-    //     left: _this.config.view.sidew+1,
-    //     bottom: 1,
-    //     right: 0,
-    //     fg: "red"
-    // });
-
-    // verticle seperator line
-    // let sepv1 = blessed.line({
-    //     parent: this.screen,
-    //     orientation: 'vertical',
-    //     left: _this.config.view.sidew,
-    //     top: 0,
-    //     bottom: 0,
-    //     //fg: "green",
-    //     //bg: "black"
-    // });
-
-    // let sepv2 = blessed.line({
-    //     parent: this.screen,
-    //     orientation: 'vertical',
-    //     left: _this.config.view.sidew,
-    //     //top: 0,
-    //     bottom: 1,
-    //     fg: "green",
-    //     //bg: "black"
-    // });
-
+    //make the widgets
     this.create_widgets();
-
-    // //seperator  bar color change on focus chage
-    // //// side menue focus
-    // this.screen.setEffects(sepv1, this.widgets.sidebar, 'focus', 'blur', { fg: 'yellow' });
-    // // this.screen.setEffects(sepv2, this.widgets.sidebar, 'focus', 'blur', { fg: 'green' });
-    // this.screen.setEffects(seph1, this.widgets.sidebar, 'focus', 'blur', { fg: 'red' });
-    // // this.screen.setEffects(seph2, this.widgets.sidebar, 'focus', 'blur', { fg: 'red' });
-    // this.screen.setEffects(sepl, this.widgets.sidebar, 'focus', 'blur', { fg: 'red' });
-    // //// top bar
-    // this.screen.setEffects(sepv1, this.widgets.menubar, 'focus', 'blur', { fg: 'red' });
-    // // this.screen.setEffects(sepv2, this.widgets.menubar, 'focus', 'blur', { fg: 'red' });
-    // this.screen.setEffects(seph1, this.widgets.menubar, 'focus', 'blur', { fg: 'green' });
-    // // this.screen.setEffects(seph2, this.widgets.menubar, 'focus', 'blur', { fg: 'green' });
-    // this.screen.setEffects(sepl, this.widgets.menubar, 'focus', 'blur', { fg: 'red' });
-    // //// main textarea focus
-    // this.screen.setEffects(sepv1, this.widgets.workspace, 'focus', 'blur', { fg: 'green' });
-    // // this.screen.setEffects(sepv2, this.widgets.workspace, 'focus', 'blur', { fg: 'red' });
-    // this.screen.setEffects(seph1, this.widgets.workspace, 'focus', 'blur', { fg: 'green' });
-    // // this.screen.setEffects(seph2, this.widgets.workspace, 'focus', 'blur', { fg: 'green' });
-    // this.screen.setEffects(sepl, this.widgets.workspace, 'focus', 'blur', { fg: 'green' });
-    // //// log logger focus
-    // this.screen.setEffects(sepv1, this.widgets.logger, 'focus', 'blur', { fg: 'red' });
-    // // this.screen.setEffects(sepv2, this.widgets.logger, 'focus', 'blur', { fg: 'red' });
-    // this.screen.setEffects(seph1, this.widgets.logger, 'focus', 'blur', { fg: 'red' });
-    // // this.screen.setEffects(seph2, this.widgets.logger, 'focus', 'blur', { fg: 'red' });
-    // this.screen.setEffects(sepl, this.widgets.logger, 'focus', 'blur', { fg: 'green' });
 
 
     /////////////////////////////////////////////////////
@@ -145,31 +65,23 @@ function View(objects) {
 
     // set the tree data
     this.widgets.sidebar.setData(proj_tree);
-    //this.widgets.workspace.setData(proj_tree);
+    this.widgets.sidebar.saveData(proj_tree);
 
     //screen.render();
     this.setWinFocus(this.pwin.side);
 }
 
-
 View.prototype.create_widgets = function()
 {
     let _this=this;
 
-    // the main area
-    //var mainw = blessed.box({
-    this.widgets.workspace = new WorkspaceList({
+    //menubar at top
+    this.widgets.menubar = new MenuBar({
+        autoCommandKeys: true,
         parent: _this.screen,
-        left: _this.config.view.sidew,
-        right: 0,
-        top: 1,         //compensating for weird tree layout
-        bottom: 1,
-        border: {type: "line"},
-        //bottom: 2,
-        //border: {type: "line"},
-        //content: "starting content"
+        left: 0,
+        top: 0,
     });
-
 
 
     //project tree on the left
@@ -182,101 +94,111 @@ View.prototype.create_widgets = function()
         border: {type: "line"},
     });
 
-    //menubar at top
-    this.widgets.menubar = new MenuBar({
-        autoCommandKeys: true,
+    // the main area
+    this.widgets.workspace = new WorkspaceList({
         parent: _this.screen,
-        left: 0,
-        top: 0,
-        //width: _this.config.view.sidew,
+        left: _this.config.view.sidew,
+        right: 0,
+        top: 1,
+        bottom: 1,
+        border: {type: "line"},
     });
-
-
 
     //the logger at bottom of main window
     this.widgets.logger = new Logger({
         parent: _this.screen,
-        //width: _this.config.view.sidew,
         left: 0,
-        //right: 0,
         bottom: 0,
         height: 1,
-        //border: {type: "line"},
-        //content: "xxxxxxxx\nxxxxxxxxxx\nxxxxxx\nxxxxxxxx"
-        //bottom: 0,
-        //width: 30
     });
 
-    //the logger at bottom of main window
-    this.widgets.loggerx = new Logger({
+    // line to show menu is focused
+    _this.menuline = new blessed.line({
+        parent: _this.screen,
+        left: 0,
+        height: 1,
+        top: 1,
+        orientation: "horizontal",
+        type: 'line',
+        fg: "green"
+    })
+
+    //used to show log is focused
+    _this.logline = new blessed.line({
+        parent: _this.screen,
+        left: 0,
+        height: 1,
+        bottom: 1,
+        orientation: "horizontal",
+        type: 'line',
+        fg: "green"
+    })
+
+    // message of number of clocks active
+    // TODO: this is a hack overlaying a box on top
+    this.widgets.clocksRunning = new ClocksRunning({
         parent: _this.screen,
         width: _this.config.view.sidew-2,
         left: 1,
-        //right: 0,
-        //bottom: 0,
         height: 1,
         top: 2,
-        //border: {type: "line"},
-        //content: "xxxxxxxx\nxxxxxxxxxx\nxxxxxx\nxxxxxxxx"
-        //bottom: 0,
-        //width: 30
+        tags: true,
+        content: "{center}4/24 Active Clocks{/}",
     });
 
+
+    // initialize contents
+    //
+    // populate the workspace list view table
+    _this.timetrap.fetch_list();
 }
 
 View.prototype.register_actions = function()
 {
     let _this = this;
+    _this.timetrap.on('list', (arr) => {
+        _this.widgets.workspace.populate(_this.timetrap.list)
+    });
 }
 
 View.prototype.setWinFocus = function(win){
     let _this = this;
+    // The focus and effects are managed here so mouse actions don't cause
+    // false positives.
     switch(win){
         case _this.pwin.mainw:
             _this.widgets.workspace.options.style.border.fg = "green";
             _this.widgets.sidebar.options.style.border.fg = "red";
-
-            _this.widgets.menubar.options.style.bg = "black";
-            _this.widgets.menubar.options.style.fg = "white"
-            _this.widgets.menubar.options.style.item.bg = "black";
-            _this.widgets.menubar.options.style.item.fg = "white"
-            _this.widgets.menubar.options.style.prefix.bg = "black";
-            _this.widgets.menubar.options.style.prefix.fg = "lightblack"
-            _this.widgets.menubar.options.style.selected.bg = "black";
-            _this.widgets.menubar.options.style.selected.fg = "white";
-
-            _this.screen.render();
+            _this.logline.hide();
+            _this.menuline.hide();
             _this.widgets.workspace.focus();
             break;
         case _this.pwin.side:
             _this.widgets.workspace.options.style.border.fg = "red";
             _this.widgets.sidebar.options.style.border.fg = "green";
-
-            _this.widgets.menubar.options.style.bg = "black";
-            _this.widgets.menubar.options.style.fg = "white"
-            _this.widgets.menubar.options.style.item.bg = "black";
-            _this.widgets.menubar.options.style.item.fg = "white"
-            _this.widgets.menubar.options.style.prefix.bg = "black";
-            _this.widgets.menubar.options.style.prefix.fg = "lightblack"
-            _this.widgets.menubar.options.style.selected.bg = "black";
-            _this.widgets.menubar.options.style.selected.fg = "white";
-
-            _this.screen.render();
+            _this.logline.hide();
+            _this.menuline.hide();
             _this.widgets.sidebar.focus();
             break;
         case _this.pwin.menu:
             _this.widgets.workspace.options.style.border.fg = "red";
             _this.widgets.sidebar.options.style.border.fg = "red";
+            _this.logline.hide();
+            _this.menuline.show();
+            _this.widgets.menubar.focus();
+            break;
+        case _this.pwin.logger:
+            _this.widgets.workspace.options.style.border.fg = "red";
+            _this.widgets.sidebar.options.style.border.fg = "red";
+            _this.logline.show();
+            _this.menuline.hide();
+            _this.widgets.logger.focus();
+            break;
+    }
 
-            // _this.widgets.menubar.options.style.bg = null;
-            // _this.widgets.menubar.options.style.fg = "white"
-            // _this.widgets.menubar.options.style.item.bg = null;
-            // _this.widgets.menubar.options.style.item.fg = "white"
-            // _this.widgets.menubar.options.style.prefix.bg = "yellow";
-            // _this.widgets.menubar.options.style.prefix.fg = "yellow"
-            // _this.widgets.menubar.options.style.selected.bg = "gray";
-            // _this.widgets.menubar.options.style.selected.fg = "white";
-
+    //toggle menu colors
+    if ( win === _this.pwin.menu ) {
+        // menu is active highlight only the selected one
             _this.widgets.menubar.options.style.bg = null;
             _this.widgets.menubar.options.style.fg = "white"
 
@@ -288,27 +210,22 @@ View.prototype.setWinFocus = function(win){
 
             _this.widgets.menubar.options.style.selected.bg = null;
             _this.widgets.menubar.options.style.selected.fg = "blue";
-
-            _this.screen.render();
-            _this.widgets.menubar.focus();
-            break;
-        case _this.pwin.logger:
-            _this.widgets.workspace.options.style.border.fg = "red";
-            _this.widgets.sidebar.options.style.border.fg = "red";
-
+    }
+    else {
+        // menu is not active don't show highlights
             _this.widgets.menubar.options.style.bg = "black";
             _this.widgets.menubar.options.style.fg = "white"
+
             _this.widgets.menubar.options.style.item.bg = "black";
             _this.widgets.menubar.options.style.item.fg = "white"
+
             _this.widgets.menubar.options.style.prefix.bg = "black";
             _this.widgets.menubar.options.style.prefix.fg = "lightblack"
+
             _this.widgets.menubar.options.style.selected.bg = "black";
             _this.widgets.menubar.options.style.selected.fg = "white";
-
-            _this.screen.render();
-            _this.widgets.logger.focus();
-            break;
     }
+            _this.screen.render();
 }
 
 View.prototype.setWinFocusNext = function(){

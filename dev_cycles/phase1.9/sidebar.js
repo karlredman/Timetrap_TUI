@@ -73,6 +73,10 @@ SideBar.prototype.render = function() {
   Box.prototype.render.call(this);
 };
 
+SideBar.prototype.saveData = function(data){
+    this.savedData = data;
+}
+
 SideBar.prototype.register_actions = function(view){
 
 	this.view = view;

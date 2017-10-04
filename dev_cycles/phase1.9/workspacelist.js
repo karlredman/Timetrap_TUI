@@ -185,5 +185,23 @@ WorkspaceList.prototype.register_actions = function(view){
     });
 }
 
+WorkspaceList.prototype.populate = function(tlist){
+    let _this = this;
+    //let sdata = _this.view.widgets.sidebar.data;
+    // let sdata = _this.view.widgets.sidebar.savedData;
+
+    // console.log(sdata.children.filter(function(e){return e.sheet == 'Projects'}).length);
+
+    // let out = sdata.children.filter(function(e){return e.sheet == 'Projects'})[0].length;
+    // let len = sdata.children.filter(function(e){return e.sheet == 'Projects'})[0];
+    // for (; len > 0;len--){
+    //     console.log(sdata.children.filter(function(e){return e.sheet == 'Projects'})[0][len-1]);
+    // }
+    // let sdata = _this.view.widgets.sidebar.savedData;
+    // let output = sdata.children.filter(function(e){return e.sheet == 'Projects'})[0];
+    // require('fs').writeFile('node.out', util.inspect(output, null, 9), (er, x)=>{});
+
+}
+
 WorkspaceList.prototype.type = 'WorkspaceList';
 module.exports = WorkspaceList;

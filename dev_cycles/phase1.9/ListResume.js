@@ -2,8 +2,8 @@
 var blessed = require('blessed'),
     Node = blessed.Node;
 
-function ListDisplay(options) {
-    if (!(this instanceof Node)) return new ListDisplay(options);
+function ListResume(options) {
+    if (!(this instanceof Node)) return new ListResume(options);
     let _this=this;
 
     _this.options = options;
@@ -23,10 +23,8 @@ function ListDisplay(options) {
     options.style.border.fg = options.style.border.fg || "blue";
 
     options.items = [
-        "Today",
-        "Yesterday",
-        "Week",
-        "Month",
+        "Latest",
+        "Pick",
         //"other",   //TODO: add user defined displays (from contrib filters)
     ];
 
@@ -97,9 +95,9 @@ function ListDisplay(options) {
             _this.screen.render();
     });
 }
-ListDisplay.prototype = Object.create(blessed.list.prototype);
-ListDisplay.prototype.constructor = ListDisplay;
+ListResume.prototype = Object.create(blessed.list.prototype);
+ListResume.prototype.constructor = ListResume;
 
 
-ListDisplay.prototype.type = 'ListDisplay';
-module.exports = ListDisplay;
+ListResume.prototype.type = 'ListResume';
+module.exports = ListResume;

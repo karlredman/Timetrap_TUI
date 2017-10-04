@@ -6,6 +6,7 @@ var DialogPrompt = require('./DialogPrompt'),
     DialogMessage = require('./DialogMessage'),
     DialogAlert = require('./DialogAlert'),
     ListDisplay = require('./ListDisplay'),
+    ListResume = require('./ListResume'),
     BigBox = require('./bigbox');
 var util = require('util');
 
@@ -66,42 +67,43 @@ function MenuBar(options) {
         In: function(){
             let prompt = new DialogPrompt({target: _this, parent: _this.screen});
             prompt.cannedInput('checkIn');
-                setTimeout(function(){
-                    // item.style.bg = null;
-                    // item.style.fg = "white";
-                    _this.select(0);
-                    _this.screen.render();
-                }, 1000);
+            setTimeout(function(){
+                _this.select(0);
+                _this.screen.render();
+            }, 1000);
         },
         Out: function(){
             let prompt = new DialogPrompt({target: _this, parent: _this.screen});
             prompt.cannedInput('checkOut');
-                setTimeout(function(){
-                    // item.style.bg = null;
-                    // item.style.fg = "white";
-                    _this.select(0);
-                    _this.screen.render();
-                }, 1000);
+            setTimeout(function(){
+                _this.select(0);
+                _this.screen.render();
+            }, 1000);
         },
         Edit: function(){
             let prompt = new DialogPrompt({target: _this, parent: _this.screen});
             prompt.cannedInput('edit');
-                setTimeout(function(){
-                    // item.style.bg = null;
-                    // item.style.fg = "white";
-                    _this.select(0);
-                    _this.screen.render();
-                }, 1000);
+            setTimeout(function(){
+                _this.select(0);
+                _this.screen.render();
+            }, 1000);
         },
         Resume: function(){
             let prompt = new DialogPrompt({target: _this, parent: _this.screen});
-            prompt.cannedInput('resume');
-                setTimeout(function(){
-                    // item.style.bg = null;
-                    // item.style.fg = "white";
-                    _this.select(0);
-                    _this.screen.render();
-                }, 1000);
+            //prompt.cannedInput('resume');
+            let display_menu = new ListResume({
+                parent: _this.screen,
+                //TODO: could be more generic
+                top: _this.items[3].position.top+1,         //offset one below
+                left: _this.items[3].position.left+3,       //offset to the right
+                width: _this.items[3].position.width,       //the width of 'Display'
+            });
+            display_menu.focus();
+            _this.screen.render();
+            setTimeout(function(){
+                _this.select(0);
+                _this.screen.render();
+            }, 1000);
         },
         Display: function(){
             let display_menu = new ListDisplay({
@@ -112,12 +114,10 @@ function MenuBar(options) {
             });
             display_menu.focus();
             _this.screen.render();
-                setTimeout(function(){
-                    // item.style.bg = null;
-                    // item.style.fg = "white";
-                    _this.select(0);
-                    _this.screen.render();
-                }, 1000);
+            setTimeout(function(){
+                _this.select(0);
+                _this.screen.render();
+            }, 1000);
         },
         Stop_all: function(){
             let question = new DialogQuestion({target: _this, parent: _this.screen});
@@ -128,12 +128,10 @@ function MenuBar(options) {
                 _this.emit('question', {type: 'stopAll', data: true});
             }
             //question.cannedInput('stopAll');
-                setTimeout(function(){
-                    // item.style.bg = null;
-                    // item.style.fg = "white";
-                    _this.select(0);
-                    _this.screen.render();
-                }, 1000);
+            setTimeout(function(){
+                _this.select(0);
+                _this.screen.render();
+            }, 1000);
         },
         Help: function(){
             let nkey = {
@@ -145,12 +143,10 @@ function MenuBar(options) {
                 full: "?"
             }
             _this.parent.emit('key '+nkey.full, nkey.full, nkey);
-                setTimeout(function(){
-                    // item.style.bg = null;
-                    // item.style.fg = "white";
-                    _this.select(0);
-                    _this.screen.render();
-                }, 1000);
+            setTimeout(function(){
+                _this.select(0);
+                _this.screen.render();
+            }, 1000);
         },
         eXit: function(){
             let question = new DialogQuestion({target: _this, parent: _this.screen});
@@ -160,12 +156,10 @@ function MenuBar(options) {
             else {
                 _this.emit('question', {type: 'exit', data: true});
             }
-                setTimeout(function(){
-                    // item.style.bg = null;
-                    // item.style.fg = "white";
-                    _this.select(0);
-                    _this.screen.render();
-                }, 1000);
+            setTimeout(function(){
+                _this.select(0);
+                _this.screen.render();
+            }, 1000);
         },
         Test: function() {
             // TODO: move alert to screen level for debugging
@@ -173,14 +167,19 @@ function MenuBar(options) {
             // m.alert('testing: '+ _this.view.config.timetrap_config.tui_question_prompts.value);
             //_this.items[8].style.bg = "yellow";
             let bb = new BigBox({parent: _this.screen});
-            let output = util.inspect(_this.items[8], null, true);
+            //let output = util.inspect(_this.items[8], null, true);
+            //let output = util.inspect(_this.view.widgets.sidebar.rows.getItem(0), false, 2);
+            let output = "";
+            let sdata = _this.view.widgets.sidebar.savedData;
+
+
+            //let output = sdata.children.filter(function(e){return e.sheet == 'Projects'})[0];
+            //require('fs').writeFile('node.out', util.inspect(output, null, 9));
             bb.setContent(output);
-                setTimeout(function(){
-                    // item.style.bg = null;
-                    // item.style.fg = "white";
-                    _this.select(0);
-                    _this.screen.render();
-                }, 1000);
+            setTimeout(function(){
+                _this.select(0);
+                _this.screen.render();
+            }, 1000);
         },
         Test2: function() {
             // TODO: move alert to screen level for debugging
@@ -188,12 +187,10 @@ function MenuBar(options) {
             //let alert = new DialogAlert({target: _this, parent: _this.screen});
             //m.alert('testing: '+ _this.view.config.timetrap_config.tui_question_prompts.value);
             _this.view.widgets.workspace.setContent(output);
-                setTimeout(function(){
-                    // item.style.bg = null;
-                    // item.style.fg = "white";
-                    _this.select(0);
-                    _this.screen.render();
-                }, 1000);
+            setTimeout(function(){
+                _this.select(0);
+                _this.screen.render();
+            }, 1000);
         }
     }
 

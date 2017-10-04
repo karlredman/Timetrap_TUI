@@ -53,7 +53,7 @@ function Logger(options) {
     options.style.scrollbar = options.style.scrollbar || {};
     options.style.scrollbar.inverse = options.style.scrollbar.inverse || true;
 
-    options.content = "xxxxxxxxxxxxxxxxxxxx"
+    //options.content = "xxxxxxxxxxxxxxxxxxxx"
 
     contrib.log.call(this, options);
 
@@ -71,6 +71,7 @@ Logger.prototype.register_actions = function(view){
 	this.view = view;
     let _this = this;
 
+    //TODO: this is just here for testing
     let i = 0
     setInterval(function() {_this.log("{center}new {red-fg}log{/red-fg} line xxxxx-xxxxx-xxxxx-xxxxx-xxxxx: {/}"+ i++); _this.screen.render()}, 5000)
 
