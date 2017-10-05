@@ -1,6 +1,6 @@
 "use strict"
 const {spawn } = require('child_process');
-const {util} = require('util');
+var util = require('util');
 var {EventEmitter} = require('events').EventEmitter;
 
 
@@ -81,24 +81,56 @@ Timetrap.prototype.fetch_list = function(){
     });
 };
 
-Timetrap.prototype.buildTree = function(list){
+Timetrap.prototype.buildTree = function(list, family) {
+
     let _this = this;
-    let
 
+    let found = false;
+    let f = 0,
+        i = 0;
+
+    for ( i in list) {
+        for(f in family){
+            if( list[i] == family[f].name) {
+                found = true;
+                this.buildTree(list.slice(i+1,list.length), family[f].children);
+                break;
+            }
+        }
+        if(!found){
+            family.push({name: list[i], children: []});
+        }
+    }
 }
-
 
 Timetrap.prototype.type = 'Timetrap';
 module.exports = Timetrap;
 
 ////////////-------------
 var t = new Timetrap(null);
-t.on('list', function(arr){
-    t.buildTree(arr);
+
+t.on('list', function(list){
+
+    let branches = [];
+    for (let i in list) {
+        //turn list into array of arrays
+        branches.push(list[i].name.split('.'));
+    }
+    //console.log(util.inspect(branches, null, 10));
+
+    //build the tree
+    let family = [{name: 'default', children:[]}];
+
+    for ( let b in branches ){
+        this.buildTree(branches[b], family[0].children);
+        //if(b==2) break;
+    }
+    //console.log(util.inspect(family, null, 10));
+    console.log(JSON.stringify(family, null, 2));
 });
 
 t.on('tree', function(tree){
-    console.log(util.inspect(tree, null, false));
+    console.log(util.inspect(tree, null, 10));
 })
 
 t.fetch_list();

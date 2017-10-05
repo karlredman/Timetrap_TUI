@@ -65,6 +65,8 @@ function View(objects) {
 
     // set the tree data
     this.widgets.sidebar.setData(proj_tree);
+            var util = require('util')
+            require('fs').writeFile('node.out', util.inspect(proj_tree, null, 9));
     this.widgets.sidebar.saveData(proj_tree);
 
     //screen.render();

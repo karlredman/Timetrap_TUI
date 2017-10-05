@@ -1,0 +1,197 @@
+"use strict"
+const {spawn } = require('child_process');
+var util = require('util');
+var {EventEmitter} = require('events').EventEmitter;
+
+
+function Timetrap(config) {
+
+    if (!(this instanceof EventEmitter)) { return new Timetrap(); }
+
+    let _this = this;
+    _this.config = config
+    _this.list = [];
+
+    EventEmitter.call(this);
+};
+Timetrap.prototype = Object.create(EventEmitter.prototype);
+Timetrap.prototype.constructor = Timetrap;
+
+Timetrap.prototype.fetch_list = function(){
+    let _this = this;
+    let command = "timetrap";
+    let options = ["list"];
+    const cmd = spawn(command, options);
+
+    let result = '';
+    cmd.stdout.on('data', (data) => {
+        //console.log(`${data}`);
+        if( typeof '${data}' === 'undefined' ){
+            return;
+        }
+            result += `${data}`.toString();
+    });
+
+    cmd.once('close', function (){
+        //parse the sheets
+
+        //console.log(result);
+        let arr = result.toString().split("\n");
+
+        let jarr = [];
+        let i = 1; //skip the header line
+        for ( ; i < arr.length; i++){
+            let j = {};
+
+            //determine active state
+            if( arr[i][0] == ' ' ) {
+                j.active = 'na';
+            }
+            else {
+                if( arr[i][0] == '-' ) {
+                    j.active = 'previous';
+                }
+                else {
+                    if( arr[i][0] == '*' ) {
+                        j.active = 'current';
+                    }
+                    else {
+                        j.active = undefined;
+                    }
+                }
+            }
+
+            //get the rest of the fields
+            let darr = arr[i].substr(1, arr[i].length).match(/\S+/g);
+            if(darr != null){
+                j.name = darr[0];
+                j.running = darr[1];
+                j.today = darr[2];
+                j.total_time = darr[3];
+
+                jarr.push(j);
+            }
+        }
+        //save the list
+        _this.list = jarr;
+
+    //TODO: possible race codition someday?
+    //_this.emit('list', _this.list);
+        _this.emit('list', jarr);
+    });
+};
+
+// Timetrap.prototype.buildTree = function(list, family) {
+//     let _this = this;
+//     let branches = [];
+
+//     if(family === null) {
+//         family = [];
+//     }
+
+//     //break list into a list of arrays, successive members of a sub array are
+//     //children
+//     for (let i in list) {
+//         branches.push(list[i].name.split('.'));
+//     }
+
+//     for ( let b in branches ) {
+//         //just and this branch if we haven't stated building the tree yet
+//         if ( family.length == 0 ){
+//             //add the first name of the firt entry
+//             family.push({name: branches[0][0], children: []})
+//         }
+//         else {
+//             let found = false;
+//             for ( let f in family ){
+//                 for ( let m in branches[b] ){
+//                     if ( family[f].name === branches[b][m] ){
+//                         found = true;
+//                         console.log("xxx: "+util.inspect(branches[b][m], null, 10))
+//                         _this.buildTree(branches[b][m+1], family[f].children)
+//                         m++;
+//                     }
+//                     else {
+//                         if ( (m+1) >= branches[b].length){
+//                             family.push({name: branches[b][m], children: []})
+//                         }
+//                     }
+//                 }
+//             }
+//             if( ! found ) {
+//             }
+//         }
+//     }
+
+//     console.log(util.inspect(branches, null, 10))
+//     console.log("-----------------------------")
+//     console.log(util.inspect(family, null, 10))
+//     console.log("#############################")
+// };
+
+Timetrap.prototype.buildTree = function(list, family) {
+    let _this = this;
+
+    let branch = [];
+
+    // console.log(list.length);
+    // process.exit(0)
+
+    for ( let i in list ) {
+        if( list.length == 1) {
+            branch.push({name: list[i], children: []});
+        }
+        else {
+            if ( i == 0 ){
+                branch.push({name: list[i], children: []})
+            }
+            else {
+                branch[0].children.push({name: list[i], children: []})
+            }
+            console.log(util.inspect(branch, null, 10));
+            console.log("-----------------------------");
+        }
+    }
+    // family.push(branch);
+    // return family;
+    return branch;
+}
+
+Timetrap.prototype.type = 'Timetrap';
+module.exports = Timetrap;
+
+////////////-------------
+var t = new Timetrap(null);
+
+t.on('list', function(list){
+
+    let branches = [];
+    for (let i in list) {
+        //turn list into array of arrays
+        branches.push(list[i].name.split('.'));
+    }
+
+    //build the tree
+    let family = [];
+    for ( let b in branches ){
+        family.push(this.buildTree(branches[b], family))
+    }
+    // console.log("-----------------------------");
+    // console.log("-----------------------------");
+    // console.log("-----------------------------");
+    // console.log("-----------------------------");
+    // console.log(util.inspect(family, null, 10));
+
+
+    let obj = [];
+    for ( let b in branches ) {
+        obj = Object.assign(obj, branches[b])
+    }
+
+});
+
+t.on('tree', function(tree){
+    console.log(util.inspect(tree, null, 10));
+})
+
+t.fetch_list();
