@@ -169,12 +169,22 @@ View.prototype.register_actions = function()
             branches.push(list[i].name.split('.'));
         }
 
-
         //build the tree
-        let family = [{name: 'default', children:[], extended: true}];
+        let family = [{name: 'Timetrap Default', extended: true, sheet: 'default', children: []}];
 
+        //account for no default
+        let sheet = '';
         for ( let b in branches ){
-            _this.timetrap.buildTree(branches[b], family[0].children);
+            if ( list[b].name == '')
+                sheet = '';
+            else{
+                sheet = list[b].name;
+            }
+
+            let sheet_lifo = [];
+            //this.buildTree(branches[b], family[0].children, list[b].name);
+            _this.timetrap.buildTree(branches[b], family[0].children, sheet, sheet_lifo);
+            //if(b==2) break;
         }
 
         // TODO: move this. we're cheating
@@ -185,8 +195,8 @@ View.prototype.register_actions = function()
     _this.timetrap.on('tree', function(tree){
         //console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
         //_this.widgets.sidebar.setData(_this.proj_tree);
-        _this.widgets.sidebar.setData(tree);
-        console.log(tree)
+        _this.widgets.sidebar.setData(tree[0]);
+        //console.log(tree)
         _this.screen.render();
         // console.log(util.inspect(tree, null, 10));
         //_this.widgets.workspace.populate(_this.timetrap.list)

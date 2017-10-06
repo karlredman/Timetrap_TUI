@@ -77,11 +77,11 @@ Timetrap.prototype.fetch_list = function(){
 
     //TODO: possible race codition someday?
     //_this.emit('list', _this.list);
-        _this.emit('list', jarr);
+        _this.emit('fetch_list', jarr);
     });
 };
 
-Timetrap.prototype.buildTree = function(list, family) {
+Timetrap.prototype.buildTree = function(list, family, sheet, sheet_lifo) {
 
     let _this = this;
 
@@ -93,12 +93,21 @@ Timetrap.prototype.buildTree = function(list, family) {
         for(f in family){
             if( list[i] == family[f].name) {
                 found = true;
-                this.buildTree(list.slice(i+1,list.length), family[f].children);
+                this.buildTree(list.slice(i+1,list.length), family[f].children, sheet, sheet_lifo);
                 break;
             }
         }
         if(!found){
-            family.push({name: list[i], children: []});
+            //find out if this is the endpoint. If not then there's no sheet.
+            let sheet_arr = sheet.split('.');
+            let sheet_val = sheet;
+            if ( list[i] != sheet_arr[sheet_arr.length-1] ) {
+                //this isn't the endpoint so it's just a hiarchy element
+                sheet_val = '';
+            }
+
+            //push the array
+            family.push({name: list[i], extended: true, sheet: sheet_val, children: []});
         }
     }
 }
@@ -106,31 +115,41 @@ Timetrap.prototype.buildTree = function(list, family) {
 Timetrap.prototype.type = 'Timetrap';
 module.exports = Timetrap;
 
-// ////////////-------------
-var t = new Timetrap(null);
+// // ////////////-------------
+// var t = new Timetrap(null);
 
-t.on('list', function(list){
+// t.on('list', function(list){
+//     let _this = this;
 
-    let branches = [];
-    for (let i in list) {
-        //turn list into array of arrays
-        branches.push(list[i].name.split('.'));
-    }
-    //console.log(util.inspect(branches, null, 10));
+//     let branches = [];
+//     for (let i in list) {
+//         //turn list into array of arrays
+//         branches.push(list[i].name.split('.'));
+//     }
+//     //console.log(util.inspect(branches, null, 10));
 
-    //build the tree
-    let family = {name: 'default', children:[]};
+//     //build the tree
+//     let family = [{name: 'default', extended: true, sheet: 'default', children: []}];
 
-    for ( let b in branches ){
-        this.buildTree(branches[b], family[0].children);
-        //if(b==2) break;
-    }
-    console.log(util.inspect(family, null, 10));
-    //console.log(JSON.stringify(family, null, 2));
-});
+//     let sheet = '';
+//     for ( let b in branches ){
+//         if ( list[b].name == '')
+//             sheet = '';
+//         else{
+//             sheet = list[b].name;
+//         }
 
-t.on('tree', function(tree){
-    console.log(util.inspect(tree, null, 10));
-})
+//         let sheet_lifo = [];
+//         //this.buildTree(branches[b], family[0].children, list[b].name);
+//         this.buildTree(branches[b], family[0].children, sheet, sheet_lifo);
+//         //if(b==2) break;
+//     }
+//     console.log(util.inspect(family[0], null, 10));
+//     //console.log(JSON.stringify(family, null, 2));
+// });
 
-t.fetch_list();
+// t.on('tree', function(tree){
+//     console.log(util.inspect(tree[0], null, 10));
+// })
+
+// t.fetch_list();
