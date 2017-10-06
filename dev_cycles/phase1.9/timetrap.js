@@ -106,7 +106,7 @@ Timetrap.prototype.buildTree = function(list, family) {
 Timetrap.prototype.type = 'Timetrap';
 module.exports = Timetrap;
 
-////////////-------------
+// ////////////-------------
 var t = new Timetrap(null);
 
 t.on('list', function(list){
@@ -119,14 +119,14 @@ t.on('list', function(list){
     //console.log(util.inspect(branches, null, 10));
 
     //build the tree
-    let family = [{name: 'default', children:[]}];
+    let family = {name: 'default', children:[]};
 
     for ( let b in branches ){
         this.buildTree(branches[b], family[0].children);
         //if(b==2) break;
     }
-    //console.log(util.inspect(family, null, 10));
-    console.log(JSON.stringify(family, null, 2));
+    console.log(util.inspect(family, null, 10));
+    //console.log(JSON.stringify(family, null, 2));
 });
 
 t.on('tree', function(tree){

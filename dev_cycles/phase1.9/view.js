@@ -22,7 +22,7 @@ function View(objects) {
     //fetch projects list
     //this.widgets.dirtree = new DirTree(config);
     this.widgets.dirtree = objects.dirtree;
-    let proj_tree = this.widgets.dirtree.fetch(this.config.timetrap_config.tui_projects_template_path.value);
+    this.proj_tree = this.widgets.dirtree.fetch(this.config.timetrap_config.tui_projects_template_path.value);
 
     this.config.view.sidew = this.widgets.dirtree.getMaxSideNameLen();   //side menu width
     this.config.view.numwnd = 3;                    //number of windows
@@ -64,10 +64,11 @@ function View(objects) {
     this.register_actions();
 
     // set the tree data
-    this.widgets.sidebar.setData(proj_tree);
-            var util = require('util')
-            require('fs').writeFile('node.out', util.inspect(proj_tree, null, 9));
-    this.widgets.sidebar.saveData(proj_tree);
+    //this.widgets.sidebar.setData(proj_tree);
+    _this.timetrap.fetch_list();
+            // var util = require('util')
+            // require('fs').writeFile('node.out', util.inspect(proj_tree, null, 9));
+    //this.widgets.sidebar.saveData(proj_tree);
 
     //screen.render();
     this.setWinFocus(this.pwin.side);
@@ -152,15 +153,45 @@ View.prototype.create_widgets = function()
     // initialize contents
     //
     // populate the workspace list view table
-    _this.timetrap.fetch_list();
+    //_this.timetrap.fetch_list();
 }
 
 View.prototype.register_actions = function()
 {
     let _this = this;
-    _this.timetrap.on('list', (arr) => {
-        _this.widgets.workspace.populate(_this.timetrap.list)
+    _this.timetrap.on('list', (list) => {
+        //gotta convert the list to a tree
+
+
+        let branches = [];
+        for (let i in list) {
+            //turn list into array of arrays
+            branches.push(list[i].name.split('.'));
+        }
+
+
+        //build the tree
+        let family = [{name: 'default', children:[], extended: true}];
+
+        for ( let b in branches ){
+            _this.timetrap.buildTree(branches[b], family[0].children);
+        }
+
+        // TODO: move this. we're cheating
+        _this.timetrap.emit('tree', family);
+
     });
+
+    _this.timetrap.on('tree', function(tree){
+        //console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+        //_this.widgets.sidebar.setData(_this.proj_tree);
+        _this.widgets.sidebar.setData(tree);
+        console.log(tree)
+        _this.screen.render();
+        // console.log(util.inspect(tree, null, 10));
+        //_this.widgets.workspace.populate(_this.timetrap.list)
+    });
+
 }
 
 View.prototype.setWinFocus = function(win){
