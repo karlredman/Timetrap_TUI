@@ -81,7 +81,59 @@ Timetrap.prototype.fetch_list = function(){
     });
 };
 
-Timetrap.prototype.buildTree = function(list, family, sheet, sheet_lifo) {
+Timetrap.prototype.fetch_tree = function(list){
+    let _this = this;
+
+    //altered from:
+    //https://stackoverflow.com/questions/6232753/convert-delimited-string-into-hierarchical-json-with-jquery
+
+    var input = list;
+    var output = [];
+    for (var i = 0; i < input.length; i++) {
+        var chain = input[i].name.split(".");
+        var currentNode = output;
+        for (var j = 0; j < chain.length; j++) {
+            var wantedNode = chain[j];
+            var lastNode = currentNode;
+            for (var k = 0; k < currentNode.length; k++) {
+                if (currentNode[k].name == wantedNode) {
+                    currentNode = currentNode[k].children;
+                    break;
+                }
+            }
+            // If we couldn't find an item in this list of children
+            // that has the right name, create one:
+            if (lastNode == currentNode) {
+
+                // set the sheet as part of the data
+                //let sheet_arr = sheet.split('.');
+                let sheet_arr = chain;
+                let sheet_val = input[i].name;
+                let list_info_val = {
+                    running: input[i].running,
+                    today: input[i].today,
+                    total_time: input[i].total_time,
+                    active: input[i].active
+                }
+                if ( wantedNode != sheet_arr[sheet_arr.length-1] ) {
+                    //this isn't the endpoint so it's just a hiarchy element
+                    sheet_val = '';
+                    list_info_val = '';
+                }
+                var newNode = currentNode[k] = {name: wantedNode, extended: true, sheet: sheet_val, info: list_info_val, children: []};
+                currentNode = newNode.children;
+            }
+        }
+    }
+
+    // TODO: default should be set by the user
+        let tree = {name: "Timetrap", extended: true, sheet: "default", children: output}
+
+        _this.emit('fetch_tree', tree);
+
+}
+
+Timetrap.prototype.buildTree = function(list, family, sheet, info) {
 
     let _this = this;
 
@@ -93,7 +145,7 @@ Timetrap.prototype.buildTree = function(list, family, sheet, sheet_lifo) {
         for(f in family){
             if( list[i] == family[f].name) {
                 found = true;
-                this.buildTree(list.slice(i+1,list.length), family[f].children, sheet, sheet_lifo);
+                this.buildTree(list.slice(i+1,list.length), family[f].children, sheet, info);
                 break;
             }
         }

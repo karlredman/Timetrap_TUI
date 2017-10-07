@@ -169,8 +169,24 @@ function MenuBar(options) {
             let bb = new BigBox({parent: _this.screen});
             //let output = util.inspect(_this.items[8], null, true);
             //let output = util.inspect(_this.view.widgets.sidebar.rows.getItem(0), false, 2);
-            let output = "";
-            let sdata = _this.view.widgets.sidebar.savedData;
+            //let output = _this.view.widgets.sidebar.savedData;
+            //let sdata = _this.view.widgets.sidebar.data;
+            //let output = util.inspect(_this.view.widgets.sidebar.rows.getItem(0), false, 2);
+            //
+            //let output = util.inspect(_this.view.widgets.sidebar.rows.getItem(8), false, 2);
+            //require('fs').writeFile('node.out', util.inspect(output, null, 20));
+            //require('fs').writeFile('node.json', JSON.stringify(output, null, 2));
+
+            //let output = util.inspect(_this.view.widgets.sidebar.rows.selected, null, 2);
+            //let output = util.inspect(_this.view.widgets.sidebar.data[_this.view.widgets.sidebar.rows.selected], null, 2);
+            //let output = util.inspect(_this.view.widgets.sidebar.data, null, 6);
+
+
+
+            //let output = util.inspect(_this.view.widgets.sidebar.nodeLines, false, 20);
+            //let output = util.inspect(_this.view.widgets.sidebar.lineNbr, false, 20);
+            let output = util.inspect(_this.view.widgets.sidebar.nodeLines[8], false, 20);
+            //require('fs').writeFile('node.out', util.inspect(output, null, 20));
 
 
             //let output = sdata.children.filter(function(e){return e.sheet == 'Projects'})[0];
@@ -183,9 +199,13 @@ function MenuBar(options) {
         },
         Test2: function() {
             // TODO: move alert to screen level for debugging
-            let output = util.inspect(_this.items[8], null, true);
             //let alert = new DialogAlert({target: _this, parent: _this.screen});
             //m.alert('testing: '+ _this.view.config.timetrap_config.tui_question_prompts.value);
+
+            //update tables
+
+
+
             _this.view.widgets.workspace.setContent(output);
             setTimeout(function(){
                 _this.select(0);
