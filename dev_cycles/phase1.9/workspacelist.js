@@ -183,6 +183,9 @@ WorkspaceList.prototype.register_actions = function(view){
         _this.rows.select(idx);
         _this.screen.render();
     });
+
+    // _this.on('update', function(data)) {
+    // }
 }
 
 WorkspaceList.prototype.populate = function(tlist){

@@ -118,7 +118,12 @@ Timetrap.prototype.fetch_tree = function(list){
                 if ( wantedNode != sheet_arr[sheet_arr.length-1] ) {
                     //this isn't the endpoint so it's just a hiarchy element
                     sheet_val = '';
-                    list_info_val = '';
+                    list_info_val = {
+                        running: '',
+                        today: '',
+                        total_time: '',
+                        active: ''
+                    };
                 }
                 var newNode = currentNode[k] = {name: wantedNode, extended: true, sheet: sheet_val, info: list_info_val, children: []};
                 currentNode = newNode.children;
@@ -127,7 +132,14 @@ Timetrap.prototype.fetch_tree = function(list){
     }
 
     // TODO: default should be set by the user
-        let tree = {name: "Timetrap", extended: true, sheet: "default", children: output}
+    let tree = {name: "Timetrap", extended: true, sheet: "default",
+                    info: {
+                        running: '',
+                        today: '',
+                        total_time: '',
+                        active: ''
+                    },
+        children: output}
 
         _this.emit('fetch_tree', tree);
 

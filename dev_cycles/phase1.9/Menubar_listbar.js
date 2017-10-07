@@ -185,9 +185,11 @@ function MenuBar(options) {
 
             //let output = util.inspect(_this.view.widgets.sidebar.nodeLines, false, 20);
             //let output = util.inspect(_this.view.widgets.sidebar.lineNbr, false, 20);
-            let output = util.inspect(_this.view.widgets.sidebar.nodeLines[8], false, 20);
+            let node_lines = _this.view.widgets.sidebar.nodeLines;      //data in sidebar tree
+            //let output = util.inspect(_this.view.widgets.sidebar.nodeLines[8].info.running, false, 20);
             //require('fs').writeFile('node.out', util.inspect(output, null, 20));
 
+            let output = util.inspect(node_lines[8], false, 20);
 
             //let output = sdata.children.filter(function(e){return e.sheet == 'Projects'})[0];
             //require('fs').writeFile('node.out', util.inspect(output, null, 9));
@@ -203,10 +205,62 @@ function MenuBar(options) {
             //m.alert('testing: '+ _this.view.config.timetrap_config.tui_question_prompts.value);
 
             //update tables
+            this.proj_tree = this.widgets.dirtree.fetch(this.config.timetrap_config.tui_projects_template_path.value);
+
+            let node_lines = _this.view.widgets.sidebar.nodeLines;      //data in sidebar tree
+            //let items = [_this.view.widgets.sidebar.lineNbr];            //number of tree elements
+            let selected = _this.view.widgets.sidebar.rows.selected;    //currently selected node
 
 
 
-            _this.view.widgets.workspace.setContent(output);
+            let output = util.inspect(node_lines[8].info, false, 20);
+
+            let items = {
+                headers: [" Running", " Today", " Total Time"],
+                data: []
+            };
+            items.data = new Array(node_lines.length);
+
+            for ( let i in node_lines){
+                items.data[i] = ['','',''];
+            }
+
+            for ( let i in node_lines){
+                items.data[i] = [
+                    node_lines[i].info.running,
+                    node_lines[i].info.today,
+                    node_lines[i].info.total_time,
+                ];
+            }
+
+
+            // let items = {
+            //     headers: [" Running", " Today", " Total Time"],
+            //     data: [
+            //         ["GG000:00:00","XX000:00:00","00000:00:00"],
+            //         ["000:00:00","000:00:00","00000:00:00"],
+            //         ["000:00:00","000:00:00","00000:00:00"],
+            //         ["000:00:00","000:00:00","00000:00:00"],
+            //         ["000:00:00","000:00:00","00000:00:00"],
+            //         ["000:00:00","000:00:00","00000:00:00"],
+            //         ["000:00:00","000:00:00","00000:00:00"],
+            //         ["000:00:00","000:00:00","00000:00:00"],
+            //         ["000:00:00","000:00:00","00000:00:00"],
+            //         ["000:00:00","000:00:00","00000:00:00"],
+            //         ["000:00:00","000:00:00","00000:00:00"],
+            //         ["000:00:00","000:00:00","00000:00:00"],
+            //         ["000:00:00","000:00:00","00000:00:00"],
+            //         ["000:00:00","000:00:00","00000:00:00"],
+            //         ["000:00:00","000:00:00","00000:00:00"],
+            //         ["000:00:00","000:00:00","00000:00:00"],
+            //         ["000:00:00","000:00:00","00000:00:00"],
+            //         ["000:00:00","000:00:00","00000:00:00"],
+            //         ["000:00:00","000:00:00","00000:00:00"],
+            //         ["000:00:00","000:00:00","00000:00:00"],
+            //     ]};
+            _this.view.widgets.workspace.setData(items);
+
+
             setTimeout(function(){
                 _this.select(0);
                 _this.screen.render();
