@@ -2,6 +2,8 @@
 const {spawn } = require('child_process');
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
+const fs = require('fs');
+const path = require('path');
 
 
 function Timetrap(config) {
@@ -16,6 +18,144 @@ function Timetrap(config) {
 };
 Timetrap.prototype = Object.create(EventEmitter.prototype);
 Timetrap.prototype.constructor = Timetrap;
+
+Timetrap.prototype.monitorDB = function(){
+    let _this = this;
+
+    _this.watched_file = "/home/karl/Documents/Heorot/timetrap/timetrap.db"
+    _this.count = 0;
+    _this.watcher = fs.watch(_this.watched_file);
+
+    _this.watcher.on('change', (event, filename) => {
+
+        if(filename == path.basename(_this.watched_file) ){
+            //verify command
+
+            //incriment counter
+            _this.count++;
+
+            //start timer
+            if ( _this.count > 0) {
+                //the kernel emits multiple IN_MODIFY events via libuv + sometimes
+                // multiple writes occur for an action via timetrap -so we'll only
+                // report the composite within a (arbitrary) time window of 1 second.
+                // see [fs.watch has double change events for file writes · Issue #3042 · nodejs/node](https://github.com/nodejs/node/issues/3042)
+                setTimeout(function () {
+                    _this.catch_timer(_this.count);
+                }, 1000);
+            }
+        }
+        //else {console.log("got here: "+filename)}
+    });
+}
+
+Timetrap.prototype.catch_timer = function() {
+	if (this.count > 0){
+        this.emit('db_change');
+        //console.log("File "+_this.watched_file+" just changed "+count+" times!");
+		this.count=0;
+	}
+}
+
+Timetrap.prototype.callCommand = function(data){
+    let _this = this;
+
+    // data = {
+    //     type: 'type of command'
+    //     content: command from input
+    //     sheet: sheet to do the thing on
+    //     this: 'target of emit' ????
+    // }
+
+    let types = {
+        checkIn:{
+            command: ["in", "i"],
+            options: ["-a", "--at"]
+        },
+        checkOut:{
+            command: ["out", "o"],
+            options: ["-a", "--at"]
+        },
+        resume:{
+            command: ["resume", "r"],
+            options: [
+                "-a", "--at",
+                "-i", "--id"
+            ]
+        },
+        edit:{
+            command: ["edit", "e"],
+            options: [
+                // TODO: test compound statements
+                "--id", "-i",
+                "--start", "-s",        //can not be used with --end
+                "--end", "-e",          //can not be used with --start
+                "--append", "-z",
+                "--move", "-m"          //implement with EXTREME caution
+            ]
+        },
+        today:{
+            command: ["today"],
+        },
+        yesterday:{
+            command: ["yesterday"],
+        },
+        week:{
+            command: ["week"],
+        },
+        month:{
+            command: ["month"],
+        },
+        kill:{
+            command: ["kill", "k"],
+            //TODO: handle delicately -deletes either id or timesheet
+            options: ["--id", "-i"]
+        },
+        display: {
+            command: ["d", "display"],
+            options: [
+                "--ids", "-v",
+                "--start", "-s",
+                "--end", "-e",
+                "--grep", "-g"
+            ]
+        }
+    };
+
+    //TODO: sanitize content
+
+    // do command magic
+    let base_command = "timetrap";
+    //let base_command = "timetrap";
+    //let options = [data.content];
+    let options = [types[data.type].command[0], data.content];
+    let result = '';
+
+    const cmd = spawn(base_command, options);
+
+    cmd.stdout.on('data', (data) => {
+        //console.log(`${data}`);
+        if( typeof '${data}' === 'undefined' ){
+            return;
+        }
+            result += `${data}`.toString();
+    });
+
+    cmd.on('exit', function(code){
+        //return error
+    });
+
+    cmd.once('close', function (){
+        let response = {
+            type: data.type,
+            //err: err,
+            //data: data,
+            //obj: _this
+        };
+        _this.emit('timetrap_command', response);
+    });
+
+};
 
 Timetrap.prototype.fetch_list = function(){
     let _this = this;

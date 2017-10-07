@@ -28,6 +28,10 @@ function ListDisplay(options) {
         "Week",
         "Month",
         //"other",   //TODO: add user defined displays (from contrib filters)
+        "Today (all)",
+        "Yesterday (all)",
+        "Week (all)",
+        "Month (all)",
     ];
 
     //TODO: find max width of items based on parent element from listbar

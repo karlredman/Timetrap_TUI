@@ -44,20 +44,20 @@ DialogPrompt.prototype.cannedInput = function(type){
 
     let types = {
         checkIn:{
-            message: "Enter {bold}clock in{/bold} command",
-            value: "t in "
+            message: "Enter {bold}clock in{/bold} arguments",
+            value: ""
         },
         checkOut:{
-            message: "Enter {bold}clock out{/bold} command",
-            value: "t out "
+            message: "Enter {bold}clock out{/bold} arguments",
+            value: ""
         },
         edit:{
-            message: "Enter {bold}edit{/bold} command",
-            value: "t edit "
+            message: "Enter {bold}edit{/bold} arguments",
+            value: ""
         },
         resume:{
-            message: "Enter {bold}resume{/bold} command",
-            value: "t resume "
+            message: "Enter {bold}resume{/bold} arguments",
+            value: ""
         },
     };
 

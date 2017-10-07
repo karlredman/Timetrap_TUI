@@ -13,6 +13,9 @@ var WorkspaceList = require('./workspacelist');
 var Logger = require('./Logger_box');
 var ClocksRunning = require('./ClocksRunning_box')
 
+// dialogs
+var DialogMessage = require('./DialogMessage');
+
 function View(objects) {
 
     let _this=this;
@@ -68,12 +71,27 @@ function View(objects) {
     // set the tree data
     //this.widgets.sidebar.setData(proj_tree);
     _this.timetrap.fetch_list();
+    _this.timetrap.monitorDB();
+    _this.updateTimer();
             // var util = require('util')
             // require('fs').writeFile('node.out', util.inspect(proj_tree, null, 9));
     //this.widgets.sidebar.saveData(proj_tree);
 
     //screen.render();
     this.setWinFocus(this.pwin.side);
+}
+
+View.prototype.updateTimer = function(){
+    let _this = this;
+    //TODO: replace with something sane (i.e artificial timers)
+
+    setInterval(function() {
+        _this.timetrap.fetch_list();
+        //_this.log("{center}new {red-fg}log{/red-fg} line xxxxx-xxxxx-xxxxx-xxxxx-xxxxx: {/}"+ i++);
+        //_this.screen.render()
+    }
+        // , 1000)
+        , 5000)
 }
 
 View.prototype.create_widgets = function()
@@ -148,9 +166,9 @@ View.prototype.create_widgets = function()
         height: 1,
         top: 2,
         tags: true,
-        content: "{center}4/24 Active Clocks{/}",
+        // TODO: base min width of sidebar on this content
+        content: "{center}4/24 Active Time Sheets{/}",
     });
-
 
     // initialize contents
     //
@@ -162,6 +180,8 @@ View.prototype.register_actions = function()
 {
     let _this = this;
     _this.timetrap.on('fetch_list', (list) => {
+            // let m = new DialogMessage({target: _this, parent: _this.screen});
+            // m.alert('got here: ');
         //require('fs').writeFile('list.out', util.inspect(list, null, 20));
         this.timetrap.fetch_tree(list);
     });
@@ -170,8 +190,54 @@ View.prototype.register_actions = function()
         //console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
         _this.proj_tree = tree;
         _this.widgets.sidebar.setData(tree);
+        _this.updateWorkspaceData();
+
+        let idx = _this.widgets.sidebar.rows.selected;
+        _this.widgets.workspace.emit('syncSelect', idx, 'keypress');
+        //_this.widgets.workspacelist.
+
         _this.screen.render();
     });
+
+    _this.timetrap.on('db_change', function(){
+        _this.timetrap.fetch_list();
+        //_this.timetrap.fetch_tree(list);
+    });
+}
+
+View.prototype.updateWorkspaceData = function(){
+
+    //TODO: move this to workspace
+        let _this = this;
+
+    //_this.timetrap.fetch_list();
+
+            let node_lines = _this.widgets.sidebar.nodeLines;      //data in sidebar tree
+            //let items = [_this.view.widgets.sidebar.lineNbr];            //number of tree elements
+    //let selected = _this.view.widgets.sidebar.rows.selected;    //currently selected node
+
+    //        let output = util.inspect(node_lines[8].info, false, 20);
+
+            let items = {
+                headers: [" Running", " Today", " Total Time"],
+                data: []
+            };
+            items.data = new Array(node_lines.length);
+
+            for ( let i in node_lines){
+                items.data[i] = ['','',''];
+            }
+
+            for ( let i in node_lines){
+                items.data[i] = [
+                    node_lines[i].info.running,
+                    node_lines[i].info.today,
+                    node_lines[i].info.total_time,
+                ];
+            }
+
+
+            _this.widgets.workspace.setData(items);
 }
 
 View.prototype.setWinFocus = function(win){

@@ -211,8 +211,6 @@ function MenuBar(options) {
             //let items = [_this.view.widgets.sidebar.lineNbr];            //number of tree elements
             let selected = _this.view.widgets.sidebar.rows.selected;    //currently selected node
 
-
-
             let output = util.inspect(node_lines[8].info, false, 20);
 
             let items = {
@@ -368,17 +366,22 @@ MenuBar.prototype.register_actions = function(view){
         _this.screen.render();
     });
     _this.on('prompt', function(data){
-        if ( data.type === 'checkIn' ) {
-            _this.view.widgets.sidebar.rows.select(0);
+        let _this = this;
+        if (
+            ( data.type === 'checkIn' )
+            || ( data.type === 'checkOut' )
+        )
+        {
+            //_this.view.widgets.sidebar.rows.select(0);
+            _this.view.timetrap.callCommand({type: data.type, target: _this, content: data.data});
+            //let m = new DialogMessage({target: _this, parent: _this.screen}).alert('got here: '+ data.data);
         }
-        if (data.type === 'checkOut'){
-        }
-        //_this.select(0)
-        _this.screen.render();
     });
-    _this.on('testprompt', function(data){
-        _this.select(0)
-        _this.screen.render();
+    _this.view.timetrap.on('timetrap_command', function(response){
+        if(response.type == 'checkIn'){
+            // let m = new DialogMessage({target: _this, parent: _this.screen});
+            // m.alert('got here: '+ _this.view.config.timetrap_config.tui_question_prompts.value);
+        }
     });
 }
 
