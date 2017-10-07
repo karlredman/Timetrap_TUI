@@ -5,11 +5,11 @@ var blessed = require('blessed'),
     contrib = require('blessed-contrib');
 
 // View panels
-var MenuBar = require('./menubar');
-var SideBar = require('./sidebar');
+var MenuBar = require('./Menubar_listbar');
+var SideBar = require('./Sidebar_tree');
 var WorkspaceList = require('./workspacelist');
-var Logger = require('./logger');
-var ClocksRunning = require('./clocksrunning')
+var Logger = require('./Logger_box');
+var ClocksRunning = require('./ClocksRunning_box')
 
 function View(objects) {
 
@@ -159,43 +159,78 @@ View.prototype.create_widgets = function()
 View.prototype.register_actions = function()
 {
     let _this = this;
-    _this.timetrap.on('list', (list) => {
-        //gotta convert the list to a tree
+    _this.timetrap.on('fetch_list', (list) => {
+        // //gotta convert the list to a tree
 
 
-        let branches = [];
-        for (let i in list) {
-            //turn list into array of arrays
-            branches.push(list[i].name.split('.'));
-        }
+        // let branches = [];
+        // for (let i in list) {
+        //     //turn list into array of arrays
+        //     branches.push(list[i].name.split('.'));
+        // }
 
-        //build the tree
-        let family = [{name: 'Timetrap Default', extended: true, sheet: 'default', children: []}];
+        // //build the tree
+        // let family = [{name: 'Timetrap Default', extended: true, sheet: 'default', children: []}];
 
-        //account for no default
-        let sheet = '';
-        for ( let b in branches ){
-            if ( list[b].name == '')
-                sheet = '';
-            else{
-                sheet = list[b].name;
+        // //account for no default
+        // let sheet = '';
+        // for ( let b in branches ){
+        //     if ( list[b].name == '')
+        //         sheet = '';
+        //     else{
+        //         sheet = list[b].name;
+        //     }
+
+        //     let sheet_lifo = [];
+        //     //this.buildTree(branches[b], family[0].children, list[b].name);
+        //     _this.timetrap.buildTree(branches[b], family[0].children, sheet, sheet_lifo);
+        //     //if(b==2) break;
+        // }
+
+
+    var input = list;
+    var output = [];
+    for (var i = 0; i < input.length; i++) {
+        var chain = input[i].name.split(".");
+        var currentNode = output;
+        for (var j = 0; j < chain.length; j++) {
+            var wantedNode = chain[j];
+            var lastNode = currentNode;
+            for (var k = 0; k < currentNode.length; k++) {
+                if (currentNode[k].name == wantedNode) {
+                    currentNode = currentNode[k].children;
+                    break;
+                }
             }
+            // If we couldn't find an item in this list of children
+            // that has the right name, create one:
+            if (lastNode == currentNode) {
 
-            let sheet_lifo = [];
-            //this.buildTree(branches[b], family[0].children, list[b].name);
-            _this.timetrap.buildTree(branches[b], family[0].children, sheet, sheet_lifo);
-            //if(b==2) break;
+                //let sheet_arr = sheet.split('.');
+                let sheet_arr = chain;
+                let sheet_val = input[i].name;
+                if ( wantedNode != sheet_arr[sheet_arr.length-1] ) {
+                    //this isn't the endpoint so it's just a hiarchy element
+                    sheet_val = '';
+                }
+                var newNode = currentNode[k] = {name: wantedNode, extended: true, sheet: sheet_val, children: []};
+                currentNode = newNode.children;
+            }
         }
+    }
+
+        let tree = {name: "Timetrap", extended: true, sheet: "default", children: output}
+
 
         // TODO: move this. we're cheating
-        _this.timetrap.emit('tree', family);
+        _this.timetrap.emit('tree', tree);
 
     });
 
     _this.timetrap.on('tree', function(tree){
         //console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
         //_this.widgets.sidebar.setData(_this.proj_tree);
-        _this.widgets.sidebar.setData(tree[0]);
+        _this.widgets.sidebar.setData(tree);
         //console.log(tree)
         _this.screen.render();
         // console.log(util.inspect(tree, null, 10));

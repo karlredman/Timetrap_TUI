@@ -9,7 +9,7 @@ var opt = require('commander');
 var Configuration = require('./config'),
     DirTree = require('./dirtree'),
     ViewControl = require('./viewcontrol'),
-    Timetrap = require('./timetrap');
+    Timetrap = require('./timetrap2');
 
 var screen = blessed.screen({
     autoPadding: true,

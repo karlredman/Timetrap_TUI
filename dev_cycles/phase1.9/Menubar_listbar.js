@@ -5,8 +5,8 @@ var DialogPrompt = require('./DialogPrompt'),
     DialogQuestion = require('./DialogQuestion'),
     DialogMessage = require('./DialogMessage'),
     DialogAlert = require('./DialogAlert'),
-    ListDisplay = require('./ListDisplay'),
-    ListResume = require('./ListResume'),
+    ListDisplay = require('./MenuDisplay_list'),
+    ListResume = require('./MenuResume_list'),
     BigBox = require('./bigbox');
 var util = require('util');
 

@@ -9,7 +9,7 @@ var Configuration = require('./config');
 // views
 var View = require('./view');
 var HelpView = require('./helpview');
-var MenuBar = require('./menubar');
+var MenuBar = require('./Menubar_listbar');
 
 //function ViewControl(config, screen){
 function ViewControl(objects){
