@@ -45,7 +45,7 @@ Timetrap.prototype.fetch_list = function(){
 
             //determine active state
             if( arr[i][0] == ' ' ) {
-                j.active = 'na';
+                j.active = '';
             }
             else {
                 if( arr[i][0] == '-' ) {
@@ -119,9 +119,9 @@ Timetrap.prototype.fetch_tree = function(list){
                     //this isn't the endpoint so it's just a hiarchy element
                     sheet_val = '';
                     list_info_val = {
-                        running: '',
-                        today: '',
-                        total_time: '',
+                        running: '-:--:--',
+                        today: '-:--:--',
+                        total_time: '-:--:--',
                         active: ''
                     };
                 }
@@ -134,9 +134,9 @@ Timetrap.prototype.fetch_tree = function(list){
     // TODO: default should be set by the user
     let tree = {name: "Timetrap", extended: true, sheet: "default",
                     info: {
-                        running: '',
-                        today: '',
-                        total_time: '',
+                        running: '-:--:--',
+                        today: '-:--:--',
+                        total_time: '-:--:--',
                         active: ''
                     },
         children: output}
@@ -145,36 +145,36 @@ Timetrap.prototype.fetch_tree = function(list){
 
 }
 
-Timetrap.prototype.buildTree = function(list, family, sheet, info) {
+// Timetrap.prototype.buildTree = function(list, family, sheet, info) {
 
-    let _this = this;
+//     let _this = this;
 
-    let found = false;
-    let f = 0,
-        i = 0;
+//     let found = false;
+//     let f = 0,
+//         i = 0;
 
-    for ( i in list) {
-        for(f in family){
-            if( list[i] == family[f].name) {
-                found = true;
-                this.buildTree(list.slice(i+1,list.length), family[f].children, sheet, info);
-                break;
-            }
-        }
-        if(!found){
-            //find out if this is the endpoint. If not then there's no sheet.
-            let sheet_arr = sheet.split('.');
-            let sheet_val = sheet;
-            if ( list[i] != sheet_arr[sheet_arr.length-1] ) {
-                //this isn't the endpoint so it's just a hiarchy element
-                sheet_val = '';
-            }
+//     for ( i in list) {
+//         for(f in family){
+//             if( list[i] == family[f].name) {
+//                 found = true;
+//                 this.buildTree(list.slice(i+1,list.length), family[f].children, sheet, info);
+//                 break;
+//             }
+//         }
+//         if(!found){
+//             //find out if this is the endpoint. If not then there's no sheet.
+//             let sheet_arr = sheet.split('.');
+//             let sheet_val = sheet;
+//             if ( list[i] != sheet_arr[sheet_arr.length-1] ) {
+//                 //this isn't the endpoint so it's just a hiarchy element
+//                 sheet_val = '';
+//             }
 
-            //push the array
-            family.push({name: list[i], extended: true, sheet: sheet_val, children: []});
-        }
-    }
-}
+//             //push the array
+//             family.push({name: list[i], extended: true, sheet: sheet_val, children: []});
+//         }
+//     }
+// }
 
 Timetrap.prototype.type = 'Timetrap';
 module.exports = Timetrap;

@@ -205,7 +205,7 @@ function MenuBar(options) {
             //m.alert('testing: '+ _this.view.config.timetrap_config.tui_question_prompts.value);
 
             //update tables
-            this.proj_tree = this.widgets.dirtree.fetch(this.config.timetrap_config.tui_projects_template_path.value);
+            _this.view.timetrap.fetch_list();
 
             let node_lines = _this.view.widgets.sidebar.nodeLines;      //data in sidebar tree
             //let items = [_this.view.widgets.sidebar.lineNbr];            //number of tree elements
@@ -363,6 +363,15 @@ MenuBar.prototype.register_actions = function(view){
             if(data.data) {
                 //stop all timers
             }
+        }
+        //_this.select(0)
+        _this.screen.render();
+    });
+    _this.on('prompt', function(data){
+        if ( data.type === 'checkIn' ) {
+            _this.view.widgets.sidebar.rows.select(0);
+        }
+        if (data.type === 'checkOut'){
         }
         //_this.select(0)
         _this.screen.render();
