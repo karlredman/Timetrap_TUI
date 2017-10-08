@@ -4,15 +4,15 @@ var blessed = require('blessed'),
     contrib = require('blessed-contrib');
 
 // app packages
-var Configuration = require('./config');
+//var Configuration = require('./config');
 
 // views
-var View = require('./view');
-var HelpView = require('./helpview');
-var MenuBar = require('./Menubar_listbar');
+var View = require('./ViewMain');
+var HelpView = require('./ViewHelp');
+//var MenuBar = require('./PanelMenubarListbar');
 
-//function ViewControl(config, screen){
-function ViewControl(objects){
+//function ViewController(config, screen){
+function ViewController(objects){
     let _this=this;
 
     //convenience
@@ -21,13 +21,13 @@ function ViewControl(objects){
 
     //set the main view
     this.view = new View(objects);
+    this.view.register_actions();
 
     _this.register_actions(this);
     _this.screen.render();
-
 }
 
-ViewControl.prototype.register_actions = function(obj){
+ViewController.prototype.register_actions = function(obj){
     let _this = this;
 
     //view destroyers
@@ -77,5 +77,5 @@ ViewControl.prototype.register_actions = function(obj){
 }
 
 
-ViewControl.prototype.type = 'ViewControl';
-module.exports = ViewControl;
+ViewController.prototype.type = 'ViewController';
+module.exports = ViewController;

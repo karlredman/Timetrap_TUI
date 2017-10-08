@@ -6,10 +6,10 @@ var blessed = require('blessed'),
 var opt = require('commander');
 
 // app packages
-var Configuration = require('./config'),
-    DirTree = require('./dirtree'),
-    ViewControl = require('./viewcontrol'),
-    Timetrap = require('./timetrap2');
+var Configuration = require('./Configuration'),
+    //DirTree = require('./dirtree'),
+    ViewControl = require('./ViewController'),
+    Timetrap = require('./Timetrap');
 
 var screen = blessed.screen({
     autoPadding: true,
@@ -29,7 +29,7 @@ function main(argv, callback) {
     config.fetch();
 
     //adjust config with commandline
-    let conf = config.timetrap_config //convenienc
+    let conf = config.settings //convenienc
     opt
         .version(config.version)
         .description(
@@ -50,12 +50,9 @@ function main(argv, callback) {
         .option('-d, --developer_mode [true|FALSE]',
             conf.tui_developer_mode.desc,
             conf.tui_developer_mode.value)
-        .option('-c, --create_missing_sheets [true|FALSE]',
+        .option('-c, --create_missing_sheets [true|FALSE]', // TODO
             conf.tui_create_missing_sheets.desc,
             conf.tui_create_missing_sheets.value)
-        .option('-C, --recreate_sheets [true|FALSE]',
-            conf.tui_recreate_sheets.desc,
-            conf.tui_recreate_sheets.value)
         .option('-H, --HELP',
             "Print full documentation help and exit")    // TODO
         .option('-p, --print_config [true|FALSE]',
@@ -73,19 +70,22 @@ function main(argv, callback) {
 
     // map arguments (commandline overrides config file)
     // TODO: figure out a better way to do this
-    config.timetrap_config.tui_developer_mode.value = opt.developer_mode;
-    config.timetrap_config.tui_question_prompts.value = opt.question_prompts
+    config.settings.tui_developer_mode.value = opt.developer_mode;
+    config.settings.tui_question_prompts.value = opt.question_prompts
 
-    //console.log(config.timetrap_config.tui_question_prompts.value); process.exit(0)
+    //console.log(config.settings.tui_question_prompts.value); process.exit(0)
 
     // instantiate supporting objects
-    let dirtree = new DirTree(config);
+    //let dirtree = new DirTree(config);
     let timetrap = new Timetrap(config);
 
     // the controller of views
     //ViewControl.viewcontrol = new ViewControl(config, screen);
-    ViewControl.viewcontrol = new ViewControl({config: config, screen: screen,
-        dirtree: dirtree, timetrap: timetrap});
+    ViewControl.viewcontrol = new ViewControl({
+        config: config,
+        screen: screen,
+        timetrap: timetrap
+    });
 
     // return start(data, function(err) {
     //     if (err) return callback(err);

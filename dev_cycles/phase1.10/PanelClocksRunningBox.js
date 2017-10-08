@@ -3,8 +3,8 @@
 var blessed = require('blessed'),
     Node = blessed.Node;
 
-function ClocksRunning(options) {
-    if (!(this instanceof Node)) return new ClocksRunning(options);
+function PanelClocksRunningBox(options) {
+    if (!(this instanceof Node)) return new PanelClocksRunningBox(options);
     let _this=this;
 
     _this.options = options;
@@ -13,14 +13,14 @@ function ClocksRunning(options) {
 
     blessed.box.call(this, options);
 }
-ClocksRunning.prototype = Object.create(blessed.box.prototype);
-ClocksRunning.prototype.constructor = ClocksRunning;
+PanelClocksRunningBox.prototype = Object.create(blessed.box.prototype);
+PanelClocksRunningBox.prototype.constructor = PanelClocksRunningBox;
 
-ClocksRunning.prototype.register_actions = function(view){
+PanelClocksRunningBox.prototype.register_actions = function(view){
     let _this = this;
     this.view = view;
 
     // TODO: register for db change listener
 }
-ClocksRunning.prototype.type = 'ClocksRunning';
-module.exports = ClocksRunning;
+PanelClocksRunningBox.prototype.type = 'PanelClocksRunningBox';
+module.exports = PanelClocksRunningBox;

@@ -5,10 +5,10 @@ var blessed = require('blessed'),
     contrib = require('blessed-contrib'),
     Node = blessed.Node;
 
-function HelpView(options) {
+function ViewHelp(options) {
     let _this=this;
 
-    if (!(this instanceof Node)) return new HelpView(options);
+    if (!(this instanceof Node)) return new ViewHelp(options);
 
     // set overridable defaults
     options = options || {};
@@ -31,22 +31,22 @@ function HelpView(options) {
     _this.on('keypress', function(ch, key) {
         if (key.name === 'escape') {
             //requires 2 key presses
-            _this.options.parent.emit('destroy', "HelpView");
+            _this.options.parent.emit('destroy', "ViewHelp");
             return;
         }
         if (key.name === 'q') {
-            _this.options.parent.emit('destroy', "HelpView");
+            _this.options.parent.emit('destroy', "ViewHelp");
             return;
         }
     });
 
 }
-HelpView.prototype = Object.create(blessed.textarea.prototype);
-HelpView.prototype.constructor = HelpView;
+ViewHelp.prototype = Object.create(blessed.textarea.prototype);
+ViewHelp.prototype.constructor = ViewHelp;
 
-HelpView.prototype.hide = function(){
+ViewHelp.prototype.hide = function(){
     this.options.hidden = true;
 }
 
-HelpView.prototype.type = 'HelpView';
-module.exports = HelpView;
+ViewHelp.prototype.type = 'ViewHelp';
+module.exports = ViewHelp;

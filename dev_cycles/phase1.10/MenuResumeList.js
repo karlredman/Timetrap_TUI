@@ -2,8 +2,8 @@
 var blessed = require('blessed'),
     Node = blessed.Node;
 
-function ListDisplay(options) {
-    if (!(this instanceof Node)) return new ListDisplay(options);
+function MenuResumeList(options) {
+    if (!(this instanceof Node)) return new MenuResumeList(options);
     let _this=this;
 
     _this.options = options;
@@ -23,15 +23,9 @@ function ListDisplay(options) {
     options.style.border.fg = options.style.border.fg || "blue";
 
     options.items = [
-        "Today",
-        "Yesterday",
-        "Week",
-        "Month",
+        "Latest",
+        "Pick",
         //"other",   //TODO: add user defined displays (from contrib filters)
-        "Today (all)",
-        "Yesterday (all)",
-        "Week (all)",
-        "Month (all)",
     ];
 
     //TODO: find max width of items based on parent element from listbar
@@ -101,9 +95,9 @@ function ListDisplay(options) {
             _this.screen.render();
     });
 }
-ListDisplay.prototype = Object.create(blessed.list.prototype);
-ListDisplay.prototype.constructor = ListDisplay;
+MenuResumeList.prototype = Object.create(blessed.list.prototype);
+MenuResumeList.prototype.constructor = MenuResumeList;
 
 
-ListDisplay.prototype.type = 'ListDisplay';
-module.exports = ListDisplay;
+MenuResumeList.prototype.type = 'MenuResumeList';
+module.exports = MenuResumeList;

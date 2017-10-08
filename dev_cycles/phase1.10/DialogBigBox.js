@@ -5,8 +5,8 @@ var blessed = require('blessed'),
 
 var util = require('util');
 
-function BigBox(options) {
-    if (!(this instanceof Node)) return new BigBox(options);
+function DialogBigBox(options) {
+    if (!(this instanceof Node)) return new DialogBigBox(options);
 
     let _this = this;
 
@@ -58,10 +58,10 @@ function BigBox(options) {
 }
 
 
-BigBox.prototype = Object.create(Box.prototype);
-BigBox.prototype.constructor = BigBox;
+DialogBigBox.prototype = Object.create(Box.prototype);
+DialogBigBox.prototype.constructor = DialogBigBox;
 
-BigBox.prototype.register_actions = function(){
+DialogBigBox.prototype.register_actions = function(){
 
     let _this = this;
     //this.view = view;
@@ -95,5 +95,5 @@ BigBox.prototype.register_actions = function(){
     });
 }
 
-BigBox.prototype.type = 'BigBox';
-module.exports = BigBox;
+DialogBigBox.prototype.type = 'DialogBigBox';
+module.exports = DialogBigBox;

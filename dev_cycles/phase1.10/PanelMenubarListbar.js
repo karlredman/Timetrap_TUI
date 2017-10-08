@@ -4,22 +4,21 @@ var blessed = require('blessed'),
 var DialogPrompt = require('./DialogPrompt'),
     DialogQuestion = require('./DialogQuestion'),
     DialogMessage = require('./DialogMessage'),
-    DialogAlert = require('./DialogAlert'),
-    ListDisplay = require('./MenuDisplay_list'),
-    ListResume = require('./MenuResume_list'),
-    BigBox = require('./bigbox');
+    ListDisplay = require('./MenuDisplayList'),
+    ListResume = require('./MenuResumeList'),
+    BigBox = require('./DialogBigBox');
 var util = require('util');
 
-function MenuBar(options) {
+function PanelMenubarListbar(options) {
 
 
-    if (!(this instanceof Node)) return new MenuBar(options);
+    if (!(this instanceof Node)) return new PanelMenubarListbar(options);
     let _this=this;
 
-    _this.options = options;
-    _this.screen = options.parent;
-    _this.view; // set in register_actions
-
+    this.options = options;
+    this.screen = options.parent;
+    this.view = options.view;
+    this.log = this.view.widgets.logger; //??
 
     // set overridable defaults
     options = options || {};
@@ -121,7 +120,7 @@ function MenuBar(options) {
         },
         Stop_all: function(){
             let question = new DialogQuestion({target: _this, parent: _this.screen});
-            if( _this.view.config.timetrap_config.tui_question_prompts.value === true ){
+            if( _this.view.config.settings.tui_question_prompts.value === true ){
                 question.cannedInput('stopAll');
             }
             else {
@@ -150,7 +149,7 @@ function MenuBar(options) {
         },
         eXit: function(){
             let question = new DialogQuestion({target: _this, parent: _this.screen});
-            if( _this.view.config.timetrap_config.tui_question_prompts.value === true ){
+            if( _this.view.config.settings.tui_question_prompts.value === true ){
                 question.cannedInput('exit');
             }
             else {
@@ -169,7 +168,8 @@ function MenuBar(options) {
             let bb = new BigBox({parent: _this.screen});
             //let output = util.inspect(_this.items[8], null, true);
             //let output = util.inspect(_this.view.widgets.sidebar.rows.getItem(0), false, 2);
-            //let output = _this.view.widgets.sidebar.savedData;
+            let output = util.inspect(_this.view.widgets.logger, false, 2);
+            //let output = _this.view.widgets.sidebar;
             //let sdata = _this.view.widgets.sidebar.data;
             //let output = util.inspect(_this.view.widgets.sidebar.rows.getItem(0), false, 2);
             //
@@ -179,17 +179,17 @@ function MenuBar(options) {
 
             //let output = util.inspect(_this.view.widgets.sidebar.rows.selected, null, 2);
             //let output = util.inspect(_this.view.widgets.sidebar.data[_this.view.widgets.sidebar.rows.selected], null, 2);
-            //let output = util.inspect(_this.view.widgets.sidebar.data, null, 6);
+            // let output = util.inspect(_this.view.widgets.sidebar.data, null, 6);
 
 
 
             //let output = util.inspect(_this.view.widgets.sidebar.nodeLines, false, 20);
             //let output = util.inspect(_this.view.widgets.sidebar.lineNbr, false, 20);
-            let node_lines = _this.view.widgets.sidebar.nodeLines;      //data in sidebar tree
+            //let node_lines = _this.view.widgets.sidebar.nodeLines;      //data in sidebar tree
             //let output = util.inspect(_this.view.widgets.sidebar.nodeLines[8].info.running, false, 20);
             //require('fs').writeFile('node.out', util.inspect(output, null, 20));
 
-            let output = util.inspect(node_lines[8], false, 20);
+            //let output = util.inspect(node_lines[8], false, 20);
 
             //let output = sdata.children.filter(function(e){return e.sheet == 'Projects'})[0];
             //require('fs').writeFile('node.out', util.inspect(output, null, 9));
@@ -200,64 +200,8 @@ function MenuBar(options) {
             }, 1000);
         },
         Test2: function() {
-            // TODO: move alert to screen level for debugging
-            //let alert = new DialogAlert({target: _this, parent: _this.screen});
-            //m.alert('testing: '+ _this.view.config.timetrap_config.tui_question_prompts.value);
 
-            //update tables
-            _this.view.timetrap.fetch_list();
-
-            let node_lines = _this.view.widgets.sidebar.nodeLines;      //data in sidebar tree
-            //let items = [_this.view.widgets.sidebar.lineNbr];            //number of tree elements
-            let selected = _this.view.widgets.sidebar.rows.selected;    //currently selected node
-
-            let output = util.inspect(node_lines[8].info, false, 20);
-
-            let items = {
-                headers: [" Running", " Today", " Total Time"],
-                data: []
-            };
-            items.data = new Array(node_lines.length);
-
-            for ( let i in node_lines){
-                items.data[i] = ['','',''];
-            }
-
-            for ( let i in node_lines){
-                items.data[i] = [
-                    node_lines[i].info.running,
-                    node_lines[i].info.today,
-                    node_lines[i].info.total_time,
-                ];
-            }
-
-
-            // let items = {
-            //     headers: [" Running", " Today", " Total Time"],
-            //     data: [
-            //         ["GG000:00:00","XX000:00:00","00000:00:00"],
-            //         ["000:00:00","000:00:00","00000:00:00"],
-            //         ["000:00:00","000:00:00","00000:00:00"],
-            //         ["000:00:00","000:00:00","00000:00:00"],
-            //         ["000:00:00","000:00:00","00000:00:00"],
-            //         ["000:00:00","000:00:00","00000:00:00"],
-            //         ["000:00:00","000:00:00","00000:00:00"],
-            //         ["000:00:00","000:00:00","00000:00:00"],
-            //         ["000:00:00","000:00:00","00000:00:00"],
-            //         ["000:00:00","000:00:00","00000:00:00"],
-            //         ["000:00:00","000:00:00","00000:00:00"],
-            //         ["000:00:00","000:00:00","00000:00:00"],
-            //         ["000:00:00","000:00:00","00000:00:00"],
-            //         ["000:00:00","000:00:00","00000:00:00"],
-            //         ["000:00:00","000:00:00","00000:00:00"],
-            //         ["000:00:00","000:00:00","00000:00:00"],
-            //         ["000:00:00","000:00:00","00000:00:00"],
-            //         ["000:00:00","000:00:00","00000:00:00"],
-            //         ["000:00:00","000:00:00","00000:00:00"],
-            //         ["000:00:00","000:00:00","00000:00:00"],
-            //     ]};
-            _this.view.widgets.workspace.setData(items);
-
+            _this.view.widgets.logger.msg("stuff", _this.view.widgets.logger.loglevel.production.error);
 
             setTimeout(function(){
                 _this.select(0);
@@ -271,14 +215,13 @@ function MenuBar(options) {
 
     //this.screen.render();
 }
-MenuBar.prototype = Object.create(blessed.listbar.prototype);
-MenuBar.prototype.constructor = MenuBar;
+PanelMenubarListbar.prototype = Object.create(blessed.listbar.prototype);
+PanelMenubarListbar.prototype.constructor = PanelMenubarListbar;
 
 
-MenuBar.prototype.register_actions = function(view){
+PanelMenubarListbar.prototype.register_actions = function(view){
 
     let _this = this;
-    this.view = view;
 
     _this.on('keypress', function(ch, key) {
         //custom key bindings
@@ -370,6 +313,7 @@ MenuBar.prototype.register_actions = function(view){
         if (
             ( data.type === 'checkIn' )
             || ( data.type === 'checkOut' )
+            || ( data.type === 'edit' )
         )
         {
             //_this.view.widgets.sidebar.rows.select(0);
@@ -385,5 +329,5 @@ MenuBar.prototype.register_actions = function(view){
     });
 }
 
-MenuBar.prototype.type = 'MenuBar';
-module.exports = MenuBar;
+PanelMenubarListbar.prototype.type = 'PanelMenubarListbar';
+module.exports = PanelMenubarListbar;

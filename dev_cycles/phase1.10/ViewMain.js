@@ -7,16 +7,16 @@ var blessed = require('blessed'),
 var util = require('util');
 
 // View panels
-var MenuBar = require('./Menubar_listbar');
-var SideBar = require('./Sidebar_tree');
-var WorkspaceList = require('./workspacelist');
-var Logger = require('./Logger_box');
-var ClocksRunning = require('./ClocksRunning_box')
+var MenuBar = require('./PanelMenubarListbar');
+var SideBar = require('./PanelSidebarTree');
+var WorkspaceList = require('./PanelWorkspaceList');
+var Logger = require('./PanelLoggerBox.js');
+var ClocksRunning = require('./PanelClocksRunningBox')
 
 // dialogs
 var DialogMessage = require('./DialogMessage');
 
-function View(objects) {
+function ViewMain(objects) {
 
     let _this=this;
     _this.widgets = {};
@@ -24,12 +24,11 @@ function View(objects) {
     _this.config = objects.config;
     _this.timetrap = objects.timetrap;
 
-    //fetch projects list
-    //this.widgets.dirtree = new DirTree(config);
-    this.widgets.dirtree = objects.dirtree;
-    this.proj_tree = this.widgets.dirtree.fetch(this.config.timetrap_config.tui_projects_template_path.value);
 
-    this.config.view.sidew = this.widgets.dirtree.getMaxSideNameLen();   //side menu width
+    // TODO: reaplace with actual `t list` width
+    this.config.view.sidew = '50%';   //side menu width
+    //this.config.view.sidew = 35;   //side menu width
+
     this.config.view.numwnd = 3;                    //number of windows
     this.config.view.curwind = 1;                   //current window (starts at 1, screen === 0)
 
@@ -61,27 +60,20 @@ function View(objects) {
     this.curWin=this.pwin.side;
 
     for (let key in this.widgets) {
-        //if (this.widgets.hasOwnProperty(key)) continue;
+        // if (this.widgets.hasOwnProperty(key)) continue;
         this.widgets[key].register_actions(_this)
     }
 
-    //self register
-    this.register_actions();
-
     // set the tree data
-    //this.widgets.sidebar.setData(proj_tree);
     _this.timetrap.fetch_list();
     _this.timetrap.monitorDB();
     _this.updateTimer();
-    // var util = require('util')
-    // require('fs').writeFile('node.out', util.inspect(proj_tree, null, 9));
-    //this.widgets.sidebar.saveData(proj_tree);
 
-    //screen.render();
-    this.setWinFocus(this.pwin.side);
+    // _this.screen.render();
+    _this.setWinFocus(this.pwin.side);
 }
 
-View.prototype.updateTimer = function(){
+ViewMain.prototype.updateTimer = function(){
     let _this = this;
     //TODO: replace with something sane (i.e artificial timers)
 
@@ -92,14 +84,15 @@ View.prototype.updateTimer = function(){
         , 5000)
 }
 
-View.prototype.create_widgets = function()
+ViewMain.prototype.create_widgets = function()
 {
     let _this=this;
 
     //menubar at top
     this.widgets.menubar = new MenuBar({
-        autoCommandKeys: true,
         parent: _this.screen,
+        view: this,
+        autoCommandKeys: true,
         left: 0,
         top: 0,
     });
@@ -108,6 +101,7 @@ View.prototype.create_widgets = function()
     //project tree on the left
     this.widgets.sidebar = new SideBar({
         parent: _this.screen,
+        view: _this,
         left: 0,
         top: 1,
         bottom: 1,
@@ -118,6 +112,7 @@ View.prototype.create_widgets = function()
     // the main area
     this.widgets.workspace = new WorkspaceList({
         parent: _this.screen,
+        view: _this,
         left: _this.config.view.sidew,
         right: 0,
         top: 1,
@@ -128,6 +123,7 @@ View.prototype.create_widgets = function()
     //the logger at bottom of main window
     this.widgets.logger = new Logger({
         parent: _this.screen,
+        view: _this,
         left: 0,
         bottom: 0,
         height: 1,
@@ -136,6 +132,7 @@ View.prototype.create_widgets = function()
     // line to show menu is focused
     _this.menuline = new blessed.line({
         parent: _this.screen,
+        view: _this,
         left: 0,
         height: 1,
         top: 1,
@@ -147,6 +144,7 @@ View.prototype.create_widgets = function()
     //used to show log is focused
     _this.logline = new blessed.line({
         parent: _this.screen,
+        view: _this,
         left: 0,
         height: 1,
         bottom: 1,
@@ -156,10 +154,13 @@ View.prototype.create_widgets = function()
     })
 
     // message of number of clocks active
-    // TODO: this is a hack overlaying a box on top
+    // TODO: this is a hack overlaying a box on top of the sidebar object
     this.widgets.clocksRunning = new ClocksRunning({
         parent: _this.screen,
-        width: _this.config.view.sidew-2,
+        view: _this,
+        //width: _this.config.view.sidew-2,   //TODO: forces sidebar to be absolute size instead of %
+        //width: _this.screen.cols/2-4,
+        width: "48%",           // TODO this is still a hack
         left: 1,
         height: 1,
         top: 2,
@@ -168,13 +169,15 @@ View.prototype.create_widgets = function()
         content: "{center}4/24 Active Time Sheets{/}",
     });
 
+    //_this.screen.render();
+
     // initialize contents
     //
     // populate the workspace list view table
     //_this.timetrap.fetch_list();
 }
 
-View.prototype.register_actions = function()
+ViewMain.prototype.register_actions = function()
 {
     let _this = this;
     _this.timetrap.on('fetch_list', (list) => {
@@ -193,6 +196,9 @@ View.prototype.register_actions = function()
         let idx = _this.widgets.sidebar.rows.selected;
         _this.widgets.workspace.emit('syncSelect', idx, 'keypress');
 
+        // _this.widgets.clocksRunning.hide();
+
+
         _this.screen.render();
     });
 
@@ -202,7 +208,7 @@ View.prototype.register_actions = function()
     });
 }
 
-View.prototype.updateWorkspaceData = function(){
+ViewMain.prototype.updateWorkspaceData = function(){
 
     //TODO: move this to workspace
     let _this = this;
@@ -237,7 +243,7 @@ View.prototype.updateWorkspaceData = function(){
     _this.widgets.workspace.setData(items);
 }
 
-View.prototype.setWinFocus = function(win){
+ViewMain.prototype.setWinFocus = function(win){
     let _this = this;
     // The focus and effects are managed here so mouse actions don't cause
     // false positives.
@@ -304,7 +310,7 @@ View.prototype.setWinFocus = function(win){
     _this.screen.render();
 }
 
-View.prototype.setWinFocusNext = function(){
+ViewMain.prototype.setWinFocusNext = function(){
     let _this = this;
     if((_this.curWin+1) > _this.pwin.last){
         _this.curWin = _this.pwin.first;
@@ -318,7 +324,7 @@ View.prototype.setWinFocusNext = function(){
     return
 }
 
-View.prototype.setWinFocusPrev = function(){
+ViewMain.prototype.setWinFocusPrev = function(){
     let _this = this;
     if((_this.curWin-1) < _this.pwin.first){
         _this.curWin = _this.pwin.last;
@@ -332,7 +338,7 @@ View.prototype.setWinFocusPrev = function(){
     return
 }
 
-View.prototype.hideAll = function(){
+ViewMain.prototype.hideAll = function(){
     let _this = this;
     for (let key in _this.widgets) {
 
@@ -343,7 +349,7 @@ View.prototype.hideAll = function(){
     _this.screen.render();
 }
 
-View.prototype.showAll = function(set_focus){
+ViewMain.prototype.showAll = function(set_focus){
     let _this = this;
     for (let key in _this.widgets) {
 
@@ -358,5 +364,5 @@ View.prototype.showAll = function(set_focus){
     _this.screen.render();
 }
 
-View.prototype.type = 'View';
-module.exports = View;
+ViewMain.prototype.type = 'ViewMain';
+module.exports = ViewMain;
