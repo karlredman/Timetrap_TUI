@@ -73,8 +73,8 @@ function View(objects) {
     _this.timetrap.fetch_list();
     _this.timetrap.monitorDB();
     _this.updateTimer();
-            // var util = require('util')
-            // require('fs').writeFile('node.out', util.inspect(proj_tree, null, 9));
+    // var util = require('util')
+    // require('fs').writeFile('node.out', util.inspect(proj_tree, null, 9));
     //this.widgets.sidebar.saveData(proj_tree);
 
     //screen.render();
@@ -87,8 +87,6 @@ View.prototype.updateTimer = function(){
 
     setInterval(function() {
         _this.timetrap.fetch_list();
-        //_this.log("{center}new {red-fg}log{/red-fg} line xxxxx-xxxxx-xxxxx-xxxxx-xxxxx: {/}"+ i++);
-        //_this.screen.render()
     }
         // , 1000)
         , 5000)
@@ -180,64 +178,63 @@ View.prototype.register_actions = function()
 {
     let _this = this;
     _this.timetrap.on('fetch_list', (list) => {
-            // let m = new DialogMessage({target: _this, parent: _this.screen});
-            // m.alert('got here: ');
-        //require('fs').writeFile('list.out', util.inspect(list, null, 20));
+        //  we have a new `t list` -now update the tree
         this.timetrap.fetch_tree(list);
     });
 
     _this.timetrap.on('fetch_tree', function(tree){
-        //console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
-        _this.proj_tree = tree;
+        // set the sidebar contents and update the workspace
+
+        // update sidebar
         _this.widgets.sidebar.setData(tree);
         _this.updateWorkspaceData();
 
+        //synchronize the selection bar
         let idx = _this.widgets.sidebar.rows.selected;
         _this.widgets.workspace.emit('syncSelect', idx, 'keypress');
-        //_this.widgets.workspacelist.
 
         _this.screen.render();
     });
 
     _this.timetrap.on('db_change', function(){
+        //update the sidebar and workspace when the db changes
         _this.timetrap.fetch_list();
-        //_this.timetrap.fetch_tree(list);
     });
 }
 
 View.prototype.updateWorkspaceData = function(){
 
     //TODO: move this to workspace
-        let _this = this;
+    let _this = this;
 
     //_this.timetrap.fetch_list();
 
-            let node_lines = _this.widgets.sidebar.nodeLines;      //data in sidebar tree
-            //let items = [_this.view.widgets.sidebar.lineNbr];            //number of tree elements
+    let node_lines = _this.widgets.sidebar.nodeLines;      //data in sidebar tree
+    //let items = [_this.view.widgets.sidebar.lineNbr];            //number of tree elements
     //let selected = _this.view.widgets.sidebar.rows.selected;    //currently selected node
 
     //        let output = util.inspect(node_lines[8].info, false, 20);
 
-            let items = {
-                headers: [" Running", " Today", " Total Time"],
-                data: []
-            };
-            items.data = new Array(node_lines.length);
+    let items = {
+        headers: [" Running", " Today", " Total Time"],
+        data: []
+    };
+    items.data = new Array(node_lines.length);
 
-            for ( let i in node_lines){
-                items.data[i] = ['','',''];
-            }
+    for ( let i in node_lines){
+        items.data[i] = ['','',''];
+    }
 
-            for ( let i in node_lines){
-                items.data[i] = [
-                    node_lines[i].info.running,
-                    node_lines[i].info.today,
-                    node_lines[i].info.total_time,
-                ];
-            }
+    for ( let i in node_lines){
+        items.data[i] = [
+            node_lines[i].info.running,
+            node_lines[i].info.today,
+            node_lines[i].info.total_time,
+        ];
+    }
 
 
-            _this.widgets.workspace.setData(items);
+    _this.widgets.workspace.setData(items);
 }
 
 View.prototype.setWinFocus = function(win){
@@ -278,33 +275,33 @@ View.prototype.setWinFocus = function(win){
     //toggle menu colors
     if ( win === _this.pwin.menu ) {
         // menu is active highlight only the selected one
-            _this.widgets.menubar.options.style.bg = null;
-            _this.widgets.menubar.options.style.fg = "white"
+        _this.widgets.menubar.options.style.bg = null;
+        _this.widgets.menubar.options.style.fg = "white"
 
-            _this.widgets.menubar.options.style.item.bg = null;
-            _this.widgets.menubar.options.style.item.fg = "white"
+        _this.widgets.menubar.options.style.item.bg = null;
+        _this.widgets.menubar.options.style.item.fg = "white"
 
-            _this.widgets.menubar.options.style.prefix.bg = null;
-            _this.widgets.menubar.options.style.prefix.fg = "blue";
+        _this.widgets.menubar.options.style.prefix.bg = null;
+        _this.widgets.menubar.options.style.prefix.fg = "blue";
 
-            _this.widgets.menubar.options.style.selected.bg = null;
-            _this.widgets.menubar.options.style.selected.fg = "blue";
+        _this.widgets.menubar.options.style.selected.bg = null;
+        _this.widgets.menubar.options.style.selected.fg = "blue";
     }
     else {
         // menu is not active don't show highlights
-            _this.widgets.menubar.options.style.bg = "black";
-            _this.widgets.menubar.options.style.fg = "white"
+        _this.widgets.menubar.options.style.bg = "black";
+        _this.widgets.menubar.options.style.fg = "white"
 
-            _this.widgets.menubar.options.style.item.bg = "black";
-            _this.widgets.menubar.options.style.item.fg = "white"
+        _this.widgets.menubar.options.style.item.bg = "black";
+        _this.widgets.menubar.options.style.item.fg = "white"
 
-            _this.widgets.menubar.options.style.prefix.bg = "black";
-            _this.widgets.menubar.options.style.prefix.fg = "lightblack"
+        _this.widgets.menubar.options.style.prefix.bg = "black";
+        _this.widgets.menubar.options.style.prefix.fg = "lightblack"
 
-            _this.widgets.menubar.options.style.selected.bg = "black";
-            _this.widgets.menubar.options.style.selected.fg = "white";
+        _this.widgets.menubar.options.style.selected.bg = "black";
+        _this.widgets.menubar.options.style.selected.fg = "white";
     }
-            _this.screen.render();
+    _this.screen.render();
 }
 
 View.prototype.setWinFocusNext = function(){
