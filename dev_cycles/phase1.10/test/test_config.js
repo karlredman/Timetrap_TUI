@@ -1,38 +1,29 @@
 "use strict";
 
-// packages
-var blessed = require('blessed'),
-    contrib = require('blessed-contrib');
+
+var Configuration = require('./Configuration.js')
 var opt = require('commander');
-
-// app packages
-var Configuration = require('./Configuration'),
-    //DirTree = require('./dirtree'),
-    ViewControl = require('./ViewController'),
-    Timetrap = require('./Timetrap');
-
-var screen = blessed.screen({
-    autoPadding: true,
-    smartCSR: true
-});
-
-// Quit on `Control-C`
-screen.key(['C-c'], function(ch, key) {
-    process.exit(0);
-});
 
 function main(argv, callback) {
     let _this = this;
 
     //get config data
-    let config = new Configuration("0.0.0");
+    let config = new Configuration();
 
     /// !!!!!!!!!!!!!!!!!!!!! broken
-    // console.log(config.settings.tui_question_prompts.value);
-    // console.log(config.version);
-    // console.log(config.thing.blah);
+    console.log(config.settings.tui_question_prompts.value);
+    console.log(config.version);
+    console.log(config.settings.tui_working_directory.value);
+    console.log(config.settings.tui_logger_error_fg.value);
+    console.log("----------------------------------");
 
     config.fetch();
+
+    console.log(config.settings.tui_question_prompts.value);
+    console.log(config.version);
+    console.log(config.settings.tui_working_directory.value);
+    console.log(config.settings.tui_logger_error_fg.value);
+    console.log("----------------------------------");
 
     //adjust config with commandline
     let conf = config.settings //convenienc
@@ -73,7 +64,6 @@ function main(argv, callback) {
             conf.tui_question_prompts.value)
         .option('-w, --working_directory <dir>',
             conf.tui_working_directory.desc,
-            /^(true|false)$/,
             conf.tui_working_directory.value)
     opt.parse(process.argv);
 
@@ -89,25 +79,14 @@ function main(argv, callback) {
     config.settings.tui_question_prompts.value = opt.question_prompts;
     config.settings.tui_working_directory.value = opt.working_directory;
 
-    // console.log(opt.question_prompts);
-    // console.log(config.settings.tui_question_prompts.val);
-    // process.exit(0);
-
-    //console.log(config.settings.tui_question_prompts.val); process.exit(0)
-
     //set the working directory
     process.chdir(config.settings.tui_working_directory.value)
 
-    // instantiate supporting objects
-    let timetrap = new Timetrap(config);
-
-    // the controller of views
-    //ViewControl.viewcontrol = new ViewControl(config, screen);
-    ViewControl.viewcontrol = new ViewControl({
-        config: config,
-        screen: screen,
-        timetrap: timetrap
-    });
+    console.log(config.settings.tui_question_prompts.value);
+    console.log(config.version);
+    console.log(config.settings.tui_working_directory.value);
+    console.log(config.settings.tui_logger_error_fg.value);
+    console.log("----------------------------------");
 
     // return start(data, function(err) {
     //     if (err) return callback(err);

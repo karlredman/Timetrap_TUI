@@ -3,6 +3,7 @@
 // packages
 var blessed = require('blessed'),
     contrib = require('blessed-contrib');
+var EventEmitter = require('events').EventEmitter;
 
 var util = require('util');
 
@@ -67,26 +68,26 @@ function ViewMain(objects) {
     // set the tree data
     _this.timetrap.fetch_list();
     _this.timetrap.monitorDB();
-    _this.updateTimer();
+    _this.timetrap.fakeTimer('on');
 
-    // _this.screen.render();
     _this.setWinFocus(this.pwin.side);
 }
-
-ViewMain.prototype.updateTimer = function(){
-    let _this = this;
-    //TODO: replace with something sane (i.e artificial timers)
-
-    setInterval(function() {
-        _this.timetrap.fetch_list();
-    }
-        // , 1000)
-        , 5000)
-}
+ViewMain.prototype = Object.create(EventEmitter.prototype);
+ViewMain.prototype.constructor = ViewMain;
 
 ViewMain.prototype.create_widgets = function()
 {
     let _this=this;
+
+    // needs to be at top of object list -other widgets rely on it
+    //the logger at bottom of main window
+    this.widgets.logger = new Logger({
+        parent: _this.screen,
+        view: _this,
+        left: 0,
+        bottom: 0,
+        height: 1,
+    });
 
     //menubar at top
     this.widgets.menubar = new MenuBar({
@@ -107,6 +108,10 @@ ViewMain.prototype.create_widgets = function()
         bottom: 1,
         width: _this.config.view.sidew,
         border: {type: "line"},
+        // template: {
+        //     extend: '',
+        //     retract: '',
+        // }
     });
 
     // the main area
@@ -120,14 +125,6 @@ ViewMain.prototype.create_widgets = function()
         border: {type: "line"},
     });
 
-    //the logger at bottom of main window
-    this.widgets.logger = new Logger({
-        parent: _this.screen,
-        view: _this,
-        left: 0,
-        bottom: 0,
-        height: 1,
-    });
 
     // line to show menu is focused
     _this.menuline = new blessed.line({
@@ -166,20 +163,14 @@ ViewMain.prototype.create_widgets = function()
         top: 2,
         tags: true,
         // TODO: base min width of sidebar on this content
-        content: "{center}4/24 Active Time Sheets{/}",
+        //content: "{center}4/24 Active Time Sheets{/}",
     });
-
-    //_this.screen.render();
-
-    // initialize contents
-    //
-    // populate the workspace list view table
-    //_this.timetrap.fetch_list();
 }
 
 ViewMain.prototype.register_actions = function()
 {
     let _this = this;
+
     _this.timetrap.on('fetch_list', (list) => {
         //  we have a new `t list` -now update the tree
         this.timetrap.fetch_tree(list);
@@ -196,8 +187,13 @@ ViewMain.prototype.register_actions = function()
         let idx = _this.widgets.sidebar.rows.selected;
         _this.widgets.workspace.emit('syncSelect', idx, 'keypress');
 
-        // _this.widgets.clocksRunning.hide();
 
+        _this.widgets.clocksRunning.setContent(
+            "{center}"
+            +_this.timetrap.num_running+"/"+_this.timetrap.num_clocks
+            +" Active Time Sheets"
+            +"{/center}"
+        );
 
         _this.screen.render();
     });
@@ -206,7 +202,38 @@ ViewMain.prototype.register_actions = function()
         //update the sidebar and workspace when the db changes
         _this.timetrap.fetch_list();
     });
-}
+
+    _this.timetrap.on('fake_list_update', function(list){
+        _this.timetrap.fetch_tree(list);
+    });
+
+};
+
+ViewMain.prototype.updateWorkspaceFakeData = function(list){
+    let _this = this;
+
+    let items = {
+        headers: [" Running", " Today", " Total Time"],
+        data: []
+    };
+
+    items.data = new Array(list.length);
+
+    for ( let i in list){
+        items.data[i] = ['','',''];
+    }
+
+    for( let i in list) {
+        items.data[i] = [
+            list[i].running,
+            list[i].today,
+            list[i].total_time,
+        ];
+    }
+
+    _this.widgets.workspace.setData(items);
+    _this.screen.render();
+};
 
 ViewMain.prototype.updateWorkspaceData = function(){
 

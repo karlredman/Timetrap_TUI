@@ -13,7 +13,7 @@ function DialogMessage(options) {
     //the target of the handler - required
     _this.target = options.target || undefined;
 
-    //if true: dialog is already in progress
+    //if true: dialog is already in progress (i.e. modal)
     // not sure i want to implement this yet -needs bigger infrastructure
     //_this.singlton = false;
 

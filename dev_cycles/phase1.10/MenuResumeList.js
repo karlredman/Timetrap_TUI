@@ -87,12 +87,26 @@ function MenuResumeList(options) {
     _this.on('keypress', function(ch, key) {
         if (key.name === 'escape') {
             _this.destroy();
+            delete this;
             _this.screen.render();
+            // _this.view.widgets.menubar.emit('destroy_me', _this);
         }
     });
+    // _this.on('click', function(ch, key) {
+    //     if (key.name === 'escape') {
+    //         _this.destroy();
+    //         delete this;
+    //         _this.screen.render();
+    //     }
+    // });
     _this.on('blur', function() {
+        if(typeof _this !== 'undefined'){
             _this.destroy();
+        }
+        //TODO memory leak
+        //delete _this;
             _this.screen.render();
+            // _this.view.widgets.menubar.emit('destroy_me', _this);
     });
 }
 MenuResumeList.prototype = Object.create(blessed.list.prototype);

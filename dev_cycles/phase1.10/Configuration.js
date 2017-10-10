@@ -13,13 +13,19 @@ function Configuration(version){
     _this.view = {};
 
     // app level
-    _this.version = version;
+    _this.version = "0.0.10";
 
     // timetrap config defaults
     _this.settings = {
+        tui_working_directory: {
+            value: "/tmp",
+            desc: "the working directory with no timetrap-sheet \\\n"
+            +"                                           "
+            +"files in it or it's parents"
+        },
         tui_create_missing_sheets: {
             value: false,
-            desc: "Create missing sheet files from directory name"
+            desc: "create missing sheet files from directory name"
         },
         tui_recreate_sheets: {
             value: false,
@@ -27,11 +33,12 @@ function Configuration(version){
         },
         tui_developer_mode: {
             value: false,
-            desc: "Run in development mode"
+            desc: "run in development mode"
         },
         tui_question_prompts: {
+            val: true,
             value: true,
-            desc: "Whether to use \'Are you sure?\' dialog prompts"
+            desc: "whether to use \'Are you sure?\' dialog prompts"
         },
         //logger
         tui_logger_loglevel: {
@@ -39,7 +46,7 @@ function Configuration(version){
         },
         tui_logger_file_log: {
             value: false,
-            desc: "Whether to write log text to a file"
+            desc: "whether to write log text to a file"
             },
         tui_logger_log_file: {
             value: "./timetrap_tui.log",
@@ -50,56 +57,56 @@ function Configuration(version){
             opaque: "black",
             dark: undefined,
             light: undefined,
-            desc: "The fg color of the logger"
+            desc: "the bg color of the logger"
         },
         tui_logger_fg: {
             value: undefined,
             opaque: "white",
             dark: "white",
             light: "black",
-            desc: "The fg color of the logger"
+            desc: "the fg color of the logger"
         },
         tui_logger_message_bg: {
             value: undefined,
             opaque: "black",
             dark: undefined,
             light: undefined,
-            desc: "The bg color of a message"
+            desc: "the bg color of a message"
         },
         tui_logger_message_fg: {
             value: undefined,
             opaque: "white",
             dark: "white",
             light: "black",
-            desc: "The fg color of a message"
+            desc: "the fg color of a message"
         },
         tui_logger_warning_bg: {
             value: undefined,
             opaque: "black",
             dark: undefined,
             light: undefined,
-            desc: "The bg color of a warning"
+            desc: "the bg color of a warning"
         },
         tui_logger_warning_fg: {
             value: undefined,
             opaque: "yellow",
             dark: "yellow",
             light: "yellow",
-            desc: "The fg color of a warning"
+            desc: "the fg color of a warning"
         },
         tui_logger_error_bg: {
             value: undefined,
             opaque: "black",
             dark: undefined,
             light: undefined,
-            desc: "The bg color of an error"
+            desc: "the bg color of an error"
         },
         tui_logger_error_fg: {
             value: undefined,
             opaque: "red",
             dark: "red",
             light: "red",
-            desc: "The fg color of an error"
+            desc: "the fg color of an error"
         },
     };
 
@@ -113,11 +120,10 @@ Configuration.prototype.applyDefaults = function() {
     // -mostly used for colors.
     let theme = 'opaque';
     for ( let key in _this.settings) {
-        if( typeof key.value === 'undefined'){
+        if( typeof _this.settings[key].value === 'undefined'){
             _this.settings[key].value = _this.settings[key][theme];
         }
     }
-
 }
 
 Configuration.prototype.fetch = function() {
@@ -142,11 +148,8 @@ Configuration.prototype.fetch = function() {
 
         // now map the yaml stuff into the config object
         for ( let key in config ) {
-            if( ! config.hasOwnProperty(key)) {
+            if( ! _this.settings.hasOwnProperty(key)) {
                 continue;
-            }
-            if( typeof _this.settings[key] === 'undefined' ){
-                _this.settings[key] = {};
             }
             _this.settings[key].value = config[key];
         }
@@ -162,48 +165,3 @@ Configuration.prototype.type = 'Configuration';
 module.exports = Configuration;
 
 
-// TODO
-/////////////////////////////// colors
-// tui_tree_color_bg:
-// tui_tree_color_fg: blue
-// #
-// tui_tree_color_active_running_bg:
-// tui_tree_color_active_running_fg: yellow
-// #
-// tui_tree_color_active_Nrunning_bg:
-// tui_tree_color_active_Nrunning_fg: blue
-// #
-// tui_tree_color_Nactive_running_bg:
-// tui_tree_color_Nactive_running_fg: yellow
-// #
-// tui_tree_color_Nactive_Nrunning_bg:
-// tui_tree_color_Nactive_Nrunning_fg: blue
-// #
-// tui_tree_color_hl_bg: blue
-// tui_tree_color_hl_fg: white
-// #
-// tui_tree_color_hl_active_running_bg: blue
-// tui_tree_color_hl_active_running_fg: yellow
-// #
-// tui_tree_color_hl_active_Nrunning_bg: blue
-// tui_tree_color_hl_active_Nrunning_fg: white
-// #
-// tui_tree_color_hl_Nactive_running_bg: blue
-// tui_tree_color_hl_Nactive_running_fg: yellow
-// #
-// tui_tree_color_hl_Nactive_Nrunning_bg: blue
-// tui_tree_color_hl_Nactive_Nrunning_fg: white
-
-
-// //get config data
-// let config = new Configuration("0.0.0");
-// console.log(config.settings.tui_logger_bg.value);
-// let theme = 'opaque';
-
-// // for ( let key in config.settings) {
-// //     if( typeof key.value === 'undefined'){
-// //         config.settings[key].value = config.settings[key][theme];
-// //     }
-// // }
-// config.applyDefaults();
-// console.log(config.settings.tui_logger_bg.value);

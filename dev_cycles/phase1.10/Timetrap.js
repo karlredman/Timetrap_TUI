@@ -1,9 +1,11 @@
 "use strict"
-const {spawn } = require('child_process');
+const {spawnSync} = require('child_process');
+const {spawn} = require('child_process');
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 const fs = require('fs');
 const path = require('path');
+require('./Util.js');
 
 
 function Timetrap(config) {
@@ -13,11 +15,98 @@ function Timetrap(config) {
     let _this = this;
     _this.config = config
     _this.list = [];
+    _this.num_running = 0;
+    _this.num_clocks = 0;
+    _this.fake_timer_time = 0
+    _this.fake_timer = undefined;
 
     EventEmitter.call(this);
 };
 Timetrap.prototype = Object.create(EventEmitter.prototype);
 Timetrap.prototype.constructor = Timetrap;
+
+
+Timetrap.prototype.fakeTimer = function(command){
+    //command: on, off, running
+    //returns: running state
+
+    let _this = this;
+
+    //report the state
+    if(command === 'running'){
+        if ( typeof _this.fake_timer === 'undefined' ){
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    if(command === 'on'){
+        _this.fake_timer_time = Date.now();
+        if (typeof _this.fake_timer === 'undefined' ) {
+            //_this.fake_timer = setInterval(function(){
+            _this.fake_timer = setInterval(function(){
+                //only process if semaphore is 0 so as to not waste cycles
+                //yes, i know node.js is single threaded. we're serializing
+                //the display side in the view -so the fake update timer doesn't
+                //overwrite a rereading of the database via fetch_list.
+                //if( _this.fake_timer_semaphore)
+                _this.updateListTimes();
+            }, 1000);
+        }
+    }
+
+    if(command === 'off'){
+        if (_this.fake_timer) {
+            clearInterval(_this.fake_timer);
+            destroy( _this.fake_timer);
+        }
+        return false;
+    }
+
+    // TODO: throw error if we got here;
+}
+Timetrap.prototype.updateListTimes = function(){
+    let _this = this
+
+
+    //    console.log("got here");
+
+
+    let now = Date.now();
+
+    let delta = now - _this.fake_timer_time;
+    _this.fake_timer_time = now;
+
+    //console.log(now+":"+_this.fake_timer_time+":"+delta);
+
+
+    let a = [];
+    let seconds = 0;
+    for( let i in _this.list ){
+        if( (_this.list[i].running !== '0:00:00')
+            && (_this.list[i].running !== '-:--:--') ) {
+
+            a = _this.list[i].running.split(':');
+            seconds = (+a[0]) * 60 * 60 + (+a[1]) * 60 + (+a[2]);
+            seconds += (delta/1000);
+            _this.list[i].running = seconds.toString().toHMMSS();
+
+            a = _this.list[i].today.split(':');
+            seconds = (+a[0]) * 60 * 60 + (+a[1]) * 60 + (+a[2]);
+            seconds += (delta/1000);
+            _this.list[i].today = seconds.toString().toHMMSS();
+
+            a = _this.list[i].total_time.split(':');
+            seconds = (+a[0]) * 60 * 60 + (+a[1]) * 60 + (+a[2]);
+            seconds += (delta/1000);
+            _this.list[i].total_time = seconds.toString().toHMMSS();
+        }
+
+    }
+    _this.emit('fake_list_update', _this.list);
+}
 
 Timetrap.prototype.monitorDB = function(){
     let _this = this;
@@ -68,20 +157,28 @@ Timetrap.prototype.callCommand = function(data){
     // }
 
     let types = {
+        changeSheet:{
+            command: ["s", "sheet"],
+            options: [],
+            sheet_option: true,
+        },
         checkIn:{
             command: ["in", "i"],
-            options: ["-a", "--at"]
+            options: ["-a", "--at"],
+            sheet_option: false,
         },
         checkOut:{
             command: ["out", "o"],
-            options: ["-a", "--at"]
+            options: ["-a", "--at"],
+            sheet_option: true,
         },
         resume:{
             command: ["resume", "r"],
             options: [
                 "-a", "--at",
                 "-i", "--id"
-            ]
+            ],
+            sheet_option: false,
         },
         edit:{
             command: ["edit", "e"],
@@ -92,24 +189,30 @@ Timetrap.prototype.callCommand = function(data){
                 "--end", "-e",          //can not be used with --start
                 "--append", "-z",
                 "--move", "-m"          //implement with EXTREME caution
-            ]
+            ],
+            sheet_option: false,
         },
         today:{
             command: ["today"],
+            sheet_option: true,
         },
         yesterday:{
             command: ["yesterday"],
+            sheet_option: true,
         },
         week:{
             command: ["week"],
+            sheet_option: true,
         },
         month:{
             command: ["month"],
+            sheet_option: true,
         },
         kill:{
             command: ["kill", "k"],
             //TODO: handle delicately -deletes either id or timesheet
-            options: ["--id", "-i"]
+            options: ["--id", "-i"],
+            sheet_option: false,
         },
         display: {
             command: ["d", "display"],
@@ -118,21 +221,79 @@ Timetrap.prototype.callCommand = function(data){
                 "--start", "-s",
                 "--end", "-e",
                 "--grep", "-g"
-            ]
+            ],
+            sheet_option: true,
         }
     };
 
-    //TODO: sanitize content
+    //TODO: sanitize content against options
 
     // do command magic
     let base_command = "timetrap";
     //let base_command = "timetrap";
     //let options = [data.content];
     let options = [types[data.type].command[0], data.content];
+
+    // TODO: use the sheet_option property
+    // handeling whether we need to select a sheet first
+    if(data.type != 'changeSheet'){
+        if(data.type == 'checkOut'){
+            //just push the sheet on to the options stack
+            options.push(data.sheet);
+        }
+        else {
+            //we have to select the sheet first
+            _this.callCommand({type: 'changeSheet', content: data.sheet});
+        }
+    }
+
     let result = '';
+    let error = '';
 
-    const cmd = spawn(base_command, options);
+    const cmd = spawnSync(base_command, options);
 
+    // cmd.stdout.on('data', (data) => {
+    //     //console.log(`${data}`);
+    //     if( typeof '${data}' === 'undefined' ){
+    //         return;
+    //     }
+    //         result += `${data}`.toString();
+    // });
+    // cmd.stderr.on('data', (data) => {
+    //     //console.log(`${data}`);
+    //     if( typeof '${data}' === 'undefined' ){
+    //         return;
+    //     }
+    //         error += `${data}`.toString();
+    // });
+
+    // cmd.on('exit', function(code){
+    //     //return error
+    // });
+
+    //cmd.once('close', function (){
+        let response = {
+            type: data.type,
+            sheet: data.sheet,
+            error: cmd.stderr,
+            data: base_command.toString()+" "+options.toString()
+            //obj: _this
+        };
+        _this.emit('timetrap_command', response);
+    //});
+};
+
+Timetrap.prototype.stopAllTimers = function(data){
+    // TODO
+    //data.content == dialog message
+
+    //TODO: replace with callCommand()
+    let _this = this;
+    let command = "timetrap";
+    let options = ["now"];
+    const cmd = spawn(command, options);
+
+    let result = '';
     cmd.stdout.on('data', (data) => {
         //console.log(`${data}`);
         if( typeof '${data}' === 'undefined' ){
@@ -140,22 +301,43 @@ Timetrap.prototype.callCommand = function(data){
         }
             result += `${data}`.toString();
     });
-
-    cmd.on('exit', function(code){
-        //return error
-    });
-
     cmd.once('close', function (){
-        let response = {
-            type: data.type,
-            //err: err,
-            //data: data,
-            //obj: _this
-        };
-        _this.emit('timetrap_command', response);
+        // let response = {
+        //     type: data.type,
+        //     //err: err,
+        //     data: data,
+        //     //obj: _this
+        // };
+
+        //arr.tostring will yeield arr.length-1 valid lines.
+        //it ends up with the last element being ' '
+        //the sheet name will be preceded by 1 char.
+        let arr = result.toString().split("\n");
+
+        //build an array of running sheets
+        let sheets = [];
+        if(arr.length > 1) {
+            for ( let i=0; i < arr.length-1; i++ ) {
+                let chunk = arr[i].slice(1,arr[i].length);
+                sheets.push(chunk.split(':')[0])
+            }
+        }
+
+        //we don't have to switch sheets to checkout
+        for ( let s in sheets ) {
+            _this.callCommand({type: 'checkOut', sheet:sheets[s], content: data.content})
+            //_this.callCommand({type: data.type, target: _this, content: data.data, sheet: sheet});
+            // console.log("|"+sheets[s]+"|")
+        }
+
+
+        //console.log("arr|"+arr.length)
+        _this.emit('timetrap_stopall', sheets);
     });
 
-};
+
+}
+
 
 Timetrap.prototype.fetch_list = function(){
     let _this = this;
@@ -177,6 +359,8 @@ Timetrap.prototype.fetch_list = function(){
 
         //console.log(result);
         let arr = result.toString().split("\n");
+
+        let running = 0;
 
         let jarr = [];
         let i = 1; //skip the header line
@@ -210,14 +394,23 @@ Timetrap.prototype.fetch_list = function(){
                 j.total_time = darr[3];
 
                 jarr.push(j);
+
+                //update our total running
+                if( j.running != '0:00:00')
+                {
+                    running++;
+                }
             }
         }
         //save the list
         _this.list = jarr;
+        //console.log(JSON.stringify(jarr, null, 2));
 
     //TODO: possible race codition someday?
     //_this.emit('list', _this.list);
         _this.emit('fetch_list', jarr);
+        _this.num_running = running;
+        _this.num_clocks = jarr.length;
     });
 };
 

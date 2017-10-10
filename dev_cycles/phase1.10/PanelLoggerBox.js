@@ -41,10 +41,10 @@ function PanelLoggerBox(options) {
     options.style = options.style || {};
 
     options.style.bg = options.style.bg || _this.config.settings.tui_logger_bg.value;
-    options.style.fg = _this.config.settings.tui_logger_fg.value;
+    options.style.fg = options.style.fg || _this.config.settings.tui_logger_fg.value;
 
-    //options.style.bg = options.style.bg || _this.config.settings.tui_logger_bg.value;
-    //options.style.fg = options.style.fg || _this.config.settings.tui_logger_fg.value;
+    options.bg = options.bg || _this.config.settings.tui_logger_bg.value;
+    options.fg = options.fg || _this.config.settings.tui_logger_fg.value;
 
     options.label = options.label || undefined;
 
@@ -62,6 +62,7 @@ function PanelLoggerBox(options) {
     options.style.scrollbar = options.style.scrollbar || {};
     options.style.scrollbar.inverse = options.style.scrollbar.inverse || true;
 
+    //causes tags to not work
     //options.content = "xxxxxxxxxxxxxxxxxxxx"
 
     contrib.log.call(this, options);
@@ -74,6 +75,9 @@ function PanelLoggerBox(options) {
         //i.e. _this.msg("something interesting", _this.loglevel.production.warning)
         value: _this.config.settings.tui_logger_loglevel.value,
         meta: {
+            bg: options.tui_logger_bg || _this.config.settings.tui_logger_bg.value,
+            fg: options.tui_logger_fg || _this.config.settings.tui_logger_fg.value,
+            //
             message_bg: options.tui_logger_message_bg || _this.config.settings.tui_logger_message_bg.value,
             message_fg: options.tui_logger_message_fg || _this.config.settings.tui_logger_message_fg.value,
             //
@@ -116,7 +120,8 @@ PanelLoggerBox.prototype.register_actions = function(view){
     let _this = this;
 
     // TODO: move to proper place in init chain
-    _this.log("{center}Welcome to Timetrap TUI!{/}");
+    // why oh why does this not use the color scheme ??
+    _this.log("{center}Welcome to Timetrap TUI!{/center}");
 
     //TODO: this is just here for testing
     // let i = 0
@@ -143,8 +148,8 @@ PanelLoggerBox.prototype.msg = function(message, loglevel){
     let _this = this;
 
         //we default to message
-        let bg = _this.loglevel.meta.message_bg;
-        let fg = _this.loglevel.meta.message_fg;
+        let bg = _this.loglevel.meta.bg;
+        let fg = _this.loglevel.meta.fg;
         let prefix = _this.loglevel.meta.message_prefix;
 
     if (
@@ -166,18 +171,32 @@ PanelLoggerBox.prototype.msg = function(message, loglevel){
         prefix = _this.loglevel.meta.error_prefix;
     }
 
+    //log the unixtime
+    let date = Date.now();
+
+    // TODO: this is a mess
+
     _this.log_count++;
     _this.log(
+        //"{"+bg+"-bg}"
         '{center}'
-        + "{"+bg+"-bg}"
-        + '['+_this.log_count+'] '
+        //+ '['+_this.log_count+'|'+date+'] '
+        + '['+_this.log_count+']'
+        //+ (typeof fg === 'undefined') ? '{blue-fg}' : "{"+fg+"-fg}"
         + "{"+fg+"-fg}"
         + prefix
+        //+ (typeof fg === 'undefinded') ? '{/blue-fg}' : "{/"+fg+"-fg}"
         + "{/"+fg+"-fg}"
+        //
+        //+ '{'+_this.loglevel.meta.fg+'-fg}'
         + message
-        + "{/"+bg+"-bg}"
+        //+ '{/'+_this.loglevel.meta.fg+'-fg}'
+        //
         + '{/center}'
+        //+ "{/"+bg+"-bg}"
     );
+
+    //TODO: async write to file if specified
 }
 
 

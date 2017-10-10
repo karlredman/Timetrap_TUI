@@ -34,7 +34,10 @@ function SideBar(options) {
     // options.scrollable = options.scrollable || true;
     // options.scrollbar = options.scrollbar || true;
 
+    //override parent
     options.template = options.template || {};
+    options.template.extend = options.template.extend || ' ';
+    options.template.retract = options.template.retract || ' ';
     options.template.lines = options.template.lines || true;
 
     options.style = options.style || {};

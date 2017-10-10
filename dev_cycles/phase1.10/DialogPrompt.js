@@ -10,6 +10,8 @@ function DialogPrompt(options) {
     _this.options = options;
     _this.screen = options.parent; // required
 
+    _this.loading_dialog = options.loading;
+
     //the target of the handler - required
     _this.target = options.target;
 
@@ -35,9 +37,20 @@ function DialogPrompt(options) {
     options.style.fg = options.style.fg || 'white';
 
     blessed.prompt.call(this, options);
+
+    // _this.on('blur', function() {
+    //         _this.destroy();
+    //         _this.screen.render();
+    // });
 }
 DialogPrompt.prototype = Object.create(blessed.prompt.prototype);
 DialogPrompt.prototype.constructor = DialogPrompt;
+
+// DialogPrompt.prototype.destroy = function(){
+//     let _this = this;
+//     _this.destroy();
+//     _this.screen.render();
+// }
 
 DialogPrompt.prototype.cannedInput = function(type){
     let _this = this;
@@ -71,6 +84,11 @@ DialogPrompt.prototype.cannedInput = function(type){
             data: data,
             obj: _this
         };
+
+        // if(typeof _this.loading_dialog !== 'undefinded') {
+        //     _this.loading_dialog.alert('got here: ');
+        //     _this.screen.render();
+        // }
 
         _this.target.emit('prompt', response);
     });
