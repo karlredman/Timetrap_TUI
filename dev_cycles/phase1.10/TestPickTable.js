@@ -1,15 +1,18 @@
 "use strict";
 var blessed = require('blessed'),
-    contrib = require('contrib'),
+    contrib = require('blessed-contrib'),
     Box = blessed.Box,
     Node = blessed.Node;
 
+var TestMenuBar = require('./TestMenuBar');
+
 var util = require('util');
 
-function DialogBigBox(options) {
-    if (!(this instanceof Node)) return new DialogBigBox(options);
+function TestPickTable(options) {
+    if (!(this instanceof Node)) return new TestPickTable(options);
 
     let _this = this;
+    this.view = options.view;
 
     // set overridable defaults
     options = options || {};
@@ -53,16 +56,32 @@ function DialogBigBox(options) {
 
     //this.focus();
     this.register_actions();
+
+    //this.setContent("some content");
     this.focus();
+
+    //menubar at top
+    this.menubar = new TestMenuBar({
+        parent: _this.screen,
+        view: this.view,
+        autoCommandKeys: true,
+        left: 0,
+        top: 0,
+    });
 
     this.screen.render();
 }
+TestPickTable.prototype = Object.create(Box.prototype);
+TestPickTable.prototype.constructor = TestPickTable;
 
+// TestPickTable.prototype.destroy = function(){
+//     let _this = this;
+//     _this.menubar.destroy();
+//     _this.destroy();
+//     _this.screen.render();
+// }
 
-DialogBigBox.prototype = Object.create(Box.prototype);
-DialogBigBox.prototype.constructor = DialogBigBox;
-
-DialogBigBox.prototype.register_actions = function(){
+TestPickTable.prototype.register_actions = function(){
 
     let _this = this;
     //this.view = view;
@@ -72,8 +91,9 @@ DialogBigBox.prototype.register_actions = function(){
             || (key.name === 'tab')
         )
         {
-            _this.destroy();
-            _this.screen.render();
+            _this.view.widgets.menubar.emit('destroy_TestPickTable', )
+            // _this.destroy();
+            // _this.screen.render();
         }
         if ( (key.name === 'space')
             || ( key.name === 'pagedown')
@@ -96,5 +116,5 @@ DialogBigBox.prototype.register_actions = function(){
     // });
 }
 
-DialogBigBox.prototype.type = 'DialogBigBox';
-module.exports = DialogBigBox;
+TestPickTable.prototype.type = 'TestPickTable';
+module.exports = TestPickTable;

@@ -27,10 +27,11 @@ function main(argv, callback) {
     //get config data
     let config = new Configuration("0.0.0");
 
-    /// !!!!!!!!!!!!!!!!!!!!! broken
+    ////////// DEBUG
     // console.log(config.settings.tui_question_prompts.value);
     // console.log(config.version);
-    // console.log(config.thing.blah);
+    // console.log("------------------------------------------")
+    ////////// DEBUG
 
     config.fetch();
 
@@ -44,8 +45,8 @@ function main(argv, callback) {
             +"  http://github.com/karlredman/Timetrap_TUI"
             +"\n"
             +"  -----------------------------------------"
-            +"\n"
-            +"  * Default Values are shown in CAPS."
+            // +"\n"
+            // +"  * Default Values are shown in CAPS."
             +"\n"
             +"  * Configuration file entries override defaults."
             +"\n"
@@ -54,13 +55,13 @@ function main(argv, callback) {
             +"    (Using: "+conf.config_file+")."
         )
         .option('-d, --developer_mode <bool>',
-            conf.tui_developer_mode.desc,
+            conf.tui_developer_mode.desc+' ['+conf.tui_developer_mode.value+']',
             /^(true|false)$/i,
             conf.tui_developer_mode.value)
-        .option('-c, --create_missing_sheets <bool>', // TODO
-            conf.tui_create_missing_sheets.desc,
-            /^(true|false)$/i,
-            conf.tui_create_missing_sheets.value)
+        // .option('-c, --create_missing_sheets <bool>', // TODO
+        //     conf.tui_create_missing_sheets.desc+' ['+conf.tui_create_missing_sheets.value+']',
+        //     /^(true|false)$/i,
+        //     conf.tui_create_missing_sheets.value)
         .option('-H, --HELP',
             "print full documentation help and exit")    // TODO
         .option('-p, --print_config <bool>',
@@ -68,12 +69,12 @@ function main(argv, callback) {
             /^(true|false)$/i,
             false)
         .option('-q, --question_prompts <bool>',
-            conf.tui_question_prompts.desc,
-            /^(true|false)$/,
+            conf.tui_question_prompts.desc+' ['+conf.tui_question_prompts.value+']',
+            /^(true|false)$/i,
             conf.tui_question_prompts.value)
-        .option('-w, --working_directory <dir>',
-            conf.tui_working_directory.desc,
-            /^(true|false)$/,
+        .option('-w, --working_directory <$HOME>',
+            conf.tui_working_directory.desc+' ['+conf.tui_working_directory.value+']',
+            /^.+$/i,
             conf.tui_working_directory.value)
     opt.parse(process.argv);
 
@@ -85,15 +86,17 @@ function main(argv, callback) {
 
     // map arguments (commandline overrides config file)
     // TODO: figure out a better way to do this
-    config.settings.tui_developer_mode.value = opt.developer_mode;
-    config.settings.tui_question_prompts.value = opt.question_prompts;
+    config.settings.tui_developer_mode.value = opt.developer_mode.toLowerCase();
+    config.settings.tui_question_prompts.value = opt.question_prompts.toLowerCase();
     config.settings.tui_working_directory.value = opt.working_directory;
 
+    ////// DEBUG
     // console.log(opt.question_prompts);
-    // console.log(config.settings.tui_question_prompts.val);
+    // console.log(config.settings.tui_question_prompts.value);
     // process.exit(0);
+    ////// DEBUG
 
-    //console.log(config.settings.tui_question_prompts.val); process.exit(0)
+    //console.log(config.settings.tui_question_prompts.value); process.exit(0)
 
     //set the working directory
     process.chdir(config.settings.tui_working_directory.value)

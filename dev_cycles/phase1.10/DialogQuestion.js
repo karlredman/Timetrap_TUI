@@ -35,6 +35,37 @@ function DialogQuestion(options) {
     options.style.fg = options.style.fg || 'white';
 
     blessed.question.call(this, options);
+
+    this._.cancel.top = undefined;
+    this._.cancel.left = undefined;
+    this._.cancel.bottom = 1;
+    this._.cancel.right = 1;
+    //fix broken alignment in parent
+    this._.cancel.align = 'center';
+    this._.cancel.content = ' Cancel';
+
+
+    this._.okay.top = undefined;
+    this._.okay.left = undefined;
+    this._.okay.bottom = 1;
+    this._.okay.right = 10;
+    this.screen.render();
+
+    // this._.cancel = new Button({
+    // screen: this.screen,
+    // parent: this,
+    // top: 2,
+    // height: 1,
+    // shrink: true,
+    // left: 10,
+    // width: 8,
+    // content: 'Cancel',
+    // align: 'center',
+    // bg: 'black',
+    // hoverBg: 'blue',
+    // autoFocus: false,
+    // mouse: true
+  // })
 }
 DialogQuestion.prototype = Object.create(blessed.question.prototype);
 DialogQuestion.prototype.constructor = DialogQuestion;

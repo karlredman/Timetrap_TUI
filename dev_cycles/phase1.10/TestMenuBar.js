@@ -9,10 +9,10 @@ var DialogPrompt = require('./DialogPrompt'),
     BigBox = require('./DialogBigBox');
 var util = require('util');
 
-function PanelMenubarListbar(options) {
+function TestMenuBar(options) {
 
 
-    if (!(this instanceof Node)) return new PanelMenubarListbar(options);
+    if (!(this instanceof Node)) return new TestMenuBar(options);
     let _this=this;
 
     this.options = options;
@@ -69,39 +69,23 @@ function PanelMenubarListbar(options) {
 
     // TODO: move this logic to a control location (view?)
     options.items = options.commands || {
-        In: function(){
-            _this.cleanupMenus();
-            // TODO: create item states from the sidebar data
-            // using the workspace list is lame
-            if(_this.view.widgets.sidebar.nodeLines[_this.view.widgets.sidebar.rows.selected].info.running === '-:--:--') {
-                _this.log.msg("Not a valid time sheet", _this.log.loglevel.devel.warning);
-                return;
-            }
-            else {
-                    //move to edit menu
-                    let prompt = new DialogPrompt({loading: _this.loading_dialog, target: _this, parent: _this.screen});
-                    prompt.cannedInput('checkIn');
-                }
+        Test1: function(){
+            let m = new DialogMessage({target: _this, parent: _this.screen});
+            m.alert('got here: test1');
 
-            setTimeout(function(){
-                _this.select(0);
-                _this.screen.render();
-            }, 1000);
+            // setTimeout(function(){
+            //     _this.select(0);
+            //     _this.screen.render();
+            // }, 1000);
         },
-        Out: function(){
-            _this.cleanupMenus();
-            if(_this.view.widgets.sidebar.nodeLines[_this.view.widgets.sidebar.rows.selected].info.running === '-:--:--') {
-                _this.log.msg("Not a valid time sheet", _this.log.loglevel.devel.warning);
-                return;
-            }
-            else {
-            let prompt = new DialogPrompt({target: _this, parent: _this.screen});
-            prompt.cannedInput('checkOut');
-            }
-            setTimeout(function(){
-                _this.select(0);
-                _this.screen.render();
-            }, 1000);
+        Test2: function(){
+            let m = new DialogMessage({target: _this, parent: _this.screen});
+            m.alert('got here: test2');
+
+            // setTimeout(function(){
+                // _this.select(0);
+                // _this.screen.render();
+            // }, 1000);
         },
     }
 
@@ -110,11 +94,11 @@ function PanelMenubarListbar(options) {
 
     //this.screen.render();
 }
-PanelMenubarListbar.prototype = Object.create(blessed.listbar.prototype);
-PanelMenubarListbar.prototype.constructor = PanelMenubarListbar;
+TestMenuBar.prototype = Object.create(blessed.listbar.prototype);
+TestMenuBar.prototype.constructor = TestMenuBar;
 
 
-PanelMenubarListbar.prototype.register_actions = function(view){
+TestMenuBar.prototype.register_actions = function(view){
 
     let _this = this;
 
@@ -180,107 +164,7 @@ PanelMenubarListbar.prototype.register_actions = function(view){
             return;
         }
     });
-    _this.on('question', function(data){
-        if ( data.type === 'exit' ) {
-            if(data.data) {
-                //emit the exit key sequence
-                let nkey = {
-                    sequence: "\u0003",
-                    name: "c",
-                    ctrl: true,
-                    meta: false,
-                    shift: false,
-                    full: "C-c"
-                }
-                _this.parent.emit('key '+nkey.full, 'C-c', nkey);
-            }
-        }
-        if (data.type === 'stopAll'){
-            _this.view.timetrap.stopAllTimers({content:''});
-        }
-        //_this.select(0)
-        _this.screen.render();
-    });
-
-    _this.on('destroy_me', function(obj){
-        if( typeof obj !== 'undefined') {
-            obj.destroy();
-            delete this.obj;
-            _this.screen.render();
-        }
-    });
-
-    _this.on('prompt', function(data){
-        let _this = this;
-        if (
-            ( data.type === 'checkIn' )
-            || ( data.type === 'checkOut' )
-            || ( data.type === 'edit' )
-        )
-        {
-
-            // _this.loading_dialog = new DialogMessage({target: _this, parent: _this.screen});
-            // _this.loading_dialog.alert('got here: ');
-            // _this.screen.render();
-
-            if( data.data !== null) {
-                let sheet = _this.view.widgets.sidebar.nodeLines[_this.view.widgets.sidebar.rows.selected].sheet;
-                _this.view.timetrap.callCommand({type: data.type, target: _this, content: data.data, sheet: sheet});
-            }
-
-            //TODO: make an actual loading dialog
-
-            //_this.view.widgets.sidebar.rows.select(0);
-            //let m = new DialogMessage({target: _this, parent: _this.screen}).alert('got here: '+ data.data);
-            // let m = new DialogMessage({target: _this, parent: _this.screen});
-            // m.alert('|'+'x'+'|');
-        }
-    });
-
-    _this.view.timetrap.on('timetrap_stopall', function(response){
-        // let m = new DialogMessage({target: _this, parent: _this.screen});
-        // m.alert('|'+response+'|');
-        //m.alert('got here: '+ _this.view.config.timetrap_config.tui_question_prompts.value);
-
-        // TODO: response should be a structure not an array
-        // for( let i in response) {
-        //     _this.log.msg("CheckOut: "+response[i].toString(), _this.log.loglevel.devel.message);
-        // }
-    });
-
-    _this.view.timetrap.on('timetrap_command', function(response){
-
-        // if(typeof _this.loading_dialog !== 'undefined') {
-        //     _this.loading_dialog.destroy();
-        // }
-
-        if(typeof response.error !== 'undefined'){
-            if(response.error.toString().match(/.*Timetrap is already running.*/) ){
-                _this.log.msg(response.sheet+" is already running", _this.log.loglevel.devel.warning);
-            }
-            else if ( response.error.toString().match(/.*Editing running entry.*/) ){
-                let msg = "Edited runnig entry for \'"+response.sheet+'\'';
-                _this.log.msg(msg, _this.log.loglevel.devel.message);
-                }
-            else {
-                _this.log.msg(response.error.toString(), _this.log.loglevel.devel.message);
-            }
-        }
-
-        // if(typeof response.data !== 'undefined'){
-        //     _this.log.msg(response.type+": "+response.data.toString(), _this.log.loglevel.devel.message);
-        // }
-
-
-        //TODO: this is a hack -need to run an audit on fetch_lists.
-        //_this.view.timetrap.fetch_list();
-
-        if(response.type == 'checkIn'){
-            // let m = new DialogMessage({target: _this, parent: _this.screen});
-            // m.alert('got here: '+ _this.view.config.timetrap_config.tui_question_prompts.value);
-        }
-    });
 }
 
-PanelMenubarListbar.prototype.type = 'PanelMenubarListbar';
-module.exports = PanelMenubarListbar;
+TestMenuBar.prototype.type = 'TestMenuBar';
+module.exports = TestMenuBar;

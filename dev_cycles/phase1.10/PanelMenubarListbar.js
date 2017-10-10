@@ -9,6 +9,8 @@ var DialogPrompt = require('./DialogPrompt'),
     BigBox = require('./DialogBigBox');
 var util = require('util');
 
+var TestPickTable = require('./TestPickTable');
+
 function PanelMenubarListbar(options) {
 
 
@@ -24,6 +26,8 @@ function PanelMenubarListbar(options) {
     this.loading_dialog;
     this.display_menu;
     this.resume_menu;
+
+    this.test_pick;
 
 
     // set overridable defaults
@@ -225,44 +229,13 @@ function PanelMenubarListbar(options) {
         },
         Test: function() {
             _this.cleanupMenus();
-            // TODO: move alert to screen level for debugging
-            // let m = new DialogMessage({target: _this, parent: _this.screen});
-            // m.alert('testing: '+ _this.view.config.timetrap_config.tui_question_prompts.value);
-            //_this.items[8].style.bg = "yellow";
-            //let output = util.inspect(_this.items[8], null, true);
-            //let output = util.inspect(_this.view.widgets.sidebar.rows.getItem(0), false, 2);
-            //let output = util.inspect(_this.view.widgets.logger, false, 2);
-            //let output = _this.view.widgets.sidebar;
-            //let sdata = _this.view.widgets.sidebar.data;
-            //let output = util.inspect(_this.view.widgets.sidebar.rows.getItem(0), false, 2);
-            //
-            //let output = util.inspect(_this.view.widgets.sidebar.rows.getItem(8), false, 2);
-            //require('fs').writeFile('node.out', util.inspect(output, null, 20));
-            //require('fs').writeFile('node.json', JSON.stringify(output, null, 2));
-
-            //let output = util.inspect(_this.view.widgets.sidebar.rows.selected, null, 2);
-            //let output = util.inspect(_this.view.widgets.sidebar.data[_this.view.widgets.sidebar.rows.selected], null, 2);
-            // let output = util.inspect(_this.view.widgets.sidebar.data, null, 6);
-
-
-
-            //let output = util.inspect(_this.view.widgets.sidebar.nodeLines, false, 20);
-            //let output = util.inspect(_this.view.widgets.sidebar.lineNbr, false, 20);
-            //let node_lines = _this.view.widgets.sidebar.nodeLines;      //data in sidebar tree
-            //let output = util.inspect(_this.view.widgets.sidebar.nodeLines[_this.view.widgets.sidebar.selected], false, 20);
-            //require('fs').writeFile('node.out', util.inspect(output, null, 20));
-
-            //let output = util.inspect(_this.view.widgets.sidebar.rows.selected, null, 2);
-            //let output = util.inspect(_this.view.widgets.sidebar.nodeLines[_this.view.widgets.sidebar.rows.selected].sheet, false, 20);
-
-            //let output = sdata.children.filter(function(e){return e.sheet == 'Projects'})[0];
-            //require('fs').writeFile('node.out', util.inspect(output, null, 9));
-
-            let bb = new BigBox({parent: _this.screen});
+            _this.test_pick = new TestPickTable({
+                parent: _this.screen,
+                view: _this.view,
+            });
             let output = util.inspect(_this.view.timetrap.list, null, 4);
 
-             bb.setContent(output);
-            _this.log.msg("some message", _this.log.loglevel.devel.message);
+             _this.test_pick.setContent(output);
 
             setTimeout(function(){
                 _this.select(0);
@@ -469,6 +442,13 @@ PanelMenubarListbar.prototype.register_actions = function(view){
             // let m = new DialogMessage({target: _this, parent: _this.screen});
             // m.alert('got here: '+ _this.view.config.timetrap_config.tui_question_prompts.value);
         }
+    });
+
+    _this.on('destroy_TestPickTable', function(){
+        _this.test_pick.menubar.destroy();
+        delete _this.test_pick.menubar;
+        _this.test_pick.destroy();
+        delete _this.test_pick;
     });
 }
 
