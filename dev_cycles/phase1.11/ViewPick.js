@@ -8,76 +8,67 @@ var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 
 // View panels
-var MenuBar = require('./PanelMenubarListbar');
-var SideBar = require('./PanelSidebarTree');
-var WorkspaceList = require('./PanelWorkspaceList');
-var Logger = require('./PanelLoggerBox.js');
-var ClocksRunning = require('./PanelClocksRunningBox')
-var TestPickTable = require('./TestPickTable');
+var MenuPickView = require('./MenuPickView');
+var PanelPickList = require('./PanelPickList')
 
 // dialogs
 var DialogMessage = require('./DialogMessage');
 
-function ViewMain(objects) {
+function ViewPick(objects) {
+    if (!(this instanceof EventEmitter)) return new ViewPick(options);
 
     let _this=this;
-    _this.widgets = {};
+
+    //required options
     _this.screen = objects.screen;
     _this.config = objects.config;
     _this.timetrap = objects.timetrap;
+    _this.logger = options.logger;
 
+    //widgets owned by this view
+    _this.widgets = {};
 
-    // TODO: reaplace with actual `t list` width
-    this.config.view.sidew = '50%';   //side menu width
-    //this.config.view.sidew = 35;   //side menu width
+    _this.config.view.numwnd = 2;                    //number of windows
+    _this.config.view.curwind = 1;                   //current window (starts at 1, screen === 0)
 
-    this.config.view.numwnd = 3;                    //number of windows
-    this.config.view.curwind = 1;                   //current window (starts at 1, screen === 0)
-
-
+    //call parent constructor
+    EventEmitter.call(this);
     /////////////////////////////////////////////////////
     // this view's layout
 
     //this view's window panes
-    this.pwin ={
+    _this.pwin ={
         menu: 1,
-        logger: 2,
-        side: 3,
-        //mainw: 4,
+        mainw: 2,
     };
-    this.pwin.first = this.pwin.menu;
+
+    _this.pwin.first = this.pwin.menu;
     // this.pwin.last = this.pwin.mainw;
-    this.pwin.last = this.pwin.side;
+    _this.pwin.last = this.pwin.mainw;
 
     //the current pane default
-    this.curWin = 1;
+    _this.curWin = 1;
 
     //make the widgets
-    this.create_widgets();
+    _this.create_widgets();
 
 
     /////////////////////////////////////////////////////
     // this view's control
 
-    this.widgets.sidebar.focus();
-    this.curWin=this.pwin.side;
+    _this.curWin=this.pwin.main;
 
     for (let key in this.widgets) {
         // if (this.widgets.hasOwnProperty(key)) continue;
-        this.widgets[key].register_actions(_this)
+        _this.widgets[key].register_actions(_this)
     }
 
-    // set the tree data
-    _this.timetrap.fetch_list();
-    _this.timetrap.monitorDB();
-    _this.timetrap.fakeTimer('on');
-
-    _this.setWinFocus(this.pwin.side);
+    _this.setWinFocus(this.pwin.mainw);
 }
-ViewMain.prototype = Object.create(EventEmitter.prototype);
-ViewMain.prototype.constructor = ViewMain;
+ViewPick.prototype = Object.create(EventEmitter.prototype);
+ViewPick.prototype.constructor = ViewPick;
 
-ViewMain.prototype.create_widgets = function()
+ViewPick.prototype.create_widgets = function()
 {
     let _this=this;
 
@@ -170,7 +161,7 @@ ViewMain.prototype.create_widgets = function()
     });
 }
 
-ViewMain.prototype.register_actions = function()
+ViewPick.prototype.register_actions = function()
 {
     let _this = this;
 
@@ -233,7 +224,7 @@ ViewMain.prototype.register_actions = function()
 
 };
 
-ViewMain.prototype.updateWorkspaceFakeData = function(list){
+ViewPick.prototype.updateWorkspaceFakeData = function(list){
     let _this = this;
 
     let items = {
@@ -259,7 +250,7 @@ ViewMain.prototype.updateWorkspaceFakeData = function(list){
     _this.screen.render();
 };
 
-ViewMain.prototype.updateWorkspaceData = function(){
+ViewPick.prototype.updateWorkspaceData = function(){
 
     //TODO: move this to workspace
     let _this = this;
@@ -294,7 +285,7 @@ ViewMain.prototype.updateWorkspaceData = function(){
     _this.widgets.workspace.setData(items);
 }
 
-ViewMain.prototype.setWinFocus = function(win){
+ViewPick.prototype.setWinFocus = function(win){
     let _this = this;
     // The focus and effects are managed here so mouse actions don't cause
     // false positives.
@@ -361,7 +352,7 @@ ViewMain.prototype.setWinFocus = function(win){
     _this.screen.render();
 }
 
-ViewMain.prototype.setWinFocusNext = function(){
+ViewPick.prototype.setWinFocusNext = function(){
     let _this = this;
     if((_this.curWin+1) > _this.pwin.last){
         _this.curWin = _this.pwin.first;
@@ -375,7 +366,7 @@ ViewMain.prototype.setWinFocusNext = function(){
     return
 }
 
-ViewMain.prototype.setWinFocusPrev = function(){
+ViewPick.prototype.setWinFocusPrev = function(){
     let _this = this;
     if((_this.curWin-1) < _this.pwin.first){
         _this.curWin = _this.pwin.last;
@@ -389,7 +380,7 @@ ViewMain.prototype.setWinFocusPrev = function(){
     return
 }
 
-ViewMain.prototype.hideAll = function(){
+ViewPick.prototype.hideAll = function(){
     let _this = this;
     for (let key in _this.widgets) {
 
@@ -400,7 +391,7 @@ ViewMain.prototype.hideAll = function(){
     _this.screen.render();
 }
 
-ViewMain.prototype.showAll = function(set_focus){
+ViewPick.prototype.showAll = function(set_focus){
     let _this = this;
     for (let key in _this.widgets) {
 
@@ -415,5 +406,5 @@ ViewMain.prototype.showAll = function(set_focus){
     _this.screen.render();
 }
 
-ViewMain.prototype.type = 'ViewMain';
-module.exports = ViewMain;
+ViewPick.prototype.type = 'ViewPick';
+module.exports = ViewPick;

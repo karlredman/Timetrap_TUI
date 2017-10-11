@@ -6,6 +6,7 @@ var blessed = require('blessed'),
 var DialogMessage = require('./DialogMessage'),
     TestMenuBar = require('./TestMenuBar'),
     TestPickTableList = require('./TestPickTableList');
+var Logger = require('./PanelLoggerBox.js');
 
 var util = require('util');
 
@@ -14,6 +15,7 @@ function TestPickTable(options) {
 
     let _this = this;
     this.view = options.view;
+    _this.config = this.view.config;
 
     // set overridable defaults
     options = options || {};
@@ -22,7 +24,7 @@ function TestPickTable(options) {
     options.left = 0;
     //options.border = 'line';
     //options.right = 0;
-    //options.bottom = 0;
+    options.botom = 3;
     options.content = "";
     options.autofocus= true; // TODO: what does this actually do?
 
@@ -84,7 +86,8 @@ function TestPickTable(options) {
         // lockkeys: true,
         left: 0,
         top: 1,
-        border: 'line'
+        border: 'line',
+        bottom: 1
     });
 
     // line to show menu is focused
@@ -99,8 +102,19 @@ function TestPickTable(options) {
         fg: "green"
     });
 
+    _this.logger = new Logger({
+        parent: _this.screen,
+        view: _this.view,
+        left: 0,
+        bottom: 0,
+        height: 1,
+    });
+    _this.logger.setItems(_this.view.widgets.logger.logLines);
+    // _this.scrollTo(this.logLines.length)
+
 
     this.screen.render();
+    //console.log("\n\n\n\n\n\n\n\n\n\n\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"+lc)
 }
 TestPickTable.prototype = Object.create(Box.prototype);
 TestPickTable.prototype.constructor = TestPickTable;

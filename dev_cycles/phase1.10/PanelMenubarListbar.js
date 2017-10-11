@@ -265,15 +265,12 @@ function PanelMenubarListbar(options) {
             // _this.cleanupMenus();
             // _this.view.widgets.logger.msg("stuff", _this.view.widgets.logger.loglevel.production.error);
 
-            _this.unkey('5', function(){
-                _this.loading_dialog = new DialogMessage({target: _this, parent: _this.screen});
-                _this.loading_dialog.alert('got here: x');
-            });
 
-            _this.options.autoCommandKeys = false;
-            _this.options.grabKeys = false;
-            _this.grabKeys = false;
+            let lc = _this.view.widgets.logger.logLines;
+            _this.loading_dialog = new DialogMessage({target: _this, parent: _this.screen});
+            _this.loading_dialog.alert('got here: '+lc[1]);
             _this.screen.render();
+
 
 
             setTimeout(function(){

@@ -34,6 +34,7 @@ function ViewMain(objects) {
     this.config.view.numwnd = 3;                    //number of windows
     this.config.view.curwind = 1;                   //current window (starts at 1, screen === 0)
 
+    EventEmitter.call(this);
 
     /////////////////////////////////////////////////////
     // this view's layout
@@ -213,8 +214,13 @@ ViewMain.prototype.register_actions = function()
     _this.on('destroy_TestPickTable', function(){
         _this.test_pick.list.destroy();
         delete _this.test_pick.list;
+
         _this.test_pick.menubar.destroy();
         delete _this.test_pick.menubar;
+
+        _this.test_pick.logger.destroy();
+        delete _this.test_pick.logger;
+
         _this.test_pick.destroy();
         delete _this.test_pick;
 
