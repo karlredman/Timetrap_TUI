@@ -5,7 +5,7 @@ var fs = require('fs'),
     minimatch = require('minimatch');
 
 
-function Configuration(version){
+function Configuration(){
     // if (!(this instanceof Object)) return new Configuration(version);
     let _this = this;
 

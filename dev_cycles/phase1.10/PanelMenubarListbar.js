@@ -82,10 +82,16 @@ function PanelMenubarListbar(options) {
                 return;
             }
             else {
+                if(_this.view.widgets.sidebar.nodeLines[_this.view.widgets.sidebar.rows.selected].info.running === '0:00:00') {
                     //move to edit menu
                     let prompt = new DialogPrompt({loading: _this.loading_dialog, target: _this, parent: _this.screen});
                     prompt.cannedInput('checkIn');
                 }
+                else {
+                    _this.log.msg("Time sheet is already running", _this.log.loglevel.devel.warning);
+                    return;
+                }
+            }
 
             setTimeout(function(){
                 _this.select(0);
@@ -229,13 +235,26 @@ function PanelMenubarListbar(options) {
         },
         Test: function() {
             _this.cleanupMenus();
-            _this.test_pick = new TestPickTable({
+
+            // _this.view.hideAll();
+            // var screen2 = blessed.screen({
+            //     autoPadding: true,
+            //     dockBorders: true,
+            //     ignoreDockContrast: true,
+            //     ignoreLocked: ['C-c'],
+            //     sendFocus: true,
+            //     smartCSR: true,
+            //     grabKeys: true,
+            // });
+
+            _this.view.test_pick = new TestPickTable({
                 parent: _this.screen,
                 view: _this.view,
             });
             let output = util.inspect(_this.view.timetrap.list, null, 4);
 
-             _this.test_pick.setContent(output);
+             _this.view.test_pick.setContent(output);
+            _this.destroy();
 
             setTimeout(function(){
                 _this.select(0);
@@ -243,9 +262,19 @@ function PanelMenubarListbar(options) {
             }, 1000);
         },
         Test2: function() {
-            _this.cleanupMenus();
+            // _this.cleanupMenus();
+            // _this.view.widgets.logger.msg("stuff", _this.view.widgets.logger.loglevel.production.error);
 
-            _this.view.widgets.logger.msg("stuff", _this.view.widgets.logger.loglevel.production.error);
+            _this.unkey('5', function(){
+                _this.loading_dialog = new DialogMessage({target: _this, parent: _this.screen});
+                _this.loading_dialog.alert('got here: x');
+            });
+
+            _this.options.autoCommandKeys = false;
+            _this.options.grabKeys = false;
+            _this.grabKeys = false;
+            _this.screen.render();
+
 
             setTimeout(function(){
                 _this.select(0);
@@ -282,7 +311,7 @@ PanelMenubarListbar.prototype.register_actions = function(view){
     let _this = this;
 
     _this.on('keypress', function(ch, key) {
-        //custom key bindings
+        // custom key bindings
         if (key.name === 'tab') {
             if (!key.shift) {
                 _this.view.setWinFocusNext();
@@ -359,7 +388,9 @@ PanelMenubarListbar.prototype.register_actions = function(view){
             }
         }
         if (data.type === 'stopAll'){
-            _this.view.timetrap.stopAllTimers({content:''});
+            if(data.data){
+                _this.view.timetrap.stopAllTimers({content:''});
+            }
         }
         //_this.select(0)
         _this.screen.render();
@@ -444,12 +475,12 @@ PanelMenubarListbar.prototype.register_actions = function(view){
         }
     });
 
-    _this.on('destroy_TestPickTable', function(){
-        _this.test_pick.menubar.destroy();
-        delete _this.test_pick.menubar;
-        _this.test_pick.destroy();
-        delete _this.test_pick;
-    });
+    // _this.on('destroy_TestPickTable', function(){
+    //     _this.test_pick.menubar.destroy();
+    //     delete _this.test_pick.menubar;
+    //     _this.test_pick.destroy();
+    //     delete _this.test_pick;
+    // });
 }
 
 PanelMenubarListbar.prototype.type = 'PanelMenubarListbar';

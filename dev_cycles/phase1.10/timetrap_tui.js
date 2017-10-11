@@ -13,6 +13,10 @@ var Configuration = require('./Configuration'),
 
 var screen = blessed.screen({
     autoPadding: true,
+    dockBorders: true,
+    ignoreDockContrast: true,
+    ignoreLocked: ['C-c'],
+    sendFocus: true,
     smartCSR: true
 });
 
@@ -21,11 +25,15 @@ screen.key(['C-c'], function(ch, key) {
     process.exit(0);
 });
 
+
 function main(argv, callback) {
     let _this = this;
 
     //get config data
-    let config = new Configuration("0.0.0");
+    let config = new Configuration();
+
+    // TODO: make this an option
+    //screen.title = "Timetrap TUI";
 
     ////////// DEBUG
     // console.log(config.settings.tui_question_prompts.value);
@@ -86,8 +94,10 @@ function main(argv, callback) {
 
     // map arguments (commandline overrides config file)
     // TODO: figure out a better way to do this
-    config.settings.tui_developer_mode.value = opt.developer_mode.toLowerCase();
-    config.settings.tui_question_prompts.value = opt.question_prompts.toLowerCase();
+    // config.settings.tui_developer_mode.value = opt.developer_mode.toLowerCase();
+    // config.settings.tui_question_prompts.value = opt.question_prompts.toLowerCase();
+    config.settings.tui_developer_mode.value = opt.developer_mode;
+    config.settings.tui_question_prompts.value = opt.question_prompts;
     config.settings.tui_working_directory.value = opt.working_directory;
 
     ////// DEBUG

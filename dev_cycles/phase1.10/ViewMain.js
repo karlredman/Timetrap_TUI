@@ -13,6 +13,7 @@ var SideBar = require('./PanelSidebarTree');
 var WorkspaceList = require('./PanelWorkspaceList');
 var Logger = require('./PanelLoggerBox.js');
 var ClocksRunning = require('./PanelClocksRunningBox')
+var TestPickTable = require('./TestPickTable');
 
 // dialogs
 var DialogMessage = require('./DialogMessage');
@@ -42,10 +43,11 @@ function ViewMain(objects) {
         menu: 1,
         logger: 2,
         side: 3,
-        mainw: 4,
+        //mainw: 4,
     };
     this.pwin.first = this.pwin.menu;
-    this.pwin.last = this.pwin.mainw;
+    // this.pwin.last = this.pwin.mainw;
+    this.pwin.last = this.pwin.side;
 
     //the current pane default
     this.curWin = 1;
@@ -207,6 +209,25 @@ ViewMain.prototype.register_actions = function()
         _this.timetrap.fetch_tree(list);
     });
 
+    _this.on('destroy_TestPickTable', function(){
+        _this.test_pick.menubar.destroy();
+        delete _this.test_pick.menubar;
+        _this.test_pick.destroy();
+        delete _this.test_pick;
+
+        _this.widgets.menubar = new MenuBar({
+            parent: _this.screen,
+            view: _this,
+            autoCommandKeys: true,
+            left: 0,
+            top: 0,
+        });
+        _this.widgets.menubar.register_actions();
+        // _this.widgets.sidebar.focus();
+        _this.setWinFocus(_this.pwin.side);
+        _this.screen.render();
+    });
+
 };
 
 ViewMain.prototype.updateWorkspaceFakeData = function(list){
@@ -277,13 +298,13 @@ ViewMain.prototype.setWinFocus = function(win){
     switch(win){
         case _this.pwin.mainw:
             _this.widgets.workspace.options.style.border.fg = "green";
-            _this.widgets.sidebar.options.style.border.fg = "red";
+            _this.widgets.sidebar.options.style.border.fg = "green";
             _this.logline.hide();
             _this.menuline.hide();
             _this.widgets.workspace.focus();
             break;
         case _this.pwin.side:
-            _this.widgets.workspace.options.style.border.fg = "red";
+            _this.widgets.workspace.options.style.border.fg = "green";
             _this.widgets.sidebar.options.style.border.fg = "green";
             _this.logline.hide();
             _this.menuline.hide();

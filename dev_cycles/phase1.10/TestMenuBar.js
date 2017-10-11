@@ -90,7 +90,9 @@ function TestMenuBar(options) {
     }
 
     //inherit from textarea
+    // options.lockKeys = true;
     blessed.listbar.call(this, options);
+    // this.lockKeys = true;
 
     //this.screen.render();
 }
@@ -104,14 +106,14 @@ TestMenuBar.prototype.register_actions = function(view){
 
     _this.on('keypress', function(ch, key) {
         //custom key bindings
-        if (key.name === 'tab') {
-            if (!key.shift) {
-                _this.view.setWinFocusNext();
-            } else {
-                _this.view.setWinFocusPrev();
-            }
-            return;
-        }
+        // if (key.name === 'tab') {
+        //     if (!key.shift) {
+        //         _this.view.setWinFocusNext();
+        //     } else {
+        //         _this.view.setWinFocusPrev();
+        //     }
+        //     return;
+        // }
         if (key.name === 'left'
             || (_this.options['vi'] && key.name === 'h')
             //|| (key.shift && key.name === 'tab')

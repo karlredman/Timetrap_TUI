@@ -3,8 +3,8 @@ var blessed = require('blessed'),
     contrib = require('blessed-contrib'),
     Box = blessed.Box,
     Node = blessed.Node;
-
-var TestMenuBar = require('./TestMenuBar');
+var DialogMessage = require('./DialogMessage'),
+    TestMenuBar = require('./TestMenuBar');
 
 var util = require('util');
 
@@ -23,10 +23,10 @@ function TestPickTable(options) {
     options.bottom = 0;
     options.border = true;
     options.content = "";
-    //options.autofocus= true; // TODO: what does this actually do?
+    options.autofocus= true; // TODO: what does this actually do?
 
-    //allows only screen level (i.e. menubar) keys
-    options.lockKeys = true;
+    //allows only screen level (i.e. menubar) keys //TODO: what does tis actually do?
+    //options.lockKeys = true;
 
     options.keys = true;
     options.mouse = options.mouse || true;
@@ -40,6 +40,8 @@ function TestPickTable(options) {
     options.style = options.style || {};
     options.style.scrollbar = options.style.scrollbar || {};
     options.style.scrollbar.inverse = options.style.scrollbar.inverse || true;
+    // options.style.scrollbar.bg = "red";
+    // options.style.scrollbar.fg = "blue";
 
     // failsafe: in case parent is not passed in options
     options.parent = options.parent || screen;
@@ -65,9 +67,12 @@ function TestPickTable(options) {
         parent: _this.screen,
         view: this.view,
         autoCommandKeys: true,
+        lockkeys: false,
         left: 0,
         top: 0,
     });
+
+    this.menubar.grabKeys = true;
 
     this.screen.render();
 }
@@ -88,10 +93,10 @@ TestPickTable.prototype.register_actions = function(){
 
     _this.on('keypress', function(ch, key) {
         if ( (key.name === 'escape')
-            || (key.name === 'tab')
+            //|| (key.name === 'tab')
         )
         {
-            _this.view.widgets.menubar.emit('destroy_TestPickTable', )
+            _this.view.emit('destroy_TestPickTable', )
             // _this.destroy();
             // _this.screen.render();
         }
@@ -100,6 +105,7 @@ TestPickTable.prototype.register_actions = function(){
         )
         {
             //console.log(util.inspect(key, true))
+            //TODO: exact codes are bad -find the right thing for other terminals
             _this.emit('keypress', 'C-d',{name:'d',sequence: '\u0004', ctrl: true, full:'C-d'})
         }
         if ( key.name === 'pageup')

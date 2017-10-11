@@ -3,7 +3,6 @@ var blessed = require('blessed'),
     contrib = require('blessed-contrib'),
     Node = blessed.Node,
     Box = blessed.Box;
-// Box = blessed.Box,
 
 
 function SideBar(options) {
