@@ -118,13 +118,31 @@ SideBar.prototype.register_actions = function(view){
             }
             return;
         }
+
         // if (key.name === 'space'){
         //     let idx = self.getItemIndex(this.selected);
         //     _this.view.widgets.workspace.emit('keypress', ch, key);
         //     return;
         // }
+
+        // TODO: this isn't working
+        if (
+            ( key.name === 'pagedown' )
+            // || ( key.name === 'space' )
+        )
+        {
+            //_this.emit('keypress', 'C-d',{name:'d',sequence: '\u0004', ctrl: true, full:'C-d'})
+            this.emit('keypress', 'C-d',{name:'d', ctrl: true, full:'C-d'})
+        }
+        if ( key.name === 'pageup')
+        {
+            //_this.emit('keypress', 'C-u',{name:'u',sequence: '\u0015', ctrl: true, full:'C-u'})
+            this.emit('keypress', 'C-u',{name:'u', ctrl: true, full:'C-u'})
+        }
+
         let idx = self.getItemIndex(this.selected);
         _this.view.widgets.workspace.emit('syncSelect', idx, 'element click');
+
     });
 
     // manage mouse things

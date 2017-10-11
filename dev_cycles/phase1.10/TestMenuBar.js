@@ -42,6 +42,10 @@ function TestMenuBar(options) {
     options.style.item.bg = options.style.item.bg || null;
     options.style.item.fg = options.style.item.fg || "white";
 
+    options.style.borders = options.style.item || {};
+    options.style.item.bg = options.style.item.bg || null;
+    options.style.item.fg = options.style.item.fg || "white";
+
     options.style.prefix = options.style.prefix || {};
     options.style.prefix.bg = options.style.prefix.bg || null;
     options.style.prefix.fg = options.style.prefix.fg || "yellow";
@@ -121,11 +125,11 @@ TestMenuBar.prototype.register_actions = function(view){
             // let item = _this.items[_this.selected];
             // item.style.bg = null;
             // item.style.fg = "white";
-            _this.moveLeft();
+            this.moveLeft();
             //item = _this.items[_this.selected];
             // item.style.bg = "black";
             // item.style.fg = "lightblue";
-            _this.screen.render();
+            this.screen.render();
             // Stop propagation if we're in a form.
             //if (key.name === 'tab') return false;
             return;
@@ -164,6 +168,14 @@ TestMenuBar.prototype.register_actions = function(view){
             }
             _this.screen.render();
             return;
+        }
+        if ( (key.name === 'escape')
+            //|| (key.name === 'tab')
+        )
+        {
+            _this.view.emit('destroy_TestPickTable', )
+            // _this.destroy();
+            // _this.screen.render();
         }
     });
 }

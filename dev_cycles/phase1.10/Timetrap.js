@@ -132,12 +132,12 @@ Timetrap.prototype.monitorDB = function(){
                 setTimeout(function () {
                     _this.catch_timer(_this.count);
                 }, 1000);
+                //}, 500);
             }
         }
         //else {console.log("got here: "+filename)}
     });
 }
-
 Timetrap.prototype.catch_timer = function() {
 	if (this.count > 0){
         this.emit('db_change');
@@ -160,16 +160,19 @@ Timetrap.prototype.callCommand = function(data){
         changeSheet:{
             command: ["s", "sheet"],
             options: [],
+            required: [],
             sheet_option: true,
         },
         checkIn:{
             command: ["in", "i"],
             options: ["-a", "--at"],
+            required: [],
             sheet_option: false,
         },
         checkOut:{
             command: ["out", "o"],
             options: ["-a", "--at"],
+            required: [],
             sheet_option: true,
         },
         resume:{
@@ -179,6 +182,7 @@ Timetrap.prototype.callCommand = function(data){
                 "-i", "--id"
             ],
             sheet_option: false,
+            required: []
         },
         edit:{
             command: ["edit", "e"],
@@ -191,21 +195,30 @@ Timetrap.prototype.callCommand = function(data){
                 "--move", "-m"          //implement with EXTREME caution
             ],
             sheet_option: false,
+            required: []
         },
         today:{
             command: ["today"],
+            options: ["--ids"],
+            required: ['--ids'],
             sheet_option: true,
         },
         yesterday:{
             command: ["yesterday"],
+            options: ["--ids"],
+            required: ['--ids'],
             sheet_option: true,
         },
         week:{
             command: ["week"],
+            options: ["--ids"],
+            required: ['--ids'],
             sheet_option: true,
         },
         month:{
             command: ["month"],
+            options: ["--ids"],
+            required: ['--ids'],
             sheet_option: true,
         },
         kill:{
@@ -222,6 +235,7 @@ Timetrap.prototype.callCommand = function(data){
                 "--end", "-e",
                 "--grep", "-g"
             ],
+            required: ['--ids'],
             sheet_option: true,
         }
     };
@@ -232,7 +246,13 @@ Timetrap.prototype.callCommand = function(data){
     let base_command = "timetrap";
     //let base_command = "timetrap";
     //let options = [data.content];
-    let options = [types[data.type].command[0], data.content];
+    let options;
+    if(types[data.type].required.length > 0){
+        options = [types[data.type].command[0], types[data.type].required, data.content];
+    }
+    else {
+        options = [types[data.type].command[0], data.content];
+    }
 
     // TODO: use the sheet_option property
     // handeling whether we need to select a sheet first

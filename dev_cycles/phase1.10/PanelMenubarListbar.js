@@ -253,7 +253,7 @@ function PanelMenubarListbar(options) {
             });
             let output = util.inspect(_this.view.timetrap.list, null, 4);
 
-             _this.view.test_pick.setContent(output);
+            //_this.view.test_pick.setContent(output);
             _this.destroy();
 
             setTimeout(function(){

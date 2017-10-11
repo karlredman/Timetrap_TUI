@@ -98,6 +98,7 @@ ViewMain.prototype.create_widgets = function()
         autoCommandKeys: true,
         left: 0,
         top: 0,
+        //border: 'line'
     });
 
 
@@ -210,6 +211,8 @@ ViewMain.prototype.register_actions = function()
     });
 
     _this.on('destroy_TestPickTable', function(){
+        _this.test_pick.list.destroy();
+        delete _this.test_pick.list;
         _this.test_pick.menubar.destroy();
         delete _this.test_pick.menubar;
         _this.test_pick.destroy();

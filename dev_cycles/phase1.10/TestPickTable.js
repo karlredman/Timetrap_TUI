@@ -4,7 +4,8 @@ var blessed = require('blessed'),
     Box = blessed.Box,
     Node = blessed.Node;
 var DialogMessage = require('./DialogMessage'),
-    TestMenuBar = require('./TestMenuBar');
+    TestMenuBar = require('./TestMenuBar'),
+    TestPickTableList = require('./TestPickTableList');
 
 var util = require('util');
 
@@ -19,9 +20,9 @@ function TestPickTable(options) {
 
     options.top = 0;
     options.left = 0;
-    options.right = 0;
-    options.bottom = 0;
-    options.border = true;
+    //options.border = 'line';
+    //options.right = 0;
+    //options.bottom = 0;
     options.content = "";
     options.autofocus= true; // TODO: what does this actually do?
 
@@ -67,12 +68,37 @@ function TestPickTable(options) {
         parent: _this.screen,
         view: this.view,
         autoCommandKeys: true,
-        lockkeys: false,
+        // lockkeys: true,
         left: 0,
         top: 0,
+        //border: 'line'
+    });
+    //this.menubar.grabKeys = true;
+    this.menubar.register_actions();
+    this.menubar.focus();
+
+
+    _this.list = new TestPickTableList({
+        parent: _this.screen,
+        view: this.view,
+        // lockkeys: true,
+        left: 0,
+        top: 1,
+        border: 'line'
     });
 
-    this.menubar.grabKeys = true;
+    // line to show menu is focused
+    _this.menuline = new blessed.line({
+        parent: _this.screen,
+        view: this.view,
+        left: 0,
+        height: 1,
+        top: 1,
+        orientation: "horizontal",
+        type: 'line',
+        fg: "green"
+    });
+
 
     this.screen.render();
 }
@@ -100,17 +126,20 @@ TestPickTable.prototype.register_actions = function(){
             // _this.destroy();
             // _this.screen.render();
         }
-        if ( (key.name === 'space')
-            || ( key.name === 'pagedown')
+        if (
+            ( key.name === 'pagedown' )
+            // || ( key.name === 'space' )
         )
         {
             //console.log(util.inspect(key, true))
             //TODO: exact codes are bad -find the right thing for other terminals
-            _this.emit('keypress', 'C-d',{name:'d',sequence: '\u0004', ctrl: true, full:'C-d'})
+            //_this.emit('keypress', 'C-d',{name:'d',sequence: '\u0004', ctrl: true, full:'C-d'})
+            _this.emit('keypress', 'C-d',{name:'d', ctrl: true, full:'C-d'})
         }
         if ( key.name === 'pageup')
         {
-            _this.emit('keypress', 'C-u',{name:'u',sequence: '\u0015', ctrl: true, full:'C-u'})
+            //_this.emit('keypress', 'C-u',{name:'u',sequence: '\u0015', ctrl: true, full:'C-u'})
+            _this.emit('keypress', 'C-u',{name:'u', ctrl: true, full:'C-u'})
         }
 
     });
