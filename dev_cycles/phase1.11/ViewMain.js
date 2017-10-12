@@ -13,7 +13,6 @@ var SideBar = require('./PanelSidebarTree');
 var WorkspaceList = require('./PanelWorkspaceList');
 var Logger = require('./PanelLoggerBox.js');
 var ClocksRunning = require('./PanelClocksRunningBox')
-var TestPickTable = require('./TestPickTable');
 
 // dialogs
 var DialogMessage = require('./DialogMessage');
@@ -22,6 +21,7 @@ function ViewMain(objects) {
 
     let _this=this;
     _this.widgets = {};
+    _this.controller = objects.controller;
     _this.screen = objects.screen;
     _this.config = objects.config;
     _this.timetrap = objects.timetrap;
@@ -29,10 +29,8 @@ function ViewMain(objects) {
 
     // TODO: reaplace with actual `t list` width
     this.config.view.sidew = '50%';   //side menu width
-    //this.config.view.sidew = 35;   //side menu width
+    this.config.view.sidew = 25;   //side menu width
 
-    this.config.view.numwnd = 3;                    //number of windows
-    this.config.view.curwind = 1;                   //current window (starts at 1, screen === 0)
 
 
     /////////////////////////////////////////////////////
@@ -40,17 +38,17 @@ function ViewMain(objects) {
 
     //this view's window panes
     this.pwin ={
-        menu: 1,
-        logger: 2,
-        side: 3,
-        //mainw: 4,
+        side: 1,
+        menu: 2,
+        logger: 3,
+        mainw: 4,
     };
-    this.pwin.first = this.pwin.menu;
-    // this.pwin.last = this.pwin.mainw;
-    this.pwin.last = this.pwin.side;
+    this.pwin.first = this.pwin.side;
+    this.pwin.last = this.pwin.logger;
+    this.pwin.curWin;
 
-    //the current pane default
-    this.curWin = 1;
+    //register actions
+    _this.register_actions();
 
     //make the widgets
     this.create_widgets();
@@ -59,8 +57,6 @@ function ViewMain(objects) {
     /////////////////////////////////////////////////////
     // this view's control
 
-    this.widgets.sidebar.focus();
-    this.curWin=this.pwin.side;
 
     for (let key in this.widgets) {
         // if (this.widgets.hasOwnProperty(key)) continue;
@@ -80,8 +76,6 @@ ViewMain.prototype.constructor = ViewMain;
 ViewMain.prototype.create_widgets = function()
 {
     let _this=this;
-
-    // needs to be at top of object list -other widgets rely on it
     //the logger at bottom of main window
     this.widgets.logger = new Logger({
         parent: _this.screen,
@@ -91,15 +85,17 @@ ViewMain.prototype.create_widgets = function()
         height: 1,
     });
 
+
     //menubar at top
-    this.widgets.menubar = new MenuBar({
-        parent: _this.screen,
-        view: this,
-        autoCommandKeys: true,
-        left: 0,
-        top: 0,
-        //border: 'line'
-    });
+    this.toggle_menubar();
+    // this.widgets.menubar = new MenuBar({
+    //     parent: _this.screen,
+    //     view: this,
+    //     autoCommandKeys: true,
+    //     left: 0,
+    //     top: 0,
+    //     //border: 'line'
+    // });
 
 
     //project tree on the left
@@ -158,9 +154,10 @@ ViewMain.prototype.create_widgets = function()
     this.widgets.clocksRunning = new ClocksRunning({
         parent: _this.screen,
         view: _this,
-        //width: _this.config.view.sidew-2,   //TODO: forces sidebar to be absolute size instead of %
+        //TODO: this is a mess
+        width: _this.config.view.sidew-2,   //TODO: forces sidebar to be absolute size instead of %
         //width: _this.screen.cols/2-4,
-        width: "48%",           // TODO this is still a hack
+        //width: "48%",           // TODO this is still a hack
         left: 1,
         height: 1,
         top: 2,
@@ -168,11 +165,49 @@ ViewMain.prototype.create_widgets = function()
         // TODO: base min width of sidebar on this content
         //content: "{center}4/24 Active Time Sheets{/}",
     });
+
 }
+
+ViewMain.prototype.toggle_menubar = function(){
+    let _this = this;
+
+    if(typeof _this.widgets.menubar === 'undefined'){
+        _this.widgets.menubar = new MenuBar({
+            parent: _this.screen,
+            view: this,
+            autoCommandKeys: true,
+            left: 0,
+            top: 0,
+            //border: 'line'
+        });
+
+        return;
+    }
+    _this.widgets.menubar.destroy();
+    delete _this.widgets.menubar;
+}
+
 
 ViewMain.prototype.register_actions = function()
 {
     let _this = this;
+
+    _this.on('relay', function(msg){
+        // msg = {action: 'action name', item: 'item name'
+        _this.controller.emit(msg.action, msg.item);
+    });
+    _this.on('create', function(item){
+        if(item === 'menubar'){
+            _this.toggle_menubar();
+            _this.widgets.menubar.register_actions();
+            _this.setWinFocus(_this.pwin.side);
+        }
+    });
+    _this.on('destroy', function(item){
+        if(item === 'menubar'){
+            _this.toggle_menubar();
+        }
+    });
 
     _this.timetrap.on('fetch_list', (list) => {
         //  we have a new `t list` -now update the tree
@@ -191,6 +226,7 @@ ViewMain.prototype.register_actions = function()
         _this.widgets.workspace.emit('syncSelect', idx, 'keypress');
 
 
+        //TODO make this configurable
         _this.widgets.clocksRunning.setContent(
             "{center}"
             +_this.timetrap.num_running+"/"+_this.timetrap.num_clocks
@@ -225,8 +261,11 @@ ViewMain.prototype.register_actions = function()
             left: 0,
             top: 0,
         });
+
+        _this.running = false;               //cheezy, indicate that we've run register_actions on widgets
         _this.widgets.menubar.register_actions();
-        // _this.widgets.sidebar.focus();
+        _this.running = true;               //cheezy, indicate that we've run register_actions on widgets
+
         _this.setWinFocus(_this.pwin.side);
         _this.screen.render();
     });
@@ -300,8 +339,9 @@ ViewMain.prototype.setWinFocus = function(win){
     // false positives.
     switch(win){
         case _this.pwin.mainw:
-            _this.widgets.workspace.options.style.border.fg = "green";
-            _this.widgets.sidebar.options.style.border.fg = "green";
+            //we shouldn't be here
+            _this.widgets.workspace.options.style.border.fg = "yellow";
+            _this.widgets.sidebar.options.style.border.fg = "yellow";
             _this.logline.hide();
             _this.menuline.hide();
             _this.widgets.workspace.focus();
@@ -309,25 +349,40 @@ ViewMain.prototype.setWinFocus = function(win){
         case _this.pwin.side:
             _this.widgets.workspace.options.style.border.fg = "green";
             _this.widgets.sidebar.options.style.border.fg = "green";
+            // _this.menuline.options.fg = "red";
+            // _this.logline.options.fg = "red";
             _this.logline.hide();
             _this.menuline.hide();
             _this.widgets.sidebar.focus();
+            _this.screen.render();
             break;
         case _this.pwin.menu:
             _this.widgets.workspace.options.style.border.fg = "red";
             _this.widgets.sidebar.options.style.border.fg = "red";
+            // _this.menuline.options.fg = "green";
+            // _this.logline.options.fg = "red";
             _this.logline.hide();
             _this.menuline.show();
-            _this.widgets.menubar.focus();
+             _this.widgets.menubar.focus();
             break;
         case _this.pwin.logger:
             _this.widgets.workspace.options.style.border.fg = "red";
             _this.widgets.sidebar.options.style.border.fg = "red";
+            // _this.menuline.options.fg = "red";
+            // _this.logline.options.fg = "green";
             _this.logline.show();
             _this.menuline.hide();
             _this.widgets.logger.focus();
             break;
+        default:
+            _this.loading_dialog = new DialogMessage({target: _this, parent: _this.screen});
+            _this.loading_dialog.alert('Bad window number');
+            break;
     }
+
+    _this.pwin.curWin = win;
+
+    //TODO: rework this for color themes
 
     //toggle menu colors
     if ( win === _this.pwin.menu ) {
@@ -363,30 +418,54 @@ ViewMain.prototype.setWinFocus = function(win){
 
 ViewMain.prototype.setWinFocusNext = function(){
     let _this = this;
-    if((_this.curWin+1) > _this.pwin.last){
-        _this.curWin = _this.pwin.first;
-        _this.setWinFocus(_this.pwin.first);
+
+    // TODO: make config option for toggling traditional and this behavior
+
+    //specific behavior
+    switch(_this.pwin.curWin){
+        case _this.pwin.menu:
+            _this.setWinFocus(_this.pwin.side);
+            break;
+        case _this.pwin.side:
+            _this.setWinFocus(_this.pwin.menu);
+            break;
+        case _this.pwin.logger:
+            _this.setWinFocus(_this.pwin.side);
+            break;
     }
-    else {
-        _this.curWin++;
-        _this.setWinFocus(_this.curWin);
-    }
-    _this.screen.render();
-    return
+
+    // if((_this.pwin.curWin+1) > _this.pwin.last){
+    //     _this.pwin.curWin = _this.pwin.first;
+    //     _this.setWinFocus(_this.pwin.first);
+    // }
+    // else {
+    //     _this.setWinFocus(_this.pwin.curWin+1);
+    // }
+    // _this.screen.render();
 }
 
 ViewMain.prototype.setWinFocusPrev = function(){
     let _this = this;
-    if((_this.curWin-1) < _this.pwin.first){
-        _this.curWin = _this.pwin.last;
-        _this.setWinFocus(_this.pwin.last);
+    //specific behaovior
+    switch(_this.pwin.curWin){
+        case _this.pwin.menu:
+            _this.setWinFocus(_this.pwin.side);
+            break;
+        case _this.pwin.side:
+            _this.setWinFocus(_this.pwin.logger);
+            break;
+        case _this.pwin.logger:
+            _this.setWinFocus(_this.pwin.side);
+            break;
     }
-    else {
-        _this.curWin--;
-        _this.setWinFocus(_this.curWin);
-    }
-    _this.screen.render();
-    return
+    // if((_this.pwin.curWin-1) < _this.pwin.first){
+    //     _this.pwin.curWin = _this.pwin.last;
+    //     _this.setWinFocus(_this.pwin.last);
+    // }
+    // else {
+    //     _this.setWinFocus(_this.pwin.curWin-1);
+    // }
+    // _this.screen.render();
 }
 
 ViewMain.prototype.hideAll = function(){
@@ -410,7 +489,7 @@ ViewMain.prototype.showAll = function(set_focus){
     }
 
     if(set_focus){
-        _this.setWinFocus(_this.curwin);
+        _this.setWinFocus(_this.pwin.curwin);
     }
     _this.screen.render();
 }

@@ -5,13 +5,21 @@ var blessed = require('blessed'),
     Node = blessed.Node;
 
 var util = require('util');
+var DialogMessage = require('./DialogMessage');
 
-function TestPickTableList(options) {
-    if (!(this instanceof Node)) return new TestPickTableList(options);
+function PanelPickList(options) {
+    if (!(this instanceof Node)) return new PanelPickList(options);
+
+    let _this = this;
+
+    _this.view = options.view;
 
     options.style = options.style || {}
     options.style.border = options.style.border || {}
     options.style.border = options.style.border || {}
+    //options.align = 'center';
+
+    options.wrap = true;
 
     // options.scrollable = options.scrollable || true;
     // options.scrollbar = options.scrollbar || {};
@@ -20,75 +28,75 @@ function TestPickTableList(options) {
     // options.style.scrollbar.inverse = options.style.scrollbar.inverse || true;
 
     let items = {
-                headers: [" Running", " Today", " Total Time"],
+        headers: ["  Id"  , "      Day"       , "  Start", "   End"   ," Duration", " Notes"],
         data: [
-        ["XX000:00:00","XX000:00:00","00000:00:00"],
-        ["000:00:00","000:00:00","00000:00:00"],
-        ["000:00:00","000:00:00","00000:00:00"],
-        ["000:00:00","000:00:00","00000:00:00"],
-        ["000:00:00","000:00:00","00000:00:00"],
-        ["000:00:00","000:00:00","00000:00:00"],
-        ["000:00:00","000:00:00","00000:00:00"],
-        ["000:00:00","000:00:00","00000:00:00"],
-        ["000:00:00","000:00:00","00000:00:00"],
-        ["000:00:00","000:00:00","00000:00:00"],
-        ["000:00:00","000:00:00","00000:00:00"],
-        ["000:00:00","000:00:00","00000:00:00"],
-        ["000:00:00","000:00:00","00000:00:00"],
-        ["000:00:00","000:00:00","00000:00:00"],
-        ["000:00:00","000:00:00","00000:00:00"],
-        ["000:00:00","000:00:00","00000:00:00"],
-        ["000:00:00","000:00:00","00000:00:00"],
-        ["000:00:00","000:00:00","00000:00:00"],
-        ["000:00:00","000:00:00","00000:00:00"],
-        ["000:00:00","000:00:00","00000:00:00"],
-    ]};
-    // let items = {
-    //     headers: ["column 1", "column 2"],
-    //     data: [
-    //         ["one", "stuff"],
-    //         ["two", "stuff"],
-    //         ["three", "stuff"] ]};
+                 ["123456", "Wed Oct 11, 2017", "00:00:00", "00:00:00", "00:00:00", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"],
+                 ["123456", "Wed Oct 11, 2017", "00:00:00", "00:00:00", "00:00:00", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"],
+                 ["123456", "Wed Oct 11, 2017", "00:00:00", "00:00:00", "00:00:00", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"],
+                 ["123456", "Wed Oct 11, 2017", "00:00:00", "00:00:00", "00:00:00", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"],
+                 ["123456", "Wed Oct 11, 2017", "00:00:00", "00:00:00", "00:00:00", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"],
+                 ["123456", "Wed Oct 11, 2017", "00:00:00", "00:00:00", "00:00:00", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"],
+                 ["123456", "Wed Oct 11, 2017", "00:00:00", "00:00:00", "00:00:00", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"],
+                 ["123456", "Wed Oct 11, 2017", "00:00:00", "00:00:00", "00:00:00", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"],
+                 ["123456", "Wed Oct 11, 2017", "00:00:00", "00:00:00", "00:00:00", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"],
+                 ["123456", "Wed Oct 11, 2017", "00:00:00", "00:00:00", "00:00:00", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"],
+                 ["123456", "Wed Oct 11, 2017", "00:00:00", "00:00:00", "00:00:00", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"],
+                 ["123456", "Wed Oct 11, 2017", "00:00:00", "00:00:00", "00:00:00", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"],
+                 ["123456", "Wed Oct 11, 2017", "00:00:00", "00:00:00", "00:00:00", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"],
+                 ["123456", "Wed Oct 11, 2017", "00:00:00", "00:00:00", "00:00:00", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"],
+                 ["123456", "Wed Oct 11, 2017", "00:00:00", "00:00:00", "00:00:00", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"],
+                 ["123456", "Wed Oct 11, 2017", "00:00:00", "00:00:00", "00:00:00", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"],
+                 ["123456", "Wed Oct 11, 2017", "00:00:00", "00:00:00", "00:00:00", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"],
+                 ["123456", "Wed Oct 11, 2017", "00:00:00", "00:00:00", "00:00:00", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"],
+                 ["123456", "Wed Oct 11, 2017", "00:00:00", "00:00:00", "00:00:00", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"],
+                 ["123456", "Wed Oct 11, 2017", "00:00:00", "00:00:00", "00:00:00", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"],
+                 ["123456", "Wed Oct 11, 2017", "00:00:00", "00:00:00", "00:00:00", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"],
+                 ["123456", "Wed Oct 11, 2017", "00:00:00", "00:00:00", "00:00:00", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"],
+                 ["123456", "Wed Oct 11, 2017", "00:00:00", "00:00:00", "00:00:00", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"],
+                 ["123456", "Wed Oct 11, 2017", "00:00:00", "00:00:00", "00:00:00", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"],
+                 ["123456", "Wed Oct 11, 2017", "00:00:00", "00:00:00", "00:00:00", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"],
+                 ["123456", "Wed Oct 11, 2017", "00:00:00", "00:00:00", "00:00:00", "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"],
+                 ["123456", "Wed Oct 11, 2017", "00:00:00", "00:00:00", "00:00:00", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"],
+                 ["123456", "Wed Oct 11, 2017", "00:00:00", "00:00:00", "00:00:00", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"],
+                 ["123456", "Wed Oct 11, 2017", "00:00:00", "00:00:00", "00:00:00", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"],
+                 ["123456", "Wed Oct 11, 2017", "00:00:00", "00:00:00", "00:00:00", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"],
+                 ["123456", "Wed Oct 11, 2017", "00:00:00", "00:00:00", "00:00:00", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"],
+                 ["123456", "Wed Oct 11, 2017", "00:00:00", "00:00:00", "00:00:00", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"],
+                 ["123456", "Wed Oct 11, 2017", "00:00:00", "00:00:00", "00:00:00", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"],
+                 ["123456", "Wed Oct 11, 2017", "00:00:00", "00:00:00", "00:00:00", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"],
+                 ["123456", "Wed Oct 11, 2017", "00:00:00", "00:00:00", "00:00:00", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"],
+                 ["123456", "Wed Oct 11, 2017", "00:00:00", "00:00:00", "00:00:00", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"],
+                 ["123456", "Wed Oct 11, 2017", "00:00:00", "00:00:00", "00:00:00", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"],
+                 ["123456", "Wed Oct 11, 2017", "00:00:00", "00:00:00", "00:00:00", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"],
+                 ["123456", "Wed Oct 11, 2017", "00:00:00", "00:00:00", "00:00:00", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"],
+                 ["123456", "Wed Oct 11, 2017", "00:00:00", "00:00:00", "00:00:00", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"],
+                 ["123456", "Wed Oct 11, 2017", "00:00:00", "00:00:00", "00:00:00", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"],
+                 ["123456", "Wed Oct 11, 2017", "00:00:00", "00:00:00", "00:00:00", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"],
+                 ["123456", "Wed Oct 11, 2017", "00:00:00", "00:00:00", "00:00:00", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"],
+                 ["123456", "Wed Oct 11, 2017", "00:00:00", "00:00:00", "00:00:00", "yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"],
+        ]};
 
-
-    // ["four", "stuff"],
-    // ["five", "stuff"],
-    // ["six", "stuff"],
-    // ["seven", "stuff"],
-    // ["eight", "stuff"],
-    // ["nine", "stuff"],
-    // ["ten", "stuff"],
-    // ["eleven", "stuff"],
-    // ["twelve", "stuff"],
-    // ["thirteen", "stuff"],
-    // ["fourteen", "stuff"],
-    // ["fifteen", "stuff"],
-    // ["sixteen", "stuff"],
-    // ["seventeen", "stuff"],
-    // ["eighteen", "stuff"],
-    // ["nineteen", "stuff"],
-    // ["twenty", "stuff"]
-    // ]};
-
-    //["000:00:00","000:00:00","00000:00:00"],
-    options.columnWidth = [11,11,11];
-    options.columnSpacing = 2;
+    //TODO: adjust to screen width / or make configurable for note length
+    options.columnWidth = [6,16,8,8,10,64];
+    options.columnSpacing = 3;
     options.mouse = true;
     options.keys = true;
     options.vi = true;
     options.interactive = true;
     options.screen = options.parent;
 
-    this.grabKeys = true;
-    options.grabKeys = true;
+    // this.grabKeys = true;
+    // options.grabKeys = true;
 
-    this.sendFocus = true;
-    options.sendFocus = true;
+    // this.sendFocus = true;
+    // options.sendFocus = true;
 
-    this.input = true;
-    options.input = true;
-    this.keyable = true
-    options.keyable = true
+    // this.input = true;
+    // options.input = true;
+    // this.keyable = true
+    // options.keyable = true
+
+    this.options = options
 
     contrib.table.call(this, options);
     // this.focus;
@@ -105,13 +113,11 @@ function TestPickTableList(options) {
     //             , [4, 5, 6] ]})
 
 }
-TestPickTableList.prototype = Object.create(contrib.table.prototype);
-TestPickTableList.prototype.constructor = TestPickTableList;
+PanelPickList.prototype = Object.create(contrib.table.prototype);
+PanelPickList.prototype.constructor = PanelPickList;
 
-TestPickTableList.prototype.register_actions = function(view){
+PanelPickList.prototype.register_actions = function(){
     let _this = this;
-    this.view = view;
-    this.rows.view = view;
 
     // manage mouse things
     _this.rows.on('element wheeldown', function(foo, bar) {
@@ -160,57 +166,26 @@ TestPickTableList.prototype.register_actions = function(view){
     });
 
     // manage keypresses
-    // _this.rows.key('tab', function(ch, key) {
-    //             console.log("thing")
-    // });
+    _this.rows.on('keypress', function(ch, key) {
+        // let idx = this.getItemIndex(this.selected);
+        if (key.name === 'tab') {
+            if (!key.shift) {
+                _this.view.setWinFocusNext();
+            } else {
+                _this.view.setWinFocusPrev();
+            }
+            return;
+        }
+    });
+
     _this.rows.on('mouse', function(ch, key) {
         let idx = this.getItemIndex(this.selected);
         this.select(idx);
         // _this.view.widgets.sidebar.emit('syncSelect', idx, 'keypress');
     });
 
-    _this.rows.on('keypress', function(ch, key) {
-        let idx = this.getItemIndex(this.selected);
-        //self.select(idx);
-        // _this.view.widgets.sidebar.emit('syncSelect', idx, 'keypress');
-        //custom key bindings
-        // if (key.name === 'tab') {
-        //     if (!key.shift) {
-        //         //console.log("thing")
-        //         _this.view.setWinFocusNext();
-        //     } else {
-        //         _this.view.setWinFocusPrev();
-        //     }
-        //     return;
-        // }
-    });
-
-    // _this.on('syncSelect', function(idx,name) {
-    //     _this.rows.select(idx);
-    //     _this.screen.render();
-    // });
-
-    // _this.on('update', function(data)) {
-    // }
-}
-
-TestPickTableList.prototype.populate = function(tlist){
-    let _this = this;
-    //let sdata = _this.view.widgets.sidebar.data;
-    // let sdata = _this.view.widgets.sidebar.savedData;
-
-    // console.log(sdata.children.filter(function(e){return e.sheet == 'Projects'}).length);
-
-    // let out = sdata.children.filter(function(e){return e.sheet == 'Projects'})[0].length;
-    // let len = sdata.children.filter(function(e){return e.sheet == 'Projects'})[0];
-    // for (; len > 0;len--){
-    //     console.log(sdata.children.filter(function(e){return e.sheet == 'Projects'})[0][len-1]);
-    // }
-    // let sdata = _this.view.widgets.sidebar.savedData;
-    // let output = sdata.children.filter(function(e){return e.sheet == 'Projects'})[0];
-    // require('fs').writeFile('node.out', util.inspect(output, null, 9), (er, x)=>{});
 
 }
 
-TestPickTableList.prototype.type = 'TestPickTableList';
-module.exports = TestPickTableList;
+PanelPickList.prototype.type = 'PanelPickList';
+module.exports = PanelPickList;

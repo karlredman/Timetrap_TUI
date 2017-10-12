@@ -20,11 +20,11 @@ function TestPickTable(options) {
     // set overridable defaults
     options = options || {};
 
-    options.top = 0;
+    options.top = 1;
     options.left = 0;
-    //options.border = 'line';
+    options.border = 'line';
     //options.right = 0;
-    options.botom = 3;
+    options.bottom = 1;
     options.content = "";
     options.autofocus= true; // TODO: what does this actually do?
 
@@ -102,15 +102,16 @@ function TestPickTable(options) {
         fg: "green"
     });
 
-    _this.logger = new Logger({
-        parent: _this.screen,
-        view: _this.view,
-        left: 0,
-        bottom: 0,
-        height: 1,
-    });
-    _this.logger.setItems(_this.view.widgets.logger.logLines);
-    // _this.scrollTo(this.logLines.length)
+    // _this.logger = new Logger({
+    //     parent: _this.screen,
+    //     view: _this.view,
+    //     left: 0,
+    //     bottom: 0,
+    //     height: 1,
+    // });
+    // _this.logger.setItems(_this.view.widgets.logger.logLines);
+    // // _this.scrollTo(this.logLines.length)
+    _this.view.widgets.logger.msg("Changed view: TestPickTable", _this.view.widgets.logger.loglevel.devel.warning);
 
 
     this.screen.render();

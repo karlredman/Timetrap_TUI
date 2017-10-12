@@ -67,12 +67,12 @@ SideBar.prototype = Object.create(contrib.tree.prototype);
 SideBar.prototype.constructor = SideBar;
 
 SideBar.prototype.render = function() {
-  if (this.screen.focused === this.rows) this.rows.focus();
+    //if (this.screen.focused === this.rows) this.rows.focus();
 
-  this.rows.top = this.top+1;
-  this.rows.width = this.width - 3;
-  this.rows.height = this.height - 4;
-  Box.prototype.render.call(this);
+    this.rows.top = this.top+1;
+    this.rows.width = this.width - 3;
+    this.rows.height = this.height - 4;
+    Box.prototype.render.call(this);
 };
 
 SideBar.prototype.saveData = function(data){

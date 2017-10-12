@@ -9,7 +9,7 @@ var DialogPrompt = require('./DialogPrompt'),
     BigBox = require('./DialogBigBox');
 var util = require('util');
 
-var TestPickTable = require('./TestPickTable');
+//var TestPickTable = require('./TestPickTable');
 
 function PanelMenubarListbar(options) {
 
@@ -121,64 +121,13 @@ function PanelMenubarListbar(options) {
             }
             else {
                 if(_this.view.widgets.sidebar.nodeLines[_this.view.widgets.sidebar.rows.selected].info.running === '0:00:00') {
-                    //show picklist
+                    let sheet = _this.view.widgets.sidebar.nodeLines[_this.view.widgets.sidebar.rows.selected].sheet;
+                    _this.view.emit('relay', {action: 'create', item: 'PickView', data:{sheet: sheet}});
                 }
                 else {
                     //show menu to select running or picklist
-            let prompt = new DialogPrompt({target: _this, parent: _this.screen});
-            prompt.cannedInput('edit');
-            }
-            }
-            setTimeout(function(){
-                _this.select(0);
-                _this.screen.render();
-            }, 1000);
-        },
-        Resume: function(){
-            let prompt = new DialogPrompt({target: _this, parent: _this.screen});
-            //prompt.cannedInput('resume');
-
-            if( typeof _this.resume_menu === 'undefined' ) {
-                _this.resume_menu = new ListResume({
-                    parent: _this.screen,
-                    //TODO: could be more generic
-                    top: _this.items[3].position.top+1,         //offset one below
-                    left: _this.items[3].position.left+3,       //offset to the right
-                    width: _this.items[3].position.width,       //the width of 'Display'
-                });
-                _this.resume_menu.focus();
-                _this.screen.render();
-            }
-            else {
-                if(typeof _this.resume_menu !== 'undefined'){
-                    // TODO: HACK!!!
-                    // _this.resume_menu.destroy();
-                    // delete _this.resume_menu;
-                    _this.cleanupMenus();
-                }
-            }
-
-            setTimeout(function(){
-                _this.select(0);
-                _this.screen.render();
-            }, 1000);
-        },
-        Display: function(){
-            if( typeof _this.display_menu === 'undefined' ) {
-             _this.display_menu = new ListDisplay({
-                parent: _this.screen,
-                top: _this.items[4].position.top+1,         //offset one below
-                left: _this.items[4].position.left+3,       //offset to the right
-                width: _this.items[4].position.width,       //the width of 'Display'
-            });
-            _this.display_menu.focus();
-            _this.screen.render();
-            }
-            else {
-                if(typeof _this.display_menu !== 'undefined'){
-                    // _this.display_menu.destroy();
-                    // delete _this.display_menu;
-                    _this.cleanupMenus();
+                    let prompt = new DialogPrompt({target: _this, parent: _this.screen});
+                    prompt.cannedInput('edit');
                 }
             }
             setTimeout(function(){
@@ -186,6 +135,62 @@ function PanelMenubarListbar(options) {
                 _this.screen.render();
             }, 1000);
         },
+        Task: function(){
+        },
+        Details: function(){
+            let sheet = _this.view.widgets.sidebar.nodeLines[_this.view.widgets.sidebar.rows.selected].sheet;
+            _this.view.emit('relay', {action: 'create', item: 'PickView', data:{sheet: sheet}});
+            // let prompt = new DialogPrompt({target: _this, parent: _this.screen});
+            // //prompt.cannedInput('resume');
+
+            // if( typeof _this.resume_menu === 'undefined' ) {
+            //     _this.resume_menu = new ListResume({
+            //         parent: _this.screen,
+            //         //TODO: could be more generic
+            //         top: _this.items[3].position.top+1,         //offset one below
+            //         left: _this.items[3].position.left+3,       //offset to the right
+            //         width: _this.items[3].position.width,       //the width of 'Display'
+            //     });
+            //     _this.resume_menu.focus();
+            //     _this.screen.render();
+            // }
+            // else {
+            //     if(typeof _this.resume_menu !== 'undefined'){
+            //         // TODO: HACK!!!
+            //         // _this.resume_menu.destroy();
+            //         // delete _this.resume_menu;
+            //         _this.cleanupMenus();
+            //     }
+            // }
+
+            setTimeout(function(){
+                _this.select(0);
+                _this.screen.render();
+            }, 1000);
+        },
+        // Display: function(){
+        //     if( typeof _this.display_menu === 'undefined' ) {
+        //      _this.display_menu = new ListDisplay({
+        //         parent: _this.screen,
+        //         top: _this.items[4].position.top+1,         //offset one below
+        //         left: _this.items[4].position.left+3,       //offset to the right
+        //         width: _this.items[4].position.width,       //the width of 'Display'
+        //     });
+        //     _this.display_menu.focus();
+        //     _this.screen.render();
+        //     }
+        //     else {
+        //         if(typeof _this.display_menu !== 'undefined'){
+        //             // _this.display_menu.destroy();
+        //             // delete _this.display_menu;
+        //             _this.cleanupMenus();
+        //         }
+        //     }
+        //     setTimeout(function(){
+        //         _this.select(0);
+        //         _this.screen.render();
+        //     }, 1000);
+        // },
         Stop_all: function(){
             _this.cleanupMenus();
             let question = new DialogQuestion({target: _this, parent: _this.screen});
@@ -203,58 +208,47 @@ function PanelMenubarListbar(options) {
                 _this.screen.render();
             }, 1000);
         },
-        Help: function(){
-            _this.cleanupMenus();
-            let nkey = {
-                sequence: "?",
-                name: "?",
-                ctrl: false,
-                meta: false,
-                shift: false,
-                full: "?"
-            }
-            _this.parent.emit('key '+nkey.full, nkey.full, nkey);
-            setTimeout(function(){
-                _this.select(0);
-                _this.screen.render();
-            }, 1000);
+        New: function(){
         },
-        eXit: function(){
-            _this.cleanupMenus();
-            let question = new DialogQuestion({target: _this, parent: _this.screen});
-            if( _this.view.config.settings.tui_question_prompts.value === true ){
-                question.cannedInput('exit');
-            }
-            else {
-                _this.emit('question', {type: 'exit', data: true});
-            }
-            setTimeout(function(){
-                _this.select(0);
-                _this.screen.render();
-            }, 1000);
+        Kill: function(){
         },
+        // Help: function(){
+        //     _this.cleanupMenus();
+        //     let nkey = {
+        //         sequence: "?",
+        //         name: "?",
+        //         ctrl: false,
+        //         meta: false,
+        //         shift: false,
+        //         full: "?"
+        //     }
+        //     _this.parent.emit('key '+nkey.full, nkey.full, nkey);
+        //     setTimeout(function(){
+        //         _this.select(0);
+        //         _this.screen.render();
+        //     }, 1000);
+        // },
+        // eXit: function(){
+        //     _this.cleanupMenus();
+        //     let question = new DialogQuestion({target: _this, parent: _this.screen});
+        //     if( _this.view.config.settings.tui_question_prompts.value === true ){
+        //         question.cannedInput('exit');
+        //     }
+        //     else {
+        //         _this.emit('question', {type: 'exit', data: true});
+        //     }
+        //     setTimeout(function(){
+        //         _this.select(0);
+        //         _this.screen.render();
+        //     }, 1000);
+        // },
         Test: function() {
             _this.cleanupMenus();
 
-            // _this.view.hideAll();
-            // var screen2 = blessed.screen({
-            //     autoPadding: true,
-            //     dockBorders: true,
-            //     ignoreDockContrast: true,
-            //     ignoreLocked: ['C-c'],
-            //     sendFocus: true,
-            //     smartCSR: true,
-            //     grabKeys: true,
-            // });
-
-            _this.view.test_pick = new TestPickTable({
-                parent: _this.screen,
-                view: _this.view,
-            });
-            let output = util.inspect(_this.view.timetrap.list, null, 4);
+            _this.view.emit('relay', {action: 'create', item: 'PickView', context: 'test', data:{}});
 
             //_this.view.test_pick.setContent(output);
-            _this.destroy();
+            //_this.destroy();
 
             setTimeout(function(){
                 _this.select(0);

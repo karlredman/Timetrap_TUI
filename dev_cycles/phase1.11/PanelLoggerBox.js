@@ -28,6 +28,12 @@ function PanelLoggerBox(options) {
     //     }
     // }
 
+    // this.grabKeys = true;
+    // options.grabKeys = true;
+
+    // this.sendFocus = true;
+    // options.sendFocus = true;
+
     //this class
     options.interval = options.interval || 500;
 
@@ -121,7 +127,8 @@ PanelLoggerBox.prototype.register_actions = function(view){
 
     // TODO: move to proper place in init chain
     // why oh why does this not use the color scheme ??
-    _this.log("{center}Welcome to Timetrap TUI!{/center}");
+    _this.log("{center}Welcome to Timetrap TUI! [C-c to exit, ? for help]{/center}");
+    //_this.log("{center}Welcome to Timetrap TUI! [ exit: C-c  | help: ? ]{/center}");
 
     //TODO: this is just here for testing
     // let i = 0

@@ -8,8 +8,8 @@ var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 
 // View panels
-var MenuPickView = require('./MenuPickView');
-var PanelPickList = require('./PanelPickList')
+var Menubar = require('./MenuPickView');
+var Workspace = require('./PanelPickList')
 
 // dialogs
 var DialogMessage = require('./DialogMessage');
@@ -23,7 +23,8 @@ function ViewPick(objects) {
     _this.screen = objects.screen;
     _this.config = objects.config;
     _this.timetrap = objects.timetrap;
-    _this.logger = options.logger;
+    _this.logger = objects.logger;
+    _this.controller = objects.controller;
 
     //widgets owned by this view
     _this.widgets = {};
@@ -33,6 +34,7 @@ function ViewPick(objects) {
 
     //call parent constructor
     EventEmitter.call(this);
+
     /////////////////////////////////////////////////////
     // this view's layout
 
@@ -40,30 +42,37 @@ function ViewPick(objects) {
     _this.pwin ={
         menu: 1,
         mainw: 2,
+        logger: 3,
     };
 
     _this.pwin.first = this.pwin.menu;
     // this.pwin.last = this.pwin.mainw;
-    _this.pwin.last = this.pwin.mainw;
+    _this.pwin.last = this.pwin.logger;
 
     //the current pane default
-    _this.curWin = 1;
+    _this.pwin.curWin = 1;
 
     //make the widgets
     _this.create_widgets();
 
 
+
     /////////////////////////////////////////////////////
     // this view's control
 
-    _this.curWin=this.pwin.main;
+    _this.curWin=_this.pwin.mainw;
 
-    for (let key in this.widgets) {
+    _this.register_actions();
+
+    // //adompt the logger //TODO: so ugly
+    // _this.logger = _this.controller.view.widgets.logger;
+
+    for (let key in _this.widgets) {
         // if (this.widgets.hasOwnProperty(key)) continue;
-        _this.widgets[key].register_actions(_this)
+        _this.widgets[key].register_actions()
     }
 
-    _this.setWinFocus(this.pwin.mainw);
+    _this.setWinFocus(_this.pwin.mainw);
 }
 ViewPick.prototype = Object.create(EventEmitter.prototype);
 ViewPick.prototype.constructor = ViewPick;
@@ -72,53 +81,39 @@ ViewPick.prototype.create_widgets = function()
 {
     let _this=this;
 
-    // needs to be at top of object list -other widgets rely on it
-    //the logger at bottom of main window
-    this.widgets.logger = new Logger({
+    //menubar at top
+    _this.widgets.menubar = new Menubar({
         parent: _this.screen,
         view: _this,
-        left: 0,
-        bottom: 0,
-        height: 1,
-    });
-
-    //menubar at top
-    this.widgets.menubar = new MenuBar({
-        parent: _this.screen,
-        view: this,
         autoCommandKeys: true,
         left: 0,
         top: 0,
         //border: 'line'
     });
 
+    // the main area
+    _this.widgets.workspace = new Workspace({
+        parent: _this.screen,
+        view: _this,
+        // lockkeys: true,
+        top: 1,
+        left: 0,
+        bottom: 1,
+        border: 'line'
+    });
 
-    //project tree on the left
-    this.widgets.sidebar = new SideBar({
+    //TODO: figure out how to manage log focus
+    //used to show log is focused
+    _this.logline = new blessed.line({
         parent: _this.screen,
         view: _this,
         left: 0,
-        top: 1,
+        height: 1,
         bottom: 1,
-        width: _this.config.view.sidew,
-        border: {type: "line"},
-        // template: {
-        //     extend: '',
-        //     retract: '',
-        // }
-    });
-
-    // the main area
-    this.widgets.workspace = new WorkspaceList({
-        parent: _this.screen,
-        view: _this,
-        left: _this.config.view.sidew,
-        right: 0,
-        top: 1,
-        bottom: 1,
-        border: {type: "line"},
-    });
-
+        orientation: "horizontal",
+        type: 'line',
+        fg: "green"
+    })
 
     // line to show menu is focused
     _this.menuline = new blessed.line({
@@ -132,158 +127,52 @@ ViewPick.prototype.create_widgets = function()
         fg: "green"
     })
 
-    //used to show log is focused
-    _this.logline = new blessed.line({
-        parent: _this.screen,
-        view: _this,
-        left: 0,
-        height: 1,
-        bottom: 1,
-        orientation: "horizontal",
-        type: 'line',
-        fg: "green"
-    })
-
-    // message of number of clocks active
-    // TODO: this is a hack overlaying a box on top of the sidebar object
-    this.widgets.clocksRunning = new ClocksRunning({
-        parent: _this.screen,
-        view: _this,
-        //width: _this.config.view.sidew-2,   //TODO: forces sidebar to be absolute size instead of %
-        //width: _this.screen.cols/2-4,
-        width: "48%",           // TODO this is still a hack
-        left: 1,
-        height: 1,
-        top: 2,
-        tags: true,
-        // TODO: base min width of sidebar on this content
-        //content: "{center}4/24 Active Time Sheets{/}",
-    });
 }
 
 ViewPick.prototype.register_actions = function()
 {
     let _this = this;
 
-    _this.timetrap.on('fetch_list', (list) => {
-        //  we have a new `t list` -now update the tree
-        this.timetrap.fetch_tree(list);
+    _this.on('relay', function(msg){
+        // msg = {action: 'action name', item: 'item name'
+        _this.controller.emit(msg.action, msg.item);
+    });
+    _this.on('destroy', function(item){
+        if(item === 'all'){
+            for (let key in _this.widgets) {
+                // if (this.widgets.hasOwnProperty(key)) continue;
+                _this.widgets[key].destroy()
+                delete _this.widgets[key];
+            }
+            _this.menuline.destroy();
+            delete _this.menuline;
+            _this.logline.destroy();
+            delete _this.menuline;
+        }
     });
 
-    _this.timetrap.on('fetch_tree', function(tree){
-        // set the sidebar contents and update the workspace
+    // _this.on('destroy_TestPickTable', function(){
+    //     _this.test_pick.list.destroy();
+    //     delete _this.test_pick.list;
+    //     _this.test_pick.menubar.destroy();
+    //     delete _this.test_pick.menubar;
+    //     _this.test_pick.destroy();
+    //     delete _this.test_pick;
 
-        // update sidebar
-        _this.widgets.sidebar.setData(tree);
-        _this.updateWorkspaceData();
-
-        //synchronize the selection bar
-        let idx = _this.widgets.sidebar.rows.selected;
-        _this.widgets.workspace.emit('syncSelect', idx, 'keypress');
-
-
-        _this.widgets.clocksRunning.setContent(
-            "{center}"
-            +_this.timetrap.num_running+"/"+_this.timetrap.num_clocks
-            +" Active Time Sheets"
-            +"{/center}"
-        );
-
-        _this.screen.render();
-    });
-
-    _this.timetrap.on('db_change', function(){
-        //update the sidebar and workspace when the db changes
-        _this.timetrap.fetch_list();
-    });
-
-    _this.timetrap.on('fake_list_update', function(list){
-        _this.timetrap.fetch_tree(list);
-    });
-
-    _this.on('destroy_TestPickTable', function(){
-        _this.test_pick.list.destroy();
-        delete _this.test_pick.list;
-        _this.test_pick.menubar.destroy();
-        delete _this.test_pick.menubar;
-        _this.test_pick.destroy();
-        delete _this.test_pick;
-
-        _this.widgets.menubar = new MenuBar({
-            parent: _this.screen,
-            view: _this,
-            autoCommandKeys: true,
-            left: 0,
-            top: 0,
-        });
-        _this.widgets.menubar.register_actions();
-        // _this.widgets.sidebar.focus();
-        _this.setWinFocus(_this.pwin.side);
-        _this.screen.render();
-    });
+    //     _this.widgets.menubar = new MenuBar({
+    //         parent: _this.screen,
+    //         view: _this,
+    //         autoCommandKeys: true,
+    //         left: 0,
+    //         top: 0,
+    //     });
+    //     _this.widgets.menubar.register_actions();
+    //     // _this.widgets.sidebar.focus();
+    //     _this.setWinFocus(_this.pwin.side);
+    //     _this.screen.render();
+    // });
 
 };
-
-ViewPick.prototype.updateWorkspaceFakeData = function(list){
-    let _this = this;
-
-    let items = {
-        headers: [" Running", " Today", " Total Time"],
-        data: []
-    };
-
-    items.data = new Array(list.length);
-
-    for ( let i in list){
-        items.data[i] = ['','',''];
-    }
-
-    for( let i in list) {
-        items.data[i] = [
-            list[i].running,
-            list[i].today,
-            list[i].total_time,
-        ];
-    }
-
-    _this.widgets.workspace.setData(items);
-    _this.screen.render();
-};
-
-ViewPick.prototype.updateWorkspaceData = function(){
-
-    //TODO: move this to workspace
-    let _this = this;
-
-    //_this.timetrap.fetch_list();
-
-    let node_lines = _this.widgets.sidebar.nodeLines;      //data in sidebar tree
-    //let items = [_this.view.widgets.sidebar.lineNbr];            //number of tree elements
-    //let selected = _this.view.widgets.sidebar.rows.selected;    //currently selected node
-
-    //        let output = util.inspect(node_lines[8].info, false, 20);
-
-    let items = {
-        headers: [" Running", " Today", " Total Time"],
-        data: []
-    };
-    items.data = new Array(node_lines.length);
-
-    for ( let i in node_lines){
-        items.data[i] = ['','',''];
-    }
-
-    for ( let i in node_lines){
-        items.data[i] = [
-            node_lines[i].info.running,
-            node_lines[i].info.today,
-            node_lines[i].info.total_time,
-        ];
-    }
-
-
-    _this.widgets.workspace.setData(items);
-}
 
 ViewPick.prototype.setWinFocus = function(win){
     let _this = this;
@@ -292,33 +181,31 @@ ViewPick.prototype.setWinFocus = function(win){
     switch(win){
         case _this.pwin.mainw:
             _this.widgets.workspace.options.style.border.fg = "green";
-            _this.widgets.sidebar.options.style.border.fg = "green";
+            // _this.menuline.options.style.border.fg = "green";
+            // _this.logline.options.style.border.fg = "green";
             _this.logline.hide();
             _this.menuline.hide();
             _this.widgets.workspace.focus();
             break;
-        case _this.pwin.side:
-            _this.widgets.workspace.options.style.border.fg = "green";
-            _this.widgets.sidebar.options.style.border.fg = "green";
-            _this.logline.hide();
-            _this.menuline.hide();
-            _this.widgets.sidebar.focus();
-            break;
         case _this.pwin.menu:
             _this.widgets.workspace.options.style.border.fg = "red";
-            _this.widgets.sidebar.options.style.border.fg = "red";
+            // _this.menuline.options.style.border.fg = "green";
+            // _this.logline.options.style.border.fg = "red";
             _this.logline.hide();
             _this.menuline.show();
             _this.widgets.menubar.focus();
             break;
         case _this.pwin.logger:
             _this.widgets.workspace.options.style.border.fg = "red";
-            _this.widgets.sidebar.options.style.border.fg = "red";
+            // _this.menuline.options.style.border.fg = "red";
+            // _this.logline.options.style.border.fg = "green";
             _this.logline.show();
             _this.menuline.hide();
-            _this.widgets.logger.focus();
+            _this.logger.focus();
             break;
     }
+
+    _this.pwin.curWin = win;
 
     //toggle menu colors
     if ( win === _this.pwin.menu ) {
@@ -354,30 +241,55 @@ ViewPick.prototype.setWinFocus = function(win){
 
 ViewPick.prototype.setWinFocusNext = function(){
     let _this = this;
-    if((_this.curWin+1) > _this.pwin.last){
-        _this.curWin = _this.pwin.first;
-        _this.setWinFocus(_this.pwin.first);
+
+    //specific behavior
+    switch(_this.pwin.curWin){
+        case _this.pwin.menu:
+            _this.setWinFocus(_this.pwin.mainw);
+            break;
+        case _this.pwin.mainw:
+            _this.setWinFocus(_this.pwin.menu);
+            break;
+        case _this.pwin.logger:
+            _this.setWinFocus(_this.pwin.mainw);
+            break;
     }
-    else {
-        _this.curWin++;
-        _this.setWinFocus(_this.curWin);
-    }
-    _this.screen.render();
-    return
+
+    // if((_this.curWin+1) > _this.pwin.last){
+    //     _this.curWin = _this.pwin.first;
+    //     _this.setWinFocus(_this.pwin.first);
+    // }
+    // else {
+    //     _this.curWin++;
+    //     _this.setWinFocus(_this.curWin);
+    // }
+    // _this.screen.render();
 }
 
 ViewPick.prototype.setWinFocusPrev = function(){
     let _this = this;
-    if((_this.curWin-1) < _this.pwin.first){
-        _this.curWin = _this.pwin.last;
-        _this.setWinFocus(_this.pwin.last);
+
+    //specific behavior
+    switch(_this.pwin.curWin){
+        case _this.pwin.menu:
+            _this.setWinFocus(_this.pwin.mainw);
+            break;
+        case _this.pwin.mainw:
+            _this.setWinFocus(_this.pwin.logger);
+            break;
+        case _this.pwin.logger:
+            _this.setWinFocus(_this.pwin.mainw);
+            break;
     }
-    else {
-        _this.curWin--;
-        _this.setWinFocus(_this.curWin);
-    }
-    _this.screen.render();
-    return
+    // if((_this.curWin-1) < _this.pwin.first){
+    //     _this.curWin = _this.pwin.last;
+    //     _this.setWinFocus(_this.pwin.last);
+    // }
+    // else {
+    //     _this.curWin--;
+    //     _this.setWinFocus(_this.curWin);
+    // }
+    // _this.screen.render();
 }
 
 ViewPick.prototype.hideAll = function(){

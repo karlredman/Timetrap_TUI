@@ -9,10 +9,10 @@ var DialogPrompt = require('./DialogPrompt'),
     BigBox = require('./DialogBigBox');
 var util = require('util');
 
-function TestMenuBar(options) {
+function MenuPickView(options) {
 
 
-    if (!(this instanceof Node)) return new TestMenuBar(options);
+    if (!(this instanceof Node)) return new MenuPickView(options);
     let _this=this;
 
     this.options = options;
@@ -73,22 +73,58 @@ function TestMenuBar(options) {
 
     // TODO: move this logic to a control location (view?)
     options.items = options.commands || {
-        Test1: function(){
-            let m = new DialogMessage({target: _this, parent: _this.screen});
-            m.alert('got here: test1');
+        close: function(){
+            // let m = new DialogMessage({target: _this, parent: _this.screen});
+            // m.alert('got here: command destroy pickview');
+            _this.view.emit('relay', {action: 'destroy', item: 'PickView'});
+
 
             // setTimeout(function(){
             //     _this.select(0);
             //     _this.screen.render();
             // }, 1000);
         },
+        Resume: function(){
+        },
+        Edit: function(){
+        },
+        Display: function(){
+        // Today
+        // Yesterday
+        // Week
+        // Month
+        // Forever
+        },
+        _Sheet: function(){
+        },
+        moVe: function(){
+        },
+        Archive: function(){
+        },
+        Kill: function(){
+        },
         Test2: function(){
-            let m = new DialogMessage({target: _this, parent: _this.screen});
-            m.alert('got here: test2');
+            let item = _this.view.widgets.workspace.rows.items[_this.view.widgets.workspace.rows.selected];
+
+            //let m = new DialogMessage({target: _this, parent: _this.screen});
+            //m.alert('got here: test2');
+            //m.alert('got here: '+util.inspect(item.height, null, 2));
+
+            item.height = 4;
+
+            // let DialogBigBox = require('./DialogBigBox')
+            // let bb = DialogBigBox({
+            //     parent: _this.options.parent
+            // });
+            // bb.setContent(util.inspect(item, null, 2));
+
+            _this.screen.render();
+
+
 
             // setTimeout(function(){
-                // _this.select(0);
-                // _this.screen.render();
+            // _this.select(0);
+            // _this.screen.render();
             // }, 1000);
         },
     }
@@ -100,54 +136,36 @@ function TestMenuBar(options) {
 
     //this.screen.render();
 }
-TestMenuBar.prototype = Object.create(blessed.listbar.prototype);
-TestMenuBar.prototype.constructor = TestMenuBar;
+MenuPickView.prototype = Object.create(blessed.listbar.prototype);
+MenuPickView.prototype.constructor = MenuPickView;
 
 
-TestMenuBar.prototype.register_actions = function(view){
+MenuPickView.prototype.register_actions = function(view){
 
     let _this = this;
 
     _this.on('keypress', function(ch, key) {
         //custom key bindings
-        // if (key.name === 'tab') {
-        //     if (!key.shift) {
-        //         _this.view.setWinFocusNext();
-        //     } else {
-        //         _this.view.setWinFocusPrev();
-        //     }
-        //     return;
-        // }
+        if (key.name === 'tab') {
+            if (!key.shift) {
+                _this.view.setWinFocusNext();
+            } else {
+                _this.view.setWinFocusPrev();
+            }
+            return;
+        }
         if (key.name === 'left'
             || (_this.options['vi'] && key.name === 'h')
-            //|| (key.shift && key.name === 'tab')
         ) {
-            // let item = _this.items[_this.selected];
-            // item.style.bg = null;
-            // item.style.fg = "white";
-            this.moveLeft();
-            //item = _this.items[_this.selected];
-            // item.style.bg = "black";
-            // item.style.fg = "lightblue";
-            this.screen.render();
-            // Stop propagation if we're in a form.
-            //if (key.name === 'tab') return false;
+            _this.moveLeft();
+            _this.screen.render();
             return;
         }
         if (key.name === 'right'
             || (_this.options['vi'] && key.name === 'l')
-            //|| key.name === 'tab'
         ) {
-            // let item = _this.items[_this.selected];
-            // item.style.bg = null;
-            // item.style.fg = "white";
             _this.moveRight();
-            // item = _this.items[_this.selected];
-            // item.style.bg = "black";
-            // item.style.fg = "lightblue";
             _this.screen.render();
-            // Stop propagation if we're in a form.
-            //if (key.name === 'tab') return false;
             return;
         }
         if (key.name === 'enter'
@@ -157,28 +175,17 @@ TestMenuBar.prototype.register_actions = function(view){
             let item = _this.items[_this.selected];
             if (item._.cmd.callback) {
                 item._.cmd.callback();
-
-                // //TODO: timer to set 'unselected'
-                // setTimeout(function(){
-                //     // item.style.bg = null;
-                //     // item.style.fg = "white";
-                //     _this.select(0);
-                //     _this.screen.render();
-                // }, 1000);
             }
             _this.screen.render();
             return;
         }
         if ( (key.name === 'escape')
-            //|| (key.name === 'tab')
         )
         {
-            _this.view.emit('destroy_TestPickTable', )
-            // _this.destroy();
-            // _this.screen.render();
+            _this.view.emit('relay', {action: 'destroy', item: 'PickView'});
         }
     });
 }
 
-TestMenuBar.prototype.type = 'TestMenuBar';
-module.exports = TestMenuBar;
+MenuPickView.prototype.type = 'MenuPickView';
+module.exports = MenuPickView;

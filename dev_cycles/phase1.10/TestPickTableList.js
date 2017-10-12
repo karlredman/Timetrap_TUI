@@ -169,7 +169,25 @@ TestPickTableList.prototype.register_actions = function(view){
         // _this.view.widgets.sidebar.emit('syncSelect', idx, 'keypress');
     });
 
+    _this.on('keypress', function(ch, key) {
+        if ( (key.name === 'escape')
+            //|| (key.name === 'tab')
+        )
+        {
+            _this.view.emit('destroy_TestPickTable', )
+            // _this.destroy();
+            // _this.screen.render();
+        }
+    })
     _this.rows.on('keypress', function(ch, key) {
+        if ( (key.name === 'escape')
+            //|| (key.name === 'tab')
+        )
+        {
+            _this.view.emit('destroy_TestPickTable', )
+            // _this.destroy();
+            // _this.screen.render();
+        }
         let idx = this.getItemIndex(this.selected);
         //self.select(idx);
         // _this.view.widgets.sidebar.emit('syncSelect', idx, 'keypress');

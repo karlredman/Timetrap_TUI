@@ -17,12 +17,14 @@ var screen = blessed.screen({
     ignoreDockContrast: true,
     ignoreLocked: ['C-c'],
     sendFocus: true,
-    smartCSR: true
+    smartCSR: true,
 });
 
 // Quit on `Control-C`
 screen.key(['C-c'], function(ch, key) {
-    process.exit(0);
+    screen.destroy();
+    process.exit();
+    //process.exit(0);
 });
 
 

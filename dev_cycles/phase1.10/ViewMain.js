@@ -218,8 +218,13 @@ ViewMain.prototype.register_actions = function()
         _this.test_pick.menubar.destroy();
         delete _this.test_pick.menubar;
 
-        _this.test_pick.logger.destroy();
-        delete _this.test_pick.logger;
+        _this.test_pick.menuline.destroy();
+        delete _this.test_pick.menuline;
+
+        if( typeof logger !== 'undefined'){
+            _this.test_pick.logger.destroy();
+            delete _this.test_pick.logger;
+        }
 
         _this.test_pick.destroy();
         delete _this.test_pick;

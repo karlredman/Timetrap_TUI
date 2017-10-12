@@ -73,11 +73,11 @@ function WorkspaceList(options) {
     options.interactive = true;
     options.screen = options.parent;
 
-    this.grabKeys = true;
-    options.grabKeys = true;
+    // this.grabKeys = true;
+    // options.grabKeys = true;
 
-    this.sendFocus = true;
-    options.sendFocus = true;
+    // this.sendFocus = true;
+    // options.sendFocus = true;
 
     this.input = true;
     options.input = true;
@@ -170,7 +170,6 @@ WorkspaceList.prototype.register_actions = function(view){
         //custom key bindings
         if (key.name === 'tab') {
             if (!key.shift) {
-                //console.log("thing")
                 _this.view.setWinFocusNext();
             } else {
                 _this.view.setWinFocusPrev();
