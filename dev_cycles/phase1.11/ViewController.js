@@ -31,14 +31,10 @@ function ViewController(objects){
     //set the base and main view
     _this.objects.baseview = new BaseView(_this.objects);
 
-    if(typeof _this.objects.baseview === 'undefined') {
-        console.log("baseview borked");
-        process.exit(0);
-    }
-
+    //our main view
     _this.objects.view = new View(_this.objects);
 
-    //other views
+    //other (dynamic) views
     _this.helpview;
     _this.pickview;
 
@@ -65,14 +61,10 @@ ViewController.prototype.register_actions = function(){
                 let options = {
                     objects: _this.objects,
                     //TODO: move these when we move logger into view controller
-                    controller: _this,
-                    logger: _this.view.widgets.logger,
-                    sheet: info.sheet
+                    data: {sheet: info.sheet}
                 }
                 _this.pickview = new PickView(options);
-                //set the logger view
-                _this.logger.view = _this.pickview;
-                _this.logger.msg("Opened view: PickView", _this.logger.loglevel.devel.message);
+                _this.logger.msg("Created view: PickView", _this.logger.loglevel.devel.message);
             }
         }
     });
@@ -93,8 +85,8 @@ ViewController.prototype.register_actions = function(){
                 delete _this.pickview;
                 _this.view.emit('create', 'menubar');
                 //set the logger view
-                _this.logger.view = _this.view;
-                _this.logger.msg("Closed view: PickView", _this.logger.loglevel.devel.message);
+                _this.objects.baseview.logger.view = _this.view;
+                _this.logger.msg("Destroyed view: PickView", _this.logger.loglevel.devel.message);
                 return;
             }
         }
