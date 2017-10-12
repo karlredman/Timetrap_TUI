@@ -11,7 +11,7 @@ var util = require('util');
 var MenuBar = require('./PanelMenubarListbar');
 var SideBar = require('./PanelSidebarTree');
 var WorkspaceList = require('./PanelWorkspaceList');
-var Logger = require('./PanelLoggerBox.js');
+//var Logger = require('./PanelLoggerBox.js');
 var ClocksRunning = require('./PanelClocksRunningBox')
 
 // dialogs
@@ -21,6 +21,9 @@ function ViewMain(objects) {
 
     let _this=this;
     _this.widgets = {};
+    _this.objects = objects;
+
+    //convenience -before refactoring
     _this.controller = objects.controller;
     _this.screen = objects.screen;
     _this.config = objects.config;
@@ -76,15 +79,32 @@ ViewMain.prototype.constructor = ViewMain;
 ViewMain.prototype.create_widgets = function()
 {
     let _this=this;
-    //the logger at bottom of main window
-    this.widgets.logger = new Logger({
-        parent: _this.screen,
-        view: _this,
-        left: 0,
-        bottom: 0,
-        height: 1,
-    });
 
+    // //the logger at bottom of main window
+    // this.widgets.logger = new Logger({
+    //     parent: _this.screen,
+    //     view: _this,
+    //     left: 0,
+    //     bottom: 0,
+    //     height: 1,
+    // });
+
+
+    //populate this view's  widgets
+    _this.widgets =  _this.objects.baseview.widgets;
+    _this.objects.baseview.set_widget_views(this, 'ViewMain');
+    //_this.widgets.logger = _this.objects.baseview.widgets.logger;
+    _this.widgets.logger.msg("ViewMain: assymilated logger from ViewBase", _this.widgets.logger.loglevel.devel.message);
+
+    //xfer this view to objects
+
+    // _this.widgets.logger =  _this.objects.baseview.widgets.logger;
+    // _this.widgets.logger.view = _this;
+    // _this.widgets.logger.msg("assymilated logger from viewmain", _this.widgets.logger.loglevel.devel.message);
+
+    // _this.widgets.logger =  _this.objects.baseview.widgets.logger;
+    // _this.widgets.logger.view = _this;
+    // _this.widgets.logger.msg("assymilated logger from viewmain", _this.widgets.logger.loglevel.devel.message);
 
     //menubar at top
     this.toggle_menubar();
@@ -125,29 +145,29 @@ ViewMain.prototype.create_widgets = function()
     });
 
 
-    // line to show menu is focused
-    _this.menuline = new blessed.line({
-        parent: _this.screen,
-        view: _this,
-        left: 0,
-        height: 1,
-        top: 1,
-        orientation: "horizontal",
-        type: 'line',
-        fg: "green"
-    })
+    // // line to show menu is focused
+    // _this.menuline = new blessed.line({
+    //     parent: _this.screen,
+    //     view: _this,
+    //     left: 0,
+    //     height: 1,
+    //     top: 1,
+    //     orientation: "horizontal",
+    //     type: 'line',
+    //     fg: "green"
+    // })
 
-    //used to show log is focused
-    _this.logline = new blessed.line({
-        parent: _this.screen,
-        view: _this,
-        left: 0,
-        height: 1,
-        bottom: 1,
-        orientation: "horizontal",
-        type: 'line',
-        fg: "green"
-    })
+    // //used to show log is focused
+    // _this.logline = new blessed.line({
+    //     parent: _this.screen,
+    //     view: _this,
+    //     left: 0,
+    //     height: 1,
+    //     bottom: 1,
+    //     orientation: "horizontal",
+    //     type: 'line',
+    //     fg: "green"
+    // })
 
     // message of number of clocks active
     // TODO: this is a hack overlaying a box on top of the sidebar object
@@ -166,6 +186,7 @@ ViewMain.prototype.create_widgets = function()
         //content: "{center}4/24 Active Time Sheets{/}",
     });
 
+    _this.showAll(_this.pwin.side);
 }
 
 ViewMain.prototype.toggle_menubar = function(){
@@ -194,7 +215,7 @@ ViewMain.prototype.register_actions = function()
 
     _this.on('relay', function(msg){
         // msg = {action: 'action name', item: 'item name'
-        _this.controller.emit(msg.action, msg.item);
+        _this.controller.emit(msg.action, msg);
     });
     _this.on('create', function(item){
         if(item === 'menubar'){
@@ -246,29 +267,29 @@ ViewMain.prototype.register_actions = function()
         _this.timetrap.fetch_tree(list);
     });
 
-    _this.on('destroy_TestPickTable', function(){
-        _this.test_pick.list.destroy();
-        delete _this.test_pick.list;
-        _this.test_pick.menubar.destroy();
-        delete _this.test_pick.menubar;
-        _this.test_pick.destroy();
-        delete _this.test_pick;
+    // _this.on('destroy_TestPickTable', function(){
+    //     _this.test_pick.list.destroy();
+    //     delete _this.test_pick.list;
+    //     _this.test_pick.menubar.destroy();
+    //     delete _this.test_pick.menubar;
+    //     _this.test_pick.destroy();
+    //     delete _this.test_pick;
 
-        _this.widgets.menubar = new MenuBar({
-            parent: _this.screen,
-            view: _this,
-            autoCommandKeys: true,
-            left: 0,
-            top: 0,
-        });
+    //     _this.widgets.menubar = new MenuBar({
+    //         parent: _this.screen,
+    //         view: _this,
+    //         autoCommandKeys: true,
+    //         left: 0,
+    //         top: 0,
+    //     });
 
-        _this.running = false;               //cheezy, indicate that we've run register_actions on widgets
-        _this.widgets.menubar.register_actions();
-        _this.running = true;               //cheezy, indicate that we've run register_actions on widgets
+    //     _this.running = false;               //cheezy, indicate that we've run register_actions on widgets
+    //     _this.widgets.menubar.register_actions();
+    //     _this.running = true;               //cheezy, indicate that we've run register_actions on widgets
 
-        _this.setWinFocus(_this.pwin.side);
-        _this.screen.render();
-    });
+    //     _this.setWinFocus(_this.pwin.side);
+    //     _this.screen.render();
+    // });
 
 };
 
@@ -342,36 +363,48 @@ ViewMain.prototype.setWinFocus = function(win){
             //we shouldn't be here
             _this.widgets.workspace.options.style.border.fg = "yellow";
             _this.widgets.sidebar.options.style.border.fg = "yellow";
-            _this.logline.hide();
-            _this.menuline.hide();
+
+            // _this.widgets.logline_focused.hide();
+            // _this.widgets.logline_unfocused.show();
+            // _this.widgets.menuline_focused.hide();
+            // _this.widgets.menuline_unfocused.show();
+
             _this.widgets.workspace.focus();
             break;
         case _this.pwin.side:
             _this.widgets.workspace.options.style.border.fg = "green";
             _this.widgets.sidebar.options.style.border.fg = "green";
-            // _this.menuline.options.fg = "red";
-            // _this.logline.options.fg = "red";
-            _this.logline.hide();
-            _this.menuline.hide();
+
+            // _this.widgets.logline_focused.hide();
+            // _this.widgets.logline_unfocused.show();
+            // _this.widgets.menuline_focused.hide();
+            // _this.widgets.menuline_unfocused.show();
+
             _this.widgets.sidebar.focus();
-            _this.screen.render();
             break;
         case _this.pwin.menu:
             _this.widgets.workspace.options.style.border.fg = "red";
             _this.widgets.sidebar.options.style.border.fg = "red";
-            // _this.menuline.options.fg = "green";
-            // _this.logline.options.fg = "red";
-            _this.logline.hide();
-            _this.menuline.show();
+
+            // _this.widgets.logline_focused.hide();
+            // _this.widgets.logline_unfocused.show();
+            // _this.widgets.menuline_focused.show();
+            // _this.widgets.menuline_unfocused.hide();
+
              _this.widgets.menubar.focus();
             break;
         case _this.pwin.logger:
             _this.widgets.workspace.options.style.border.fg = "red";
             _this.widgets.sidebar.options.style.border.fg = "red";
-            // _this.menuline.options.fg = "red";
-            // _this.logline.options.fg = "green";
-            _this.logline.show();
-            _this.menuline.hide();
+
+            // _this.loading_dialog = new DialogMessage({target: _this, parent: _this.screen});
+            // _this.loading_dialog.alert('got here');
+
+            // _this.widgets.logline_focused.show();
+            // _this.widgets.logline_unfocused.hide();
+            // _this.widgets.menuline_focused.hide();
+            // _this.widgets.menuline_unfocused.show();
+
             _this.widgets.logger.focus();
             break;
         default:
@@ -472,25 +505,23 @@ ViewMain.prototype.hideAll = function(){
     let _this = this;
     for (let key in _this.widgets) {
 
-        if (_this.widgets.hasOwnProperty(key)) continue;
+        if (! _this.widgets.hasOwnProperty(key)) continue;
 
-        _this.widgets[this.key].hide();
+        _this.widgets[key].hide();
     }
     _this.screen.render();
 }
 
-ViewMain.prototype.showAll = function(set_focus){
+ViewMain.prototype.showAll = function(winfocus){
     let _this = this;
     for (let key in _this.widgets) {
 
-        if (_this.widgets.hasOwnProperty(key)) continue;
+        if (! _this.widgets.hasOwnProperty(key)) continue;
 
-        _this.widgets[this.key].show();
+        _this.widgets[key].show();
     }
 
-    if(set_focus){
-        _this.setWinFocus(_this.pwin.curwin);
-    }
+    _this.setWinFocus(winfocus);
     _this.screen.render();
 }
 

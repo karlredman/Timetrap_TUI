@@ -103,20 +103,23 @@ function MenuPickView(options) {
         },
         Kill: function(){
         },
-        Test2: function(){
+        Test: function(){
             let item = _this.view.widgets.workspace.rows.items[_this.view.widgets.workspace.rows.selected];
 
             //let m = new DialogMessage({target: _this, parent: _this.screen});
             //m.alert('got here: test2');
             //m.alert('got here: '+util.inspect(item.height, null, 2));
 
-            item.height = 4;
+            //let DialogBigBox = require('./DialogBigBox')
+            //let bb = DialogBigBox({
+            //    parent: _this.options.parent
+            //});
 
-            // let DialogBigBox = require('./DialogBigBox')
-            // let bb = DialogBigBox({
-            //     parent: _this.options.parent
-            // });
-            // bb.setContent(util.inspect(item, null, 2));
+            //item = _this.view.widgets.menuline;
+            ////bb.setContent(util.inspect(item, null, 2));
+
+            _this.view.widgets.menuline.options.fg = "red";
+            _this.view.widgets.menuline.options.bg = "red";
 
             _this.screen.render();
 

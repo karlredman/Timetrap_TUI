@@ -122,7 +122,7 @@ function PanelMenubarListbar(options) {
             else {
                 if(_this.view.widgets.sidebar.nodeLines[_this.view.widgets.sidebar.rows.selected].info.running === '0:00:00') {
                     let sheet = _this.view.widgets.sidebar.nodeLines[_this.view.widgets.sidebar.rows.selected].sheet;
-                    _this.view.emit('relay', {action: 'create', item: 'PickView', data:{sheet: sheet}});
+                    _this.view.emit('relay', {action: 'create', widgetname: 'PickView', sheet: sheet});
                 }
                 else {
                     //show menu to select running or picklist
@@ -138,30 +138,14 @@ function PanelMenubarListbar(options) {
         Task: function(){
         },
         Details: function(){
-            let sheet = _this.view.widgets.sidebar.nodeLines[_this.view.widgets.sidebar.rows.selected].sheet;
-            _this.view.emit('relay', {action: 'create', item: 'PickView', data:{sheet: sheet}});
-            // let prompt = new DialogPrompt({target: _this, parent: _this.screen});
-            // //prompt.cannedInput('resume');
-
-            // if( typeof _this.resume_menu === 'undefined' ) {
-            //     _this.resume_menu = new ListResume({
-            //         parent: _this.screen,
-            //         //TODO: could be more generic
-            //         top: _this.items[3].position.top+1,         //offset one below
-            //         left: _this.items[3].position.left+3,       //offset to the right
-            //         width: _this.items[3].position.width,       //the width of 'Display'
-            //     });
-            //     _this.resume_menu.focus();
-            //     _this.screen.render();
-            // }
-            // else {
-            //     if(typeof _this.resume_menu !== 'undefined'){
-            //         // TODO: HACK!!!
-            //         // _this.resume_menu.destroy();
-            //         // delete _this.resume_menu;
-            //         _this.cleanupMenus();
-            //     }
-            // }
+            if(_this.view.widgets.sidebar.nodeLines[_this.view.widgets.sidebar.rows.selected].info.running === '-:--:--') {
+                _this.log.msg("Not a valid time sheet", _this.log.loglevel.devel.warning);
+                return;
+            }
+            else {
+                let sheet = _this.view.widgets.sidebar.nodeLines[_this.view.widgets.sidebar.rows.selected].sheet;
+                _this.view.emit('relay', {action: 'create', widgetname: 'PickView', sheet: sheet});
+            }
 
             setTimeout(function(){
                 _this.select(0);
@@ -257,18 +241,54 @@ function PanelMenubarListbar(options) {
         },
         Test2: function() {
             // _this.cleanupMenus();
-            // _this.view.widgets.logger.msg("stuff", _this.view.widgets.logger.loglevel.production.error);
+            _this.view.widgets.logger.msg("stuff", _this.view.widgets.logger.loglevel.production.error);
 
-            _this.unkey('5', function(){
-                _this.loading_dialog = new DialogMessage({target: _this, parent: _this.screen});
-                _this.loading_dialog.alert('got here: x');
-            });
+            // TODO: figure out why ViewBase line objects don't work
+            // * I think it's the order of things being added to the screen
+            // * the logger seems to work because nothing ever gets overlaped there
+            // * Also I've confirmed that the lines do get drawn. I just don't know how to get them to
+            // end up on top of everything else.
+            // * it's definately a zorder issue.
 
-            _this.options.autoCommandKeys = false;
-            _this.options.grabKeys = false;
-            _this.grabKeys = false;
-            _this.screen.render();
+            // _this.view.hideAll();
+            // //_this.view.objects.baseview.widgets.menuline_focused.show();
+            // _this.view.widgets.menuline_focused.setIndex(this.index);
+            // _this.view.widgets.menuline_focused.show();
+            // _this.view.widgets.menuline_focused.render();
+            // _this.view.widgets.menuline_focused.hide();
+            // _this.view.widgets.menuline_focused.show();
 
+
+            // // These things work
+            // // _this.view.hideAll();
+            // // _this.view.objects.baseview.widgets.menuline_focused.show();
+            // // _this.view.widgets.logger.show();
+            // // _this.view.showAll(_this.view.pwin.side);
+            // _this.screen.render();
+
+    let seph = blessed.line({
+        parent: _this.screen,
+        orientation: 'horizontal',
+        //left: _this.config.view.sidew,
+        //top: 1,
+        bottom: 1,
+        left: 0,
+        right: 0,
+        fg: "green"
+    });
+    let seph1 = blessed.line({
+        parent: _this.screen,
+        orientation: 'horizontal',
+        //left: _this.config.view.sidew,
+        top: 1,
+        left: 0,
+        right: 0,
+        fg: "green"
+    });
+            //_this.screen.setEffects(_this.view.widgets.menuline_focused,
+            //_this.screen.setEffects(seph1, _this.view.widgets.sidebar, 'focus', 'blur', { fg: 'blue' });
+            _this.screen.setEffects(seph1, _this.view.widgets.logger, 'focus', 'blur', { fg: 'red' }, Object);
+            _this.screen.setEffects(seph, _this.view.widgets.menubar, 'focus', 'blur', { fg: 'red' }, Object);
 
             setTimeout(function(){
                 _this.select(0);

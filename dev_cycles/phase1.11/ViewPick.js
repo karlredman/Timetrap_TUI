@@ -10,21 +10,23 @@ var util = require('util');
 // View panels
 var Menubar = require('./MenuPickView');
 var Workspace = require('./PanelPickList')
+//var Line = require('./Line')
 
 // dialogs
 var DialogMessage = require('./DialogMessage');
 
-function ViewPick(objects) {
+function ViewPick(options) {
     if (!(this instanceof EventEmitter)) return new ViewPick(options);
 
     let _this=this;
 
     //required options
-    _this.screen = objects.screen;
-    _this.config = objects.config;
-    _this.timetrap = objects.timetrap;
-    _this.logger = objects.logger;
-    _this.controller = objects.controller;
+    _this.screen = options.objects.screen;
+    _this.config = options.objects.config;
+    _this.timetrap = options.objects.timetrap;
+    _this.logger = options.logger;
+    _this.controller = options.controller;
+    _this.sheet = options.sheet;
 
     //widgets owned by this view
     _this.widgets = {};
@@ -96,15 +98,14 @@ ViewPick.prototype.create_widgets = function()
         parent: _this.screen,
         view: _this,
         // lockkeys: true,
-        top: 1,
+        top: 3,
         left: 0,
         bottom: 1,
         border: 'line'
     });
 
-    //TODO: figure out how to manage log focus
     //used to show log is focused
-    _this.logline = new blessed.line({
+    _this.widgets.logline = new blessed.line({
         parent: _this.screen,
         view: _this,
         left: 0,
@@ -113,10 +114,12 @@ ViewPick.prototype.create_widgets = function()
         orientation: "horizontal",
         type: 'line',
         fg: "green"
-    })
+    });
+    _this.widgets.logline.register_actions = function(){};
+    _this.widgets.logline.hide();
 
     // line to show menu is focused
-    _this.menuline = new blessed.line({
+    _this.widgets.menuline_active = new blessed.line({
         parent: _this.screen,
         view: _this,
         left: 0,
@@ -125,8 +128,34 @@ ViewPick.prototype.create_widgets = function()
         orientation: "horizontal",
         type: 'line',
         fg: "green"
-    })
+    });
+    _this.widgets.menuline_active.register_actions = function(){};
 
+    _this.widgets.menuline_inactive = new blessed.line({
+        parent: _this.screen,
+        view: _this,
+        left: 0,
+        height: 1,
+        top: 1,
+        orientation: "horizontal",
+        type: 'line',
+        fg: "red"
+    });
+    _this.widgets.menuline_inactive.register_actions = function(){};
+
+    _this.widgets.statusline = new blessed.box({
+        parent: _this.screen,
+        top: 2,
+        left: 0,
+        height: 1,
+        content: _this.sheet+" [Today]",
+        tags: true,
+        align: 'center',
+        fg: 'white',
+        width: "100%"
+    });
+    _this.widgets.statusline.register_actions = function(){};
+    //_this.widgets.statusline.setContent("");
 }
 
 ViewPick.prototype.register_actions = function()
@@ -144,10 +173,10 @@ ViewPick.prototype.register_actions = function()
                 _this.widgets[key].destroy()
                 delete _this.widgets[key];
             }
-            _this.menuline.destroy();
-            delete _this.menuline;
-            _this.logline.destroy();
-            delete _this.menuline;
+            // _this.menuline.destroy();
+            // delete _this.menuline;
+            // _this.logline.destroy();
+            // delete _this.menuline;
         }
     });
 
@@ -181,26 +210,23 @@ ViewPick.prototype.setWinFocus = function(win){
     switch(win){
         case _this.pwin.mainw:
             _this.widgets.workspace.options.style.border.fg = "green";
-            // _this.menuline.options.style.border.fg = "green";
-            // _this.logline.options.style.border.fg = "green";
-            _this.logline.hide();
-            _this.menuline.hide();
+            _this.widgets.logline.hide();
+            _this.widgets.menuline_active.show();
+            _this.widgets.menuline_inactive.hide();
             _this.widgets.workspace.focus();
             break;
         case _this.pwin.menu:
             _this.widgets.workspace.options.style.border.fg = "red";
-            // _this.menuline.options.style.border.fg = "green";
-            // _this.logline.options.style.border.fg = "red";
-            _this.logline.hide();
-            _this.menuline.show();
+            _this.widgets.menuline_active.show();
+            _this.widgets.menuline_inactive.hide();
+            _this.widgets.logline.hide();
             _this.widgets.menubar.focus();
             break;
         case _this.pwin.logger:
             _this.widgets.workspace.options.style.border.fg = "red";
-            // _this.menuline.options.style.border.fg = "red";
-            // _this.logline.options.style.border.fg = "green";
-            _this.logline.show();
-            _this.menuline.hide();
+            _this.widgets.menuline_active.hide();
+            _this.widgets.menuline_inactive.show();
+            _this.widgets.logline.show();
             _this.logger.focus();
             break;
     }

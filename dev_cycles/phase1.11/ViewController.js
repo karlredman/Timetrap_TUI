@@ -5,9 +5,10 @@ var blessed = require('blessed'),
 var EventEmitter = require('events').EventEmitter;
 
 // views
-var View = require('./ViewMain'),
-HelpView = require('./ViewHelp'),
-PickView = require('./ViewPick');
+var BaseView = require('./ViewBase'),
+View = require('./ViewMain'),
+PickView = require('./ViewPick'),
+HelpView = require('./ViewHelp');
 
 //debug
 var DialogMessage = require('./DialogMessage');
@@ -19,20 +20,23 @@ function ViewController(objects){
     //convenience
     _this.objects = objects;
     _this.objects.controller = _this;
+
+    //convenience -before refactoring
     _this.config = objects.config;
     _this.screen = objects.screen;
-    _this.logger;
 
     //call parent constructor
     EventEmitter.call(this);
 
-    //set the main view
-    objects.controller = this;
-    _this.view = new View(objects);
+    //set the base and main view
+    _this.objects.baseview = new BaseView(_this.objects);
 
-    //TODO: probably move logger to viewcontroller
-    _this.logger = _this.view.widgets.logger;
+    if(typeof _this.objects.baseview === 'undefined') {
+        console.log("baseview borked");
+        process.exit(0);
+    }
 
+    _this.objects.view = new View(_this.objects);
 
     //other views
     _this.helpview;
@@ -44,14 +48,28 @@ function ViewController(objects){
 ViewController.prototype = Object.create(EventEmitter.prototype);
 ViewController.prototype.constructor = ViewController;
 
-ViewController.prototype.register_actions = function(obj){
+ViewController.prototype.register_actions = function(){
     let _this = this;
-    _this.on('create', function(widgetname){
-        if (widgetname === 'PickView'){
+    _this.on('create', function(info){
+        // info = {
+        //     action:
+        //     sheet:
+        //     widgetname:
+        // }
+        if (info.widgetname === 'PickView'){
             if(typeof _this.pickview === 'undefined'){
+                //kill the view.menubar
                 _this.view.emit('destroy', 'menubar');
-                _this.objects.logger = _this.view.widgets.logger;
-                _this.pickview = new PickView(_this.objects);
+
+                //create
+                let options = {
+                    objects: _this.objects,
+                    //TODO: move these when we move logger into view controller
+                    controller: _this,
+                    logger: _this.view.widgets.logger,
+                    sheet: info.sheet
+                }
+                _this.pickview = new PickView(options);
                 //set the logger view
                 _this.logger.view = _this.pickview;
                 _this.logger.msg("Opened view: PickView", _this.logger.loglevel.devel.message);

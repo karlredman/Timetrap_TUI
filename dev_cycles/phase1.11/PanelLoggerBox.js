@@ -16,6 +16,7 @@ function PanelLoggerBox(options) {
     _this.view = options.view;
     _this.config = _this.view.config;
     _this.log_count = 0;
+    _this.registered = false;
 
     // options = {
     //     fg: "green",
@@ -70,6 +71,7 @@ function PanelLoggerBox(options) {
 
     //causes tags to not work
     //options.content = "xxxxxxxxxxxxxxxxxxxx"
+    _this.options = options;
 
     contrib.log.call(this, options);
 
@@ -122,33 +124,38 @@ PanelLoggerBox.prototype = Object.create(contrib.log.prototype);
 PanelLoggerBox.prototype.constructor = PanelLoggerBox;
 
 
-PanelLoggerBox.prototype.register_actions = function(view){
+PanelLoggerBox.prototype.register_actions = function(){
     let _this = this;
 
-    // TODO: move to proper place in init chain
-    // why oh why does this not use the color scheme ??
-    _this.log("{center}Welcome to Timetrap TUI! [C-c to exit, ? for help]{/center}");
-    //_this.log("{center}Welcome to Timetrap TUI! [ exit: C-c  | help: ? ]{/center}");
+    if(!_this.registered){
 
-    //TODO: this is just here for testing
-    // let i = 0
-    // setInterval(function() {_this.log("{center}new {red-fg}log{/red-fg} line xxxxx-xxxxx-xxxxx-xxxxx-xxxxx: {/}"+ i++); _this.screen.render()}, 5000)
-    // setInterval(function() {
-    //     //_this.log("{center}new {red-fg}log{/red-fg} line xxxxx-xxxxx-xxxxx-xxxxx-xxxxx: {/}"+ i++);
-    //     _this.msg("thing", _this.loglevel.production.error);
-    //     _this.screen.render()
-    // }, 5000)
+        _this.registered = true;
 
-    this.on('keypress', function(ch, key) {
-        if (key.name === 'tab') {
-            if (!key.shift) {
-                this.view.setWinFocusNext();
-            } else {
-                this.view.setWinFocusPrev();
+        // TODO: move to proper place in init chain
+        // why oh why does this not use the color scheme ??
+        _this.log("{center}Welcome to Timetrap TUI! [C-c to exit, ? for help]{/center}");
+        //_this.log("{center}Welcome to Timetrap TUI! [ exit: C-c  | help: ? ]{/center}");
+
+        //TODO: this is just here for testing
+        // let i = 0
+        // setInterval(function() {_this.log("{center}new {red-fg}log{/red-fg} line xxxxx-xxxxx-xxxxx-xxxxx-xxxxx: {/}"+ i++); _this.screen.render()}, 5000)
+        // setInterval(function() {
+        //     //_this.log("{center}new {red-fg}log{/red-fg} line xxxxx-xxxxx-xxxxx-xxxxx-xxxxx: {/}"+ i++);
+        //     _this.msg("thing", _this.loglevel.production.error);
+        //     _this.screen.render()
+        // }, 5000)
+
+        this.on('keypress', function(ch, key) {
+            if (key.name === 'tab') {
+                if (!key.shift) {
+                    this.view.setWinFocusNext();
+                } else {
+                    this.view.setWinFocusPrev();
+                }
+                return;
             }
-            return;
-        }
-    });
+        });
+    }
 }
 
 PanelLoggerBox.prototype.msg = function(message, loglevel){

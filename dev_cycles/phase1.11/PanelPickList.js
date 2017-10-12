@@ -19,7 +19,8 @@ function PanelPickList(options) {
     options.style.border = options.style.border || {}
     //options.align = 'center';
 
-    options.wrap = true;
+    //meh
+    //options.wrap = true;
 
     // options.scrollable = options.scrollable || true;
     // options.scrollbar = options.scrollbar || {};
