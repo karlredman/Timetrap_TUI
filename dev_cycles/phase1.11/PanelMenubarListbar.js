@@ -144,6 +144,7 @@ function PanelMenubarListbar(options) {
             }
             else {
                 let sheet = _this.view.widgets.sidebar.nodeLines[_this.view.widgets.sidebar.rows.selected].sheet;
+                //_this.view.hideAll();
                 _this.view.emit('relay', {action: 'create', widgetname: 'PickView', sheet: sheet});
             }
 

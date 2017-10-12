@@ -21,12 +21,14 @@ function ViewPick(options) {
     let _this=this;
 
     //required options
+    _this.objects = options.objects;
+
+    // TODO: get rid of these
     _this.screen = options.objects.screen;
     _this.config = options.objects.config;
     _this.timetrap = options.objects.timetrap;
-    _this.logger = options.logger;
-    _this.controller = options.controller;
-    _this.sheet = options.sheet;
+    _this.controller = options.objects.controller;
+    _this.sheet = options.data.sheet;
 
     //widgets owned by this view
     _this.widgets = {};
@@ -83,6 +85,14 @@ ViewPick.prototype.create_widgets = function()
 {
     let _this=this;
 
+    //get the logger
+    //_this.widgets =  _this.objects.baseview.widgets;
+    //_this.objects.baseview.set_widget_views(_this, 'ViewPick');
+    // TODO: hmmmm why doesn't this work?
+    _this.widgets.logger = _this.objects.baseview.widgets.logger;
+    _this.widgets.logger.show();
+    _this.widgets.logger.msg("ViewPick: assymilated logger from ViewBase", _this.widgets.logger.loglevel.devel.message);
+
     //menubar at top
     _this.widgets.menubar = new Menubar({
         parent: _this.screen,
@@ -104,58 +114,58 @@ ViewPick.prototype.create_widgets = function()
         border: 'line'
     });
 
-    //used to show log is focused
-    _this.widgets.logline = new blessed.line({
-        parent: _this.screen,
-        view: _this,
-        left: 0,
-        height: 1,
-        bottom: 1,
-        orientation: "horizontal",
-        type: 'line',
-        fg: "green"
-    });
-    _this.widgets.logline.register_actions = function(){};
-    _this.widgets.logline.hide();
+    ////used to show log is focused
+    //_this.widgets.logline = new blessed.line({
+    //    parent: _this.screen,
+    //    view: _this,
+    //    left: 0,
+    //    height: 1,
+    //    bottom: 1,
+    //    orientation: "horizontal",
+    //    type: 'line',
+    //    fg: "green"
+    //});
+    //_this.widgets.logline.register_actions = function(){};
+    //_this.widgets.logline.hide();
 
-    // line to show menu is focused
-    _this.widgets.menuline_active = new blessed.line({
-        parent: _this.screen,
-        view: _this,
-        left: 0,
-        height: 1,
-        top: 1,
-        orientation: "horizontal",
-        type: 'line',
-        fg: "green"
-    });
-    _this.widgets.menuline_active.register_actions = function(){};
+    //// line to show menu is focused
+    //_this.widgets.menuline_active = new blessed.line({
+    //    parent: _this.screen,
+    //    view: _this,
+    //    left: 0,
+    //    height: 1,
+    //    top: 1,
+    //    orientation: "horizontal",
+    //    type: 'line',
+    //    fg: "green"
+    //});
+    //_this.widgets.menuline_active.register_actions = function(){};
 
-    _this.widgets.menuline_inactive = new blessed.line({
-        parent: _this.screen,
-        view: _this,
-        left: 0,
-        height: 1,
-        top: 1,
-        orientation: "horizontal",
-        type: 'line',
-        fg: "red"
-    });
-    _this.widgets.menuline_inactive.register_actions = function(){};
+    //_this.widgets.menuline_inactive = new blessed.line({
+    //    parent: _this.screen,
+    //    view: _this,
+    //    left: 0,
+    //    height: 1,
+    //    top: 1,
+    //    orientation: "horizontal",
+    //    type: 'line',
+    //    fg: "red"
+    //});
+    //_this.widgets.menuline_inactive.register_actions = function(){};
 
-    _this.widgets.statusline = new blessed.box({
-        parent: _this.screen,
-        top: 2,
-        left: 0,
-        height: 1,
-        content: _this.sheet+" [Today]",
-        tags: true,
-        align: 'center',
-        fg: 'white',
-        width: "100%"
-    });
-    _this.widgets.statusline.register_actions = function(){};
-    //_this.widgets.statusline.setContent("");
+     _this.widgets.statusline = new blessed.box({
+         parent: _this.screen,
+         top: 2,
+         left: 0,
+         height: 1,
+         content: _this.sheet+" [Today]",
+         tags: true,
+         align: 'center',
+         fg: 'white',
+         width: "100%"
+     });
+     _this.widgets.statusline.register_actions = function(){};
+    // _this.widgets.statusline.setContent("");
 }
 
 ViewPick.prototype.register_actions = function()
@@ -210,24 +220,15 @@ ViewPick.prototype.setWinFocus = function(win){
     switch(win){
         case _this.pwin.mainw:
             _this.widgets.workspace.options.style.border.fg = "green";
-            _this.widgets.logline.hide();
-            _this.widgets.menuline_active.show();
-            _this.widgets.menuline_inactive.hide();
             _this.widgets.workspace.focus();
             break;
         case _this.pwin.menu:
             _this.widgets.workspace.options.style.border.fg = "red";
-            _this.widgets.menuline_active.show();
-            _this.widgets.menuline_inactive.hide();
-            _this.widgets.logline.hide();
             _this.widgets.menubar.focus();
             break;
         case _this.pwin.logger:
             _this.widgets.workspace.options.style.border.fg = "red";
-            _this.widgets.menuline_active.hide();
-            _this.widgets.menuline_inactive.show();
-            _this.widgets.logline.show();
-            _this.logger.focus();
+            _this.widgets.logger.focus();
             break;
     }
 

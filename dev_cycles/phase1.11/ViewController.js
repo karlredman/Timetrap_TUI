@@ -30,6 +30,7 @@ function ViewController(objects){
 
     //set the base and main view
     _this.objects.baseview = new BaseView(_this.objects);
+    _this.logger = _this.objects.baseview.widgets.logger;
 
     //our main view
     _this.objects.view = new View(_this.objects);
@@ -55,7 +56,7 @@ ViewController.prototype.register_actions = function(){
         if (info.widgetname === 'PickView'){
             if(typeof _this.pickview === 'undefined'){
                 //kill the view.menubar
-                _this.view.emit('destroy', 'menubar');
+                _this.objects.view.emit('destroy', 'menubar');
 
                 //create
                 let options = {
@@ -83,9 +84,11 @@ ViewController.prototype.register_actions = function(){
             if (typeof _this.pickview !== 'undefined'){
                 _this.pickview.emit('destroy', 'all');
                 delete _this.pickview;
-                _this.view.emit('create', 'menubar');
+                _this.objects.view.emit('create', 'menubar');
+                _this.objects.view.hideAll();
+                _this.objects.view.showAll(1);
                 //set the logger view
-                _this.objects.baseview.logger.view = _this.view;
+                _this.logger.view = _this.objects.view;
                 _this.logger.msg("Destroyed view: PickView", _this.logger.loglevel.devel.message);
                 return;
             }

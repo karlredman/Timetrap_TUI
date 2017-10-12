@@ -158,6 +158,16 @@ PanelLoggerBox.prototype.register_actions = function(){
     }
 }
 
+
+PanelLoggerBox.prototype.destroy = function(){
+    let _this=this;
+
+    //only the owner can destroy me
+    if( this.ownedby === this.view){
+        return contrib.log.prototype.destroy.call(this);
+    }
+}
+
 PanelLoggerBox.prototype.msg = function(message, loglevel){
     let _this = this;
 
