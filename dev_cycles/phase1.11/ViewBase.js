@@ -55,64 +55,70 @@ ViewBase.prototype.create_widgets = function()
 {
     let _this=this;
 
-    //log is focused
-    //_this.widgets.logline_focused = new Line({
-    _this.widgets.logline_focused = new blessed.line({
-        parent: _this.screen,
-        view: _this,
-        left: 0,
-        height: 1,
-        bottom: 1,
-        width: '100%',
-        orientation: "horizontal",
-        type: 'line',
-        fg: "green",
-        bg: "red",
-        ownedby: this
-    });
-    _this.widgets.logline_focused.register_actions = function(){this.registered = true;}
+    // Lines are commented out in favor of screen events elsewhere
+    // Also I couldn't figure out how to reset the z order so the
+    // lines didn't work anyway (be cause of overlaping).
+    //
+    //
+    //
+    // //log is focused
+    // //_this.widgets.logline_focused = new Line({
+    // _this.widgets.logline_focused = new blessed.line({
+    //     parent: _this.screen,
+    //     view: _this,
+    //     left: 0,
+    //     height: 1,
+    //     bottom: 1,
+    //     width: '100%',
+    //     orientation: "horizontal",
+    //     type: 'line',
+    //     fg: "green",
+    //     bg: "red",
+    //     ownedby: this
+    // });
+    // _this.widgets.logline_focused.register_actions = function(){this.registered = true;}
 
-    //log is unfocused
-    _this.widgets.logline_unfocused = new Line({
-        parent: _this.screen,
-        view: _this,
-        left: 0,
-        height: 1,
-        bottom: 1,
-        orientation: "horizontal",
-        type: 'line',
-        fg: "red",
-        bg: "blue",
-        ownedby: this
-    });
+    // //log is unfocused
+    // _this.widgets.logline_unfocused = new Line({
+    //     parent: _this.screen,
+    //     view: _this,
+    //     left: 0,
+    //     height: 1,
+    //     bottom: 1,
+    //     orientation: "horizontal",
+    //     type: 'line',
+    //     fg: "red",
+    //     bg: "blue",
+    //     ownedby: this
+    // });
 
-    // line to show menu is focused
-    _this.widgets.menuline_focused = new Line({
-        parent: _this.screen,
-        view: _this,
-        left: 0,
-        height: 1,
-        top: 1,
-        orientation: "horizontal",
-        type: 'line',
-        fg: "green",
-        bg: "red",
-        ownedby: this
-    });
+    // // line to show menu is focused
+    // _this.widgets.menuline_focused = new Line({
+    //     parent: _this.screen,
+    //     view: _this,
+    //     left: 0,
+    //     height: 1,
+    //     top: 1,
+    //     orientation: "horizontal",
+    //     type: 'line',
+    //     fg: "green",
+    //     bg: "red",
+    //     ownedby: this
+    // });
 
-    // line to show menu is unfocused
-    _this.widgets.menuline_unfocused = new Line({
-        parent: _this.screen,
-        view: _this,
-        left: 0,
-        height: 1,
-        top: 1,
-        orientation: "horizontal",
-        type: 'line',
-        fg: "red",
-        bg: "blue",
-        ownedby: this
-    });
+    // // line to show menu is unfocused
+    // _this.widgets.menuline_unfocused = new Line({
+    //     parent: _this.screen,
+    //     view: _this,
+    //     left: 0,
+    //     height: 1,
+    //     top: 1,
+    //     orientation: "horizontal",
+    //     type: 'line',
+    //     fg: "red",
+    //     bg: "blue",
+    //     ownedby: this
+    // });
 
     //the logger at bottom of main window
     _this.widgets.logger = new Logger({
