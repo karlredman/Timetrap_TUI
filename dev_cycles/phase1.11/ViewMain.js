@@ -186,7 +186,30 @@ ViewMain.prototype.create_widgets = function()
         //content: "{center}4/24 Active Time Sheets{/}",
     });
 
-    _this.showAll(_this.pwin.side);
+
+
+    //manage focus
+            let logline = blessed.line({
+                parent: _this.screen,
+                orientation: 'horizontal',
+                //top: 1,
+                bottom: 1,
+                left: 0,
+                right: 0,
+                fg: "green"
+            });
+            let menuline = blessed.line({
+                parent: _this.screen,
+                orientation: 'horizontal',
+                top: 1,
+                left: 0,
+                right: 0,
+                fg: "green"
+            });
+            _this.screen.setEffects(menuline, _this.widgets.logger, 'focus', 'blur', { fg: 'red' }, Object);
+            _this.screen.setEffects(logline, _this.widgets.menubar, 'focus', 'blur', { fg: 'red' }, Object);
+
+    //_this.showAll(_this.pwin.side);
 }
 
 ViewMain.prototype.toggle_menubar = function(){

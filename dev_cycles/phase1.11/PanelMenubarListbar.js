@@ -265,30 +265,9 @@ function PanelMenubarListbar(options) {
             // // _this.view.widgets.logger.show();
             // // _this.view.showAll(_this.view.pwin.side);
             // _this.screen.render();
+            //
+            // going with effects instead to force zorder
 
-    let seph = blessed.line({
-        parent: _this.screen,
-        orientation: 'horizontal',
-        //left: _this.config.view.sidew,
-        //top: 1,
-        bottom: 1,
-        left: 0,
-        right: 0,
-        fg: "green"
-    });
-    let seph1 = blessed.line({
-        parent: _this.screen,
-        orientation: 'horizontal',
-        //left: _this.config.view.sidew,
-        top: 1,
-        left: 0,
-        right: 0,
-        fg: "green"
-    });
-            //_this.screen.setEffects(_this.view.widgets.menuline_focused,
-            //_this.screen.setEffects(seph1, _this.view.widgets.sidebar, 'focus', 'blur', { fg: 'blue' });
-            _this.screen.setEffects(seph1, _this.view.widgets.logger, 'focus', 'blur', { fg: 'red' }, Object);
-            _this.screen.setEffects(seph, _this.view.widgets.menubar, 'focus', 'blur', { fg: 'red' }, Object);
 
             setTimeout(function(){
                 _this.select(0);
