@@ -59,6 +59,7 @@ function ViewPick(options) {
     //make the widgets
     _this.create_widgets();
 
+    _this.setWinFocus(_this.pwin.mainw);
 
 
     /////////////////////////////////////////////////////
@@ -76,7 +77,6 @@ function ViewPick(options) {
         _this.widgets[key].register_actions()
     }
 
-    _this.setWinFocus(_this.pwin.mainw);
 }
 ViewPick.prototype = Object.create(EventEmitter.prototype);
 ViewPick.prototype.constructor = ViewPick;
@@ -87,7 +87,7 @@ ViewPick.prototype.create_widgets = function()
 
     //get the logger
     //_this.widgets =  _this.objects.baseview.widgets;
-    //_this.objects.baseview.set_widget_views(_this, 'ViewPick');
+    _this.objects.baseview.set_widget_views(_this, 'ViewPick');
     // TODO: hmmmm why doesn't this work?
     _this.widgets.logger = _this.objects.baseview.widgets.logger;
     _this.widgets.logger.show();
@@ -114,44 +114,6 @@ ViewPick.prototype.create_widgets = function()
         border: 'line'
     });
 
-    ////used to show log is focused
-    //_this.widgets.logline = new blessed.line({
-    //    parent: _this.screen,
-    //    view: _this,
-    //    left: 0,
-    //    height: 1,
-    //    bottom: 1,
-    //    orientation: "horizontal",
-    //    type: 'line',
-    //    fg: "green"
-    //});
-    //_this.widgets.logline.register_actions = function(){};
-    //_this.widgets.logline.hide();
-
-    //// line to show menu is focused
-    //_this.widgets.menuline_active = new blessed.line({
-    //    parent: _this.screen,
-    //    view: _this,
-    //    left: 0,
-    //    height: 1,
-    //    top: 1,
-    //    orientation: "horizontal",
-    //    type: 'line',
-    //    fg: "green"
-    //});
-    //_this.widgets.menuline_active.register_actions = function(){};
-
-    //_this.widgets.menuline_inactive = new blessed.line({
-    //    parent: _this.screen,
-    //    view: _this,
-    //    left: 0,
-    //    height: 1,
-    //    top: 1,
-    //    orientation: "horizontal",
-    //    type: 'line',
-    //    fg: "red"
-    //});
-    //_this.widgets.menuline_inactive.register_actions = function(){};
 
      _this.widgets.statusline = new blessed.box({
          parent: _this.screen,
@@ -166,6 +128,27 @@ ViewPick.prototype.create_widgets = function()
      });
      _this.widgets.statusline.register_actions = function(){};
     // _this.widgets.statusline.setContent("");
+
+    //manage focus
+            let logline = blessed.line({
+                parent: _this.screen,
+                orientation: 'horizontal',
+                //top: 1,
+                bottom: 1,
+                left: 0,
+                right: 0,
+                fg: "green"
+            });
+            let menuline = blessed.line({
+                parent: _this.screen,
+                orientation: 'horizontal',
+                top: 1,
+                left: 0,
+                right: 0,
+                fg: "green"
+            });
+            _this.screen.setEffects(menuline, _this.widgets.logger, 'focus', 'blur', { fg: 'red' }, Object);
+            _this.screen.setEffects(logline, _this.widgets.menubar, 'focus', 'blur', { fg: 'red' }, Object);
 }
 
 ViewPick.prototype.register_actions = function()

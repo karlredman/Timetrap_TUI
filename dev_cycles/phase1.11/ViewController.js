@@ -84,11 +84,13 @@ ViewController.prototype.register_actions = function(){
             if (typeof _this.pickview !== 'undefined'){
                 _this.pickview.emit('destroy', 'all');
                 delete _this.pickview;
+
+                _this.objects.baseview.widgets.logger.view = _this.objects.view;
+
+                _this.objects.view.updateViews();
                 _this.objects.view.emit('create', 'menubar');
-                _this.objects.view.hideAll();
-                _this.objects.view.showAll(1);
+
                 //set the logger view
-                _this.logger.view = _this.objects.view;
                 _this.logger.msg("Destroyed view: PickView", _this.logger.loglevel.devel.message);
                 return;
             }

@@ -76,6 +76,7 @@ function MenuPickView(options) {
         close: function(){
             // let m = new DialogMessage({target: _this, parent: _this.screen});
             // m.alert('got here: command destroy pickview');
+            _this.view.objects.baseview.widgets.logger.view = _this.view.objects.view;
             _this.view.emit('relay', {action: 'destroy', item: 'PickView'});
 
 

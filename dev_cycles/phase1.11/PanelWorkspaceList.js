@@ -8,6 +8,7 @@ var util = require('util');
 
 function WorkspaceList(options) {
     if (!(this instanceof Node)) return new WorkspaceList(options);
+    let _this = this;
 
     options.style = options.style || {}
     options.style.border = options.style.border || {}
@@ -98,14 +99,16 @@ function WorkspaceList(options) {
     //         [ [1, 2, 3]
     //             , [4, 5, 6] ]})
 
+    _this.options = options;
+    _this.screen = options.screen;
+    _this.view = options.view;
+    _this.rows.view = options.view;
 }
 WorkspaceList.prototype = Object.create(contrib.table.prototype);
 WorkspaceList.prototype.constructor = WorkspaceList;
 
 WorkspaceList.prototype.register_actions = function(view){
     let _this = this;
-    this.view = view;
-    this.rows.view = view;
 
     // manage mouse things
     _this.rows.on('element wheeldown', function(foo, bar) {

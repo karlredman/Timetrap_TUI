@@ -7,6 +7,8 @@ var blessed = require('blessed'),
 
 function SideBar(options) {
     if (!(this instanceof Node)) return new SideBar(options);
+    let _this = this;
+
 
     //options
     // set overridable defaults
@@ -60,8 +62,15 @@ function SideBar(options) {
     options.style.inverse = false;
     options.fixed = true;
 
+    _this.options = options;
+
     //inherit from textarea
     contrib.tree.call(this, options);
+
+    //required
+    _this.screen = options.parent;
+    _this.view = options.view;
+    _this.rows.view = _this.view;
 }
 SideBar.prototype = Object.create(contrib.tree.prototype);
 SideBar.prototype.constructor = SideBar;
@@ -79,10 +88,8 @@ SideBar.prototype.saveData = function(data){
     this.savedData = data;
 }
 
-SideBar.prototype.register_actions = function(view){
+SideBar.prototype.register_actions = function(){
 
-	this.view = view;
-    this.rows.view = view;
 	let _this = this;
 
 	// this.rows.key(['enter'], function(ch, key) {

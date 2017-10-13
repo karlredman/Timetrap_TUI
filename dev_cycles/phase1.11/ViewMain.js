@@ -386,48 +386,21 @@ ViewMain.prototype.setWinFocus = function(win){
             //we shouldn't be here
             _this.widgets.workspace.options.style.border.fg = "yellow";
             _this.widgets.sidebar.options.style.border.fg = "yellow";
-
-            // _this.widgets.logline_focused.hide();
-            // _this.widgets.logline_unfocused.show();
-            // _this.widgets.menuline_focused.hide();
-            // _this.widgets.menuline_unfocused.show();
-
             _this.widgets.workspace.focus();
             break;
         case _this.pwin.side:
             _this.widgets.workspace.options.style.border.fg = "green";
             _this.widgets.sidebar.options.style.border.fg = "green";
-
-            // _this.widgets.logline_focused.hide();
-            // _this.widgets.logline_unfocused.show();
-            // _this.widgets.menuline_focused.hide();
-            // _this.widgets.menuline_unfocused.show();
-
             _this.widgets.sidebar.focus();
             break;
         case _this.pwin.menu:
             _this.widgets.workspace.options.style.border.fg = "red";
             _this.widgets.sidebar.options.style.border.fg = "red";
-
-            // _this.widgets.logline_focused.hide();
-            // _this.widgets.logline_unfocused.show();
-            // _this.widgets.menuline_focused.show();
-            // _this.widgets.menuline_unfocused.hide();
-
              _this.widgets.menubar.focus();
             break;
         case _this.pwin.logger:
             _this.widgets.workspace.options.style.border.fg = "red";
             _this.widgets.sidebar.options.style.border.fg = "red";
-
-            // _this.loading_dialog = new DialogMessage({target: _this, parent: _this.screen});
-            // _this.loading_dialog.alert('got here');
-
-            // _this.widgets.logline_focused.show();
-            // _this.widgets.logline_unfocused.hide();
-            // _this.widgets.menuline_focused.hide();
-            // _this.widgets.menuline_unfocused.show();
-
             _this.widgets.logger.focus();
             break;
         default:
@@ -546,6 +519,20 @@ ViewMain.prototype.showAll = function(winfocus){
 
     _this.setWinFocus(winfocus);
     _this.screen.render();
+}
+
+
+ViewMain.prototype.updateViews = function(){
+    // I don't quite get why sidebar is losing it's view
+    // after closing the pick view but this is here to update them.
+    let _this = this;
+    for (let key in this.widgets) {
+        // if ( ! this.widgets.hasOwnProperty(key)) continue;
+        //_this.widgets[key].register_actions(_this)
+        _this.widgets[key].view = _this;
+    }
+    //_this.objects.baseview.widgets.logger.view = _this;
+    _this.widgets.logger.msg("Restored views: ViewMain", _this.widgets.logger.loglevel.devel.message);
 }
 
 ViewMain.prototype.type = 'ViewMain';
