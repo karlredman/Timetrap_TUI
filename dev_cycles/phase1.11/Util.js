@@ -1,4 +1,4 @@
-//ganged from:
+//ganked from:
 //[date - Convert seconds to HH-MM-SS with JavaScript? - Stack Overflow]
 //(https://stackoverflow.com/questions/1322732/convert-seconds-to-hh-mm-ss-with-javascript/25279340)
 String.prototype.toHHMMSS = function () {
@@ -31,3 +31,4 @@ String.prototype.toHMMSS = function () {
     var time    = hours+':'+minutes+':'+seconds;
     return time;
 }
+

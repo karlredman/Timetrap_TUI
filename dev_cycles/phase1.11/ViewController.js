@@ -47,6 +47,8 @@ ViewController.prototype.constructor = ViewController;
 
 ViewController.prototype.register_actions = function(){
     let _this = this;
+
+    //view creators
     _this.on('create', function(info){
         // info = {
         //     action:
@@ -62,7 +64,7 @@ ViewController.prototype.register_actions = function(){
                 let options = {
                     objects: _this.objects,
                     //TODO: move these when we move logger into view controller
-                    data: {sheet: info.sheet}
+                    data: {sheet: info.sheet, running: info.running, id: info.id, note: info.note}
                 }
                 _this.pickview = new PickView(options);
                 _this.logger.msg("Created view: PickView", _this.logger.loglevel.devel.message);

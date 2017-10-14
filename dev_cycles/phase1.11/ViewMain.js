@@ -290,6 +290,12 @@ ViewMain.prototype.register_actions = function()
         _this.timetrap.fetch_tree(list);
     });
 
+    // _this.timetrap.on('running_list_updated', function(){
+    //     //update the tree with info about running processes
+    //     //console.log("end list: "+util.inspect(t.running_data, null, 10));
+
+    // });
+
     // _this.on('destroy_TestPickTable', function(){
     //     _this.test_pick.list.destroy();
     //     delete _this.test_pick.list;
@@ -320,14 +326,14 @@ ViewMain.prototype.updateWorkspaceFakeData = function(list){
     let _this = this;
 
     let items = {
-        headers: [" Running", " Today", " Total Time"],
+        headers: [" Running", " Today", " Total Time", ""],
         data: []
     };
 
     items.data = new Array(list.length);
 
     for ( let i in list){
-        items.data[i] = ['','',''];
+        items.data[i] = ['','','',''];
     }
 
     for( let i in list) {
@@ -335,8 +341,11 @@ ViewMain.prototype.updateWorkspaceFakeData = function(list){
             list[i].running,
             list[i].today,
             list[i].total_time,
+            list[i].note,
         ];
     }
+
+
 
     _this.widgets.workspace.setData(items);
     _this.screen.render();
@@ -356,21 +365,29 @@ ViewMain.prototype.updateWorkspaceData = function(){
     //        let output = util.inspect(node_lines[8].info, false, 20);
 
     let items = {
-        headers: [" Running", " Today", " Total Time"],
+        headers: [" Running", " Today", " Total Time",""],
         data: []
     };
     items.data = new Array(node_lines.length);
 
     for ( let i in node_lines){
-        items.data[i] = ['','',''];
+        items.data[i] = ['','','',''];
     }
 
+    let note = "";
+
     for ( let i in node_lines){
+        if( typeof node_lines[i].info.note !== 'undefined' ){
+            note = String(node_lines[i].info.note);
+        }
         items.data[i] = [
             node_lines[i].info.running,
             node_lines[i].info.today,
             node_lines[i].info.total_time,
+            note
+            //( node_lines[i].info.note == 'undefined' ) ? "" : node_lines[i].info.note.toString()
         ];
+        note = ""
     }
 
 

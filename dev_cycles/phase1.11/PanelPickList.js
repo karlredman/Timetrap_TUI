@@ -22,6 +22,7 @@ function PanelPickList(options) {
     //meh
     //options.wrap = true;
 
+    // causes crash
     // options.scrollable = options.scrollable || true;
     // options.scrollbar = options.scrollbar || {};
     // options.scrollbar.ch = options.scrollbar.ch || ' ';
@@ -78,7 +79,7 @@ function PanelPickList(options) {
         ]};
 
     //TODO: adjust to screen width / or make configurable for note length
-    options.columnWidth = [6,16,8,8,10,64];
+    options.columnWidth = [6,16,8,8,12,64];
     options.columnSpacing = 3;
     options.mouse = true;
     options.keys = true;
@@ -113,7 +114,8 @@ function PanelPickList(options) {
     //         [ [1, 2, 3]
     //             , [4, 5, 6] ]})
 
-}
+
+};
 PanelPickList.prototype = Object.create(contrib.table.prototype);
 PanelPickList.prototype.constructor = PanelPickList;
 

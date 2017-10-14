@@ -105,8 +105,8 @@ function PanelMenubarListbar(options) {
                 return;
             }
             else {
-            let prompt = new DialogPrompt({target: _this, parent: _this.screen});
-            prompt.cannedInput('checkOut');
+                let prompt = new DialogPrompt({target: _this, parent: _this.screen});
+                prompt.cannedInput('checkOut');
             }
             setTimeout(function(){
                 _this.select(0);
@@ -143,9 +143,15 @@ function PanelMenubarListbar(options) {
                 return;
             }
             else {
+                let running = false;
+                if( (_this.view.widgets.sidebar.nodeLines[_this.view.widgets.sidebar.rows.selected].info.running !== '0:00:00')
+                    && (_this.view.widgets.sidebar.nodeLines[_this.view.widgets.sidebar.rows.selected].info.running !== '-:--:--'))
+                { running = true; }
+
                 let sheet = _this.view.widgets.sidebar.nodeLines[_this.view.widgets.sidebar.rows.selected].sheet;
-                //_this.view.hideAll();
-                _this.view.emit('relay', {action: 'create', widgetname: 'PickView', sheet: sheet});
+                let id = _this.view.widgets.sidebar.nodeLines[_this.view.widgets.sidebar.rows.selected].info.id;
+                let note = _this.view.widgets.sidebar.nodeLines[_this.view.widgets.sidebar.rows.selected].info.note;
+                _this.view.emit('relay', {action: 'create', widgetname: 'PickView', sheet: sheet, running: running, id: id, note: note});
             }
 
             setTimeout(function(){
@@ -230,10 +236,11 @@ function PanelMenubarListbar(options) {
         Test: function() {
             _this.cleanupMenus();
 
-            _this.view.emit('relay', {action: 'create', item: 'PickView', context: 'test', data:{}});
+            let DialogBigBox = require('./DialogBigBox')
+            let bb = DialogBigBox({ parent: _this.options.parent });
 
-            //_this.view.test_pick.setContent(output);
-            //_this.destroy();
+            let item = _this.view.widgets.sidebar.nodeLines;      //data in sidebar tree
+            bb.setContent(util.inspect(item, null, 2));
 
             setTimeout(function(){
                 _this.select(0);
@@ -436,36 +443,44 @@ PanelMenubarListbar.prototype.register_actions = function(view){
         // }
     });
 
+    // TODO: this should be a target command and moved to the view
     _this.view.timetrap.on('timetrap_command', function(response){
 
         // if(typeof _this.loading_dialog !== 'undefined') {
         //     _this.loading_dialog.destroy();
         // }
+        if (
+            ( response.type === 'checkIn' )
+            || ( response.type === 'checkOut' )
+            || ( response.type === 'edit' )
+        )
+        {
 
-        if(typeof response.error !== 'undefined'){
-            if(response.error.toString().match(/.*Timetrap is already running.*/) ){
-                _this.log.msg(response.sheet+" is already running", _this.log.loglevel.devel.warning);
-            }
-            else if ( response.error.toString().match(/.*Editing running entry.*/) ){
-                let msg = "Edited runnig entry for \'"+response.sheet+'\'';
-                _this.log.msg(msg, _this.log.loglevel.devel.message);
+            if(typeof response.error !== 'undefined'){
+                if(response.error.toString().match(/.*Timetrap is already running.*/) ){
+                    _this.log.msg(response.sheet+" is already running", _this.log.loglevel.devel.warning);
                 }
-            else {
-                _this.log.msg(response.error.toString(), _this.log.loglevel.devel.message);
+                else if ( response.error.toString().match(/.*Editing running entry.*/) ){
+                    let msg = "Edited runnig entry for \'"+response.sheet+'\'';
+                    _this.log.msg(msg, _this.log.loglevel.devel.message);
+                }
+                else {
+                    _this.log.msg(response.error.toString(), _this.log.loglevel.devel.message);
+                }
             }
-        }
 
-        // if(typeof response.data !== 'undefined'){
-        //     _this.log.msg(response.type+": "+response.data.toString(), _this.log.loglevel.devel.message);
-        // }
+            // if(typeof response.data !== 'undefined'){
+            //     _this.log.msg(response.type+": "+response.data.toString(), _this.log.loglevel.devel.message);
+            // }
 
 
-        //TODO: this is a hack -need to run an audit on fetch_lists.
-        //_this.view.timetrap.fetch_list();
+            //TODO: this is a hack -need to run an audit on fetch_lists.
+            //_this.view.timetrap.fetch_list();
 
-        if(response.type == 'checkIn'){
-            // let m = new DialogMessage({target: _this, parent: _this.screen});
-            // m.alert('got here: '+ _this.view.config.timetrap_config.tui_question_prompts.value);
+            if(response.type == 'checkIn'){
+                // let m = new DialogMessage({target: _this, parent: _this.screen});
+                // m.alert('got here: '+ _this.view.config.timetrap_config.tui_question_prompts.value);
+            }
         }
     });
 

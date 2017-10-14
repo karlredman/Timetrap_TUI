@@ -119,10 +119,10 @@ function MenuPickView(options) {
             //item = _this.view.widgets.menuline;
             ////bb.setContent(util.inspect(item, null, 2));
 
-            _this.view.widgets.menuline.options.fg = "red";
-            _this.view.widgets.menuline.options.bg = "red";
+            // _this.view.widgets.menuline.options.fg = "red";
+            // _this.view.widgets.menuline.options.bg = "red";
 
-            _this.screen.render();
+            // _this.screen.render();
 
 
 

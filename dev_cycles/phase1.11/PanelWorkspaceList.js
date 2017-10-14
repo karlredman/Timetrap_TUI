@@ -66,7 +66,7 @@ function WorkspaceList(options) {
     // ]};
 
     //["000:00:00","000:00:00","00000:00:00"],
-    options.columnWidth = [11,11,11];
+    options.columnWidth = [11,11,11,64];
     options.columnSpacing = 2;
     options.mouse = true;
     options.keys = true;
