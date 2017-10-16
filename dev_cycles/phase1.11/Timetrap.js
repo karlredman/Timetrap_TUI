@@ -42,8 +42,12 @@ Timetrap.prototype.fetchRunningInfo = function(running_list){
             //using today is querky so we use week
             //Note: I'm not sure that running processes will be reported if they
             //run past a week. today has this issue relative to the day rollover
+            //
+            // TODO: need to handle this differnetly
+            // various time arguments return '' on rollover -could be unexpected behavior
+            // the answer is to create a filter in timetrap or (temporarily) use full dumps
 
-            let options = ["week"];
+            let options = ["display"];
             options.push("-v");
             options.push(running_list[i].name);
 
@@ -51,9 +55,12 @@ Timetrap.prototype.fetchRunningInfo = function(running_list){
             const cmd = spawnSync(command, options);
             let result = cmd.stdout;
 
+
             //cmd.once('close', function (){
             //parse the sheets
             let arr = result.toString().split("\n");
+
+            //console.log("Test: "+util.inspect(cmd.stdout.toString(), null, 10)); process.exit(0);
 
             // we want the 4th line from the end
             let line = arr[arr.length-5].split(/ /).filter(function(el){return el.length != 0});
