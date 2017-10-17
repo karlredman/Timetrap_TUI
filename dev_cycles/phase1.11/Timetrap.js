@@ -290,7 +290,7 @@ Timetrap.prototype.callCommand = function(data){
         month:{
             command: ["month"],
             options: ["--ids"],
-            required: ['--ids'],
+            required: ['--ids', '-fjson'],
             sheet_option: true,
         },
         display: {

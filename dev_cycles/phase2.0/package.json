@@ -1,0 +1,16 @@
+{
+  "name": "timetrap_tui",
+  "version": "0.0.20",
+  "description": "Terminal UI for Timetrap time tracking program",
+  "main": "timetrap_tui.js",
+  "scripts": {
+    "test": "jest --verbose"
+  },
+  "author": "Karl N. Redman",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-jest": "^21.2.0",
+    "babel-preset-env": "^1.6.0"
+  }
+}
