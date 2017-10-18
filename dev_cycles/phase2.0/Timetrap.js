@@ -24,23 +24,46 @@ const {EventEmitter} = require('events').EventEmitter;
 
 // class
 class Timetrap extends EventEmitter {
-	constructor({working_directory = '/tmp'
+	constructor({
+		working_directory = '/tmp',
+		watched_db_file = process.env.HOME+"/.timetrap.db"
 	} ={}){
+
+		//_this.watched_file = "/home/karl/Documents/Heorot/timetrap/timetrap.db"
 		super();
 		// Directory where we can call timetrap command without worrrying
 		// if recursive `nested_dotfiles`
 		this.config = {
 			working_directory: `${working_directory}`,
+			watched_db_file: `${watched_db_file}`,
 		};
 		this.data = {
 		};
+
+		//order is important
 		this.registerCommandTypes();
+		this.registerEmmitTypes();
 	};
 }
 
-Timetrap.prototype.registerCommandTypes = function(data){
+////////////////////////////////////////////
+/////////////// Data Structures
+////////////////////////////////////////////
+
+Timetrap.prototype.registerEmmitTypes = function(){
+	this.emmit_types = {
+		command_complete: {
+			description: "The type of object emitted after callCommand() completes",
+			name: "command_complete",
+			data: Object.assign({}, this.command_types.output)
+		}
+	};
+}
+
+Timetrap.prototype.registerCommandTypes = function(){
 	this.command_types = {
 		timetrap: {
+			description: "the main timetrap command",
 			_command: ["timetrap", "t"],
 			args: [],
 			required: [],
@@ -49,6 +72,7 @@ Timetrap.prototype.registerCommandTypes = function(data){
 			get command(){return this._command[0]}
 		},
 		changeSheet:{
+			description: "a sheet name",
 			_command: ["sheet", "s"],
 			args: [],
 			required: [],
@@ -57,6 +81,7 @@ Timetrap.prototype.registerCommandTypes = function(data){
 			get command(){return this._command[0]}
 		},
 		checkIn:{
+			description: "checkin command",
 			_command: ["in", "i"],
 			args: [["-a", "--at"]],
 			required: [],
@@ -65,6 +90,7 @@ Timetrap.prototype.registerCommandTypes = function(data){
 			get command(){return this._command[0]}
 		},
 		checkOut:{
+			description: "checkout command",
 			_command: ["out", "o"],
 			args: [["-a", "--at"]],
 			required: [],
@@ -73,6 +99,7 @@ Timetrap.prototype.registerCommandTypes = function(data){
 			get command(){return this._command[0]}
 		},
 		resume:{
+			description: "resume command",
 			_command: ["resume", "r"],
 			args: [
 				["-a", "--at"],
@@ -84,6 +111,7 @@ Timetrap.prototype.registerCommandTypes = function(data){
 			get command(){return this._command[0]}
 		},
 		edit:{
+			description: "edit command",
 			_command: ["edit", "e"],
 			args: [
 				// TODO: test compound statements
@@ -99,6 +127,7 @@ Timetrap.prototype.registerCommandTypes = function(data){
 			get command(){return this._command[0]}
 		},
 		today:{
+			description: "today display alias command",
 			_command: ["today", "t"],
 			args: [["-v", "--ids"], ["-fjson", "--format json"]],
 			required: ["--ids", "--format json"],
@@ -107,6 +136,7 @@ Timetrap.prototype.registerCommandTypes = function(data){
 			get command(){return this._command[0]}
 		},
 		yesterday:{
+			description: "yesterday display alias command",
 			_command: ["yesterday", "y"],
 			args: [["-v", "--ids"], ["-fjson", "--format json"]],
 			required: ['--ids', '-fjson'],
@@ -115,6 +145,7 @@ Timetrap.prototype.registerCommandTypes = function(data){
 			get command(){return this._command[0]}
 		},
 		week:{
+			description: "week display alias command",
 			_command: ["week", "w"],
 			args: [["-v", "--ids"], ["-fjson", "--format json"]],
 			required: ['--ids', '-fjson'],
@@ -124,6 +155,7 @@ Timetrap.prototype.registerCommandTypes = function(data){
 			get command(){return this._command[0]}
 		},
 		month:{
+			description: "month display alias command",
 			_command: ["month", "m"],
 			args: [["-v", "--ids", "-fjson", "--format json"]],
 			required: ['--ids', '-fjson'],
@@ -132,6 +164,7 @@ Timetrap.prototype.registerCommandTypes = function(data){
 			get command(){return this._command[0]}
 		},
 		display: {
+			description: "display command",
 			_command: ["display", "d"],
 			args: [
 				["--ids", "-v"],
@@ -145,6 +178,7 @@ Timetrap.prototype.registerCommandTypes = function(data){
 			get command(){return this._command[0]}
 		},
 		now:{
+			description: "now command",
 			_command: ["now", "n"],
 			args: [],
 			required: [],
@@ -153,6 +187,7 @@ Timetrap.prototype.registerCommandTypes = function(data){
 			get command(){return this._command[0]}
 		},
 		kill:{
+			description: "kill command",
 			_command: ["kill", "k"],
 			//TODO: handle delicately -deletes either id or timesheet
 			args: [["--id", "-i"]],
@@ -161,8 +196,27 @@ Timetrap.prototype.registerCommandTypes = function(data){
 			special: true,
 			get command(){return this._command[0]}
 		},
+		output: {
+			description: "callCommand output data structure",
+			_command: [''],
+			args: [],
+			required: [],
+			allow_sheet: false,
+			special: true,
+			stdoutData: '',
+			stderrData: '',
+			code: 0,
+			signal: '',
+			sheet: '',
+			type: '',
+			get command(){return this._command[0]}
+		}
 	};
 }
+
+////////////////////////////////////////////
+/////////////// API
+////////////////////////////////////////////
 
 Timetrap.prototype.callCommand = function({type = 'display', sheet = 'default', content = ''} ={}) {
 	// calls the timetrap program with the appropriat command 'type'
@@ -247,14 +301,11 @@ Timetrap.prototype.doCallCommand = function({
 		sheet: `${sheet}`,
 		type: `${type}`,
 	}
-	let output = {
-		stdoutData: '',
-		stderrData: '',
-		code: 0,
-		signal: '',
-		sheet: data.sheet,
-		type: data.type
-	};
+
+	// seed the output structure
+	let output = Object.assign({}, this.command_types.output);
+	output.sheet = data.sheet;
+	output.type = data.type;
 
 
 	return new Promise(function(resolve, reject){
@@ -286,4 +337,40 @@ Timetrap.prototype.doCallCommand = function({
 	});
 }
 
+Timetrap.prototype.monitorDB = function(){
+	// monitors the database
+
+    this.count = 0;
+    this.watcher = fs.watch(this.config.watched_db_file);
+
+    this.watcher.on('change', (event, filename) => {
+
+        if(filename == path.basename(this.config.watched_db_file) ){
+            //verify command
+
+            //incriment counter
+            _this.count++;
+
+            //start timer
+            if ( _this.count > 0) {
+                //the kernel emits multiple IN_MODIFY events via libuv + sometimes
+                // multiple writes occur for an action via timetrap -so we'll only
+                // report the composite within a (arbitrary) time window of 1 second.
+                // see [fs.watch has double change events for file writes · Issue #3042 · nodejs/node](https://github.com/nodejs/node/issues/3042)
+                setTimeout(function () {
+                    _this.catch_timer(_this.count);
+                }, 1000);
+                //}, 500);
+            }
+        }
+        //else {console.log("got here: "+filename)}
+    });
+}
+Timetrap.prototype.catch_timer = function() {
+    if (this.count > 0){
+        this.emit('db_change');
+        //console.log("File "+_this.watched_file+" just changed "+count+" times!");
+        this.count=0;
+    }
+}
 module.exports = {Timetrap, Timetrap_Error};

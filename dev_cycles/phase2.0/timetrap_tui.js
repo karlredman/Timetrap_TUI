@@ -9,12 +9,19 @@ function main(callback) {
 
     var timetrap = new Timetrap({});
 
-    //timetrap.callCommand({type:'changeSheet'});
-    //console.log("-------------------------------");
-    timetrap.callCommand({type:'changeSheet', sheet:'Personal'});
-    //timetrap.callCommand({type:'checkOut', sheet:'Personal'});
-    //timetrap.callCommand({type:'checkIn', sheet:'Personal', content:"testing1"});
+    ///////////////// Basic functionality
+    // timetrap.callCommand();
+    // timetrap.callCommand({type:'changeSheet', sheet:'default'});
+    // timetrap.callCommand({type:'checkOut', sheet:'default'});
+    // timetrap.callCommand({type:'checkIn', sheet:'default', content:"testing checkin"});
+    // console.log("-------------------------------");
 
+
+    ///////////////// Debugging
+        Object.keys(timetrap.command_types).forEach(function(key){
+            // expect(timetrap.command_types[key].description).toBeDefined();
+            console.log(key+":"+timetrap.command_types[key].required);
+        });
 }
 
 // Process loop
