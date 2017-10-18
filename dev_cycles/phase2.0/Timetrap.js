@@ -124,7 +124,7 @@ Timetrap.prototype.registerCommandTypes = function(data){
 		},
 		month:{
 			_command: ["month", "m"],
-			args: ["-v", "--ids", "-fjson", "--format json"],
+			args: [["-v", "--ids", "-fjson", "--format json"]],
 			required: ['--ids', '-fjson'],
 			allow_sheet: true,
 			special: false,
@@ -154,7 +154,7 @@ Timetrap.prototype.registerCommandTypes = function(data){
 		kill:{
 			_command: ["kill", "k"],
 			//TODO: handle delicately -deletes either id or timesheet
-			args: ["--id", "-i"],
+			args: [["--id", "-i"]],
 			required: [],
 			allow_sheet: false,     //could be true but we'll make a special exception in code
 			special: true,
@@ -174,6 +174,8 @@ Timetrap.prototype.registerCommandTypes = function(data){
 }
 
 Timetrap.prototype.callCommand = function({type = 'display', sheet = 'default', content = ''} ={}) {
+
+	let _this = this;
 
 	let data = {
 		type: `${type}`,
@@ -201,16 +203,66 @@ Timetrap.prototype.callCommand = function({type = 'display', sheet = 'default', 
 		args.push(data.sheet);
 	}
 
-	//const cmd = spawn(this.command_types.timetrap.command, args, {cwd: this.config.working_directory})
-	this.doCallCommand({command: this.command_types.timetrap.command,
-		args: args, sheet: data.sheet, type: data.type} ).then(function(result){
-			// handle output
-			console.log("got here: handle output: ...");
-			console.log(util.inspect(result, null, 10));
-		}, function(err){
-			// handle error
-			console.log("got here: handle error: ", err);
-		});
+	console.log("-------------------------------");
+	console.log("-------------------------------");
+	console.log("args: " +util.inspect(args, null, 10));
+	console.log("1-------------------------------");
+
+	if( ! this.command_types[data.type].allow_sheet){
+		// we have to change the sheet
+		//cmd = spawn(_this.command_types.timetrap.command, ['sheet', data.sheet], {cwd: _this.config.working_directory});
+
+		// let thing = {command: this.command_types.timetrap.command,
+		// 	args: [],
+		// 	sheet: data.sheet,
+		// 	type: 'changeSheet'
+		// }
+		// 		console.log("thing"+util.inspect(thing, null, 10));
+
+		this.doCallCommand({command: this.command_types.timetrap.command,
+			args: ['sheet', data.sheet],
+			sheet: data.sheet, type: 'changeSheet'} ).then(function(result){
+				// handle output
+				console.log("got here: changed sheet");
+				console.log(util.inspect(result, null, 10));
+				console.log(util.inspect(args, null, 10));
+				console.log("2-------------------------------");
+
+				// now call the actual command
+				//console.log(util.inspect(args, null, 10));
+				_this.doCallCommand({command: _this.command_types.timetrap.command,
+					args: args, sheet: data.sheet, type: data.type} ).then(function(result){
+						// handle output
+						console.log("got here: command after sheet returned: change");
+						console.log(util.inspect(result, null, 10));
+						console.log(util.inspect(args, null, 10));
+						console.log("3-------------------------------");
+
+						// console.log(util.inspect(result, null, 10));
+					}, function(err){
+						// handle error
+						console.log("XXXXXXXXXXXXXXXXXXXXx got here: command after sheet: error returned: ", err);
+					});
+			}, function(err){
+				// handle error
+				console.log("yyyyyyyyyyyyyyy got here: handle error: ", err);
+			});
+	}
+	else {
+		console.log("got here: direct call");
+		// we call the command with the sheet
+		this.doCallCommand({command: this.command_types.timetrap.command,
+			args: args, sheet: data.sheet, type: data.type} ).then(function(result){
+				// handle output
+				//console.log(util.inspect(result, null, 10));
+				console.log("got here: direct command call returned");
+				console.log(util.inspect(result, null, 10));
+				console.log(util.inspect(args, null, 10));
+			}, function(err){
+				// handle error
+				console.log("got here: direct command call error returned: ", err);
+			});
+	}
 }
 
 Timetrap.prototype.doCallCommand = function({
@@ -226,67 +278,128 @@ Timetrap.prototype.doCallCommand = function({
 		sheet: `${sheet}`,
 		type: `${type}`,
 	}
-	let output = [{
+	let output = {
 		stdoutData: '',
 		stderrData: '',
 		code: 0,
+		signal: '',
 		sheet: data.sheet,
 		type: data.type
-	}]
+	};
+
+
 	return new Promise(function(resolve, reject){
 
 		// we're using the promise to conditionally serialize a second call to
 		// the timetrap program for commands that require a sheet change before
 		// execution
 
-		let cmd = undefined;
+		// console.log("data.args: "+util.inspect(data.args, null, 10));
+		// console.log("command: "+_this.command_types.timetrap.command+" "+data.args.join(" "));
 
-		if( ! _this.command_types[data.type].allow_sheet){
-			// we have to change the sheet
-			cmd = spawn(_this.command_types.timetrap.command, ['sheet', data.sheet], {cwd: _this.config.working_directory});
-		}
-		else {
-			cmd = spawn(_this.command_types.timetrap.command, data.args, {cwd: _this.config.working_directory});
-		}
+		// let cmd = undefined;
+		// if(data.type === 'changeSheet'){
+		// 	cmd = spawn(_this.command_types.timetrap.command, data.args);
+		// } else {
+		// 	cmd = spawn("timetrap", ['in', 'testing1']);
+		// }
+
+		// const cmd = spawn(_this.command_types.timetrap.command, data.args);
+		const cmd = spawn(_this.command_types.timetrap.command, data.args, {cwd: _this.config.working_directory});
 
 		cmd.stdout.on('data', (data) => {
-			output[0].stdoutData += data;
-			//resolve(output);
+			output.stdoutData += data;
 		});
 
 		cmd.stderr.on('data', (data) => {
-			output[0].stderrData += data;
-			//resolve(output);
+			output.stderrData += data;
 		});
 
-		cmd.on('close', (code) => {
-			output[0].code = code;
-			//resolve(output);
+		cmd.once('close', function (){
+			resolve(output);
+		});
+		cmd.on('close', (code, signal) => {
+			output.code = code;
+			output.signal = signal;
+			reject(output);
 		})
-		return output;
-	}).then( function(output) {
-		if( ! _this.command_types[data.type].allow_sheet) {
-
-			output.push([]);
-			let cmd = spawn(_this.command_types.timetrap.command, data.args, {cwd: _this.config.working_directory})
-
-			cmd.stdout.on('data', (data) => {
-				output[1].stdoutData += data;
-				//resolve(output);
-			});
-
-			cmd.stderr.on('data', (data) => {
-				output[1].stderrData += data;
-				//resolve(output);
-			});
-
-			cmd.on('close', (code) => {
-				output[1].code = code;
-				//resolve(output);
-			})
-		}
 	});
-	//	console.log(util.inspect(output, null, 10));
 }
+
+// Timetrap.prototype.doCallCommand2 = function({
+// 	command = this.command_types.timetrap.command,
+// 	args = [['display'],['-v']], sheet = 'default',
+// 	type = 'display'} ={})
+// {
+// 	let _this = this;
+
+// 	let data = {
+// 		command: `${command}`,
+// 		args: `${args}`.split(','),		//TODO: understand why args is being turned into a string
+// 		sheet: `${sheet}`,
+// 		type: `${type}`,
+// 	}
+// 	let output = [{
+// 		stdoutData: '',
+// 		stderrData: '',
+// 		code: 0,
+// 		sheet: data.sheet,
+// 		type: data.type
+// 	}]
+// 	return new Promise(function(resolve, reject){
+
+// 		// we're using the promise to conditionally serialize a second call to
+// 		// the timetrap program for commands that require a sheet change before
+// 		// execution
+
+// 		let cmd = undefined;
+
+// 		if( ! _this.command_types[data.type].allow_sheet){
+// 			// we have to change the sheet
+// 			cmd = spawn(_this.command_types.timetrap.command, ['sheet', data.sheet], {cwd: _this.config.working_directory});
+// 		}
+// 		else {
+// 			cmd = spawn(_this.command_types.timetrap.command, data.args, {cwd: _this.config.working_directory});
+// 		}
+
+// 		cmd.stdout.on('data', (data) => {
+// 			output[0].stdoutData += data;
+// 			//resolve(output);
+// 		});
+
+// 		cmd.stderr.on('data', (data) => {
+// 			output[0].stderrData += data;
+// 			//resolve(output);
+// 		});
+
+// 		cmd.on('close', (code) => {
+// 			output[0].code = code;
+// 			//resolve(output);
+// 		})
+// 		return output;
+// 	}).then( function(output) {
+// 		if( ! _this.command_types[data.type].allow_sheet) {
+
+// 			output.push([]);
+// 			let cmd = spawn(_this.command_types.timetrap.command, data.args, {cwd: _this.config.working_directory})
+
+// 			cmd.stdout.on('data', (data) => {
+// 				output[1].stdoutData += data;
+// 				//resolve(output);
+// 			});
+
+// 			cmd.stderr.on('data', (data) => {
+// 				output[1].stderrData += data;
+// 				//resolve(output);
+// 			});
+
+// 			cmd.on('close', (code) => {
+// 				output[1].code = code;
+// 				//resolve(output);
+// 			})
+// 		}
+// 	});
+// 	//	console.log(util.inspect(output, null, 10));
+// }
 
 module.exports = {Timetrap, Timetrap_Error};

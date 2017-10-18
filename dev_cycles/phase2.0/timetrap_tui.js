@@ -9,9 +9,9 @@ function main(callback) {
 
     var timetrap = new Timetrap({});
 
-    //timetrap.callCommand();
-    console.log("-------------------------------");
-    //timetrap.callCommand({type:'changeSheet', sheet:'Projects'});
+    //timetrap.callCommand({type:'changeSheet'});
+    //console.log("-------------------------------");
+    //timetrap.callCommand({type:'changeSheet', sheet:'Personal'});
     timetrap.callCommand({type:'checkOut', sheet:'Personal'});
     timetrap.callCommand({type:'checkIn', sheet:'Personal', content:"testing1"});
 
@@ -19,7 +19,6 @@ function main(callback) {
 
 // Process loop
 if (!module.parent) {
-    //process.chdir('/tmp');
     process.title = 'Timetrap TUI';
     main(process.argv.slice(), function(err) {
         if (err) throw err;
