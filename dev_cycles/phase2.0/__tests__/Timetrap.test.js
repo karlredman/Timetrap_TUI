@@ -28,7 +28,7 @@ describe('Timetrap_Error class', function() {
     });
 });
 
-describe('Timetrap class', function() {
+describe('Timetrap class definition', function() {
     describe('Validate Timetrap class instantiated as object', function() {
         var timetrap = new Timetrap({});
         test('Validate instatniation as object (with new)', function() {
@@ -42,84 +42,89 @@ describe('Timetrap class', function() {
             expect(timetrap).toBeInstanceOf(EventEmitter);
         });
     });
-});
-describe('Timetrap callCommand() and supporters (live)', function() {
-    var timetrap = new Timetrap({});
-    test('doCallcommand() promise returnes value stderrData', () => {
-        expect.assertions(1);
-        return timetrap.doCallCommand({
-            args: ['sheet', 'default'],
-            sheet: 'default',
-            type: 'changeSheet'
-        }).then(data => {
-            expect(data.stderrData).toBe("Switching to sheet \"default\"\n");
+
+    describe('Timetrap callCommand() and supporters (live)', function() {
+        var timetrap = new Timetrap({});
+        test('doCallcommand() promise returnes value stderrData', () => {
+            expect.assertions(1);
+            return timetrap.doCallCommand({
+                args: ['sheet', 'default'],
+                sheet: 'default',
+                type: 'changeSheet'
+            }).then(data => {
+                expect(data.stderrData).toBe("Switching to sheet \"default\"\n");
+            });
         });
-    });
-    test('doCallcommand() returnes correct data structure', () => {
-        //expect.assertions(1);
-        return timetrap.doCallCommand({
-            args: ['sheet', 'default'],
-            sheet: 'default',
-            type: 'changeSheet'
-        }).then(data =>
-            //timetrap.command_types.output
-            expect(data).toMatchObject({
-                description: expect.any(String),
-                _command: expect.any(Array),
-                stdoutData: expect.any(String),
-                stderrData: expect.any(String),
-                code: expect.any(Number),
-                signal: expect.any(Object),     //spawn may set to null
-                sheet: expect.any(String),
-                type: expect.any(String)
-            }))
-    });
-    // TODO: test state changes afected by callCommand()
-});
-
-describe('Timetrap basic class properties', function() {
-    var timetrap = new Timetrap({});
-    test('Verify default class variable properties', function() {
-        expect(timetrap.config.working_directory).toBeDefined();
-    });
-    test('Verify default class variable getters work', function() {
-        expect(timetrap.command_types.changeSheet.allow_sheet).toBeDefined();
-    });
-    test('Verify command_types subgetters work', function() {
-        expect(timetrap.command_types.changeSheet.command).toEqual('sheet');
-        Object.keys(timetrap.command_types).forEach(function(key){
-            expect(timetrap.command_types[key].command).toBeDefined();
+        test('doCallcommand() returnes correct data structure', () => {
+            //expect.assertions(1);
+            return timetrap.doCallCommand({
+                args: ['sheet', 'default'],
+                sheet: 'default',
+                type: 'changeSheet'
+            }).then(data =>
+                //timetrap.command_types.output
+                expect(data).toMatchObject({
+                    description: expect.any(String),
+                    _command: expect.any(Array),
+                    stdoutData: expect.any(String),
+                    stderrData: expect.any(String),
+                    code: expect.any(Number),
+                    signal: expect.any(Object),     //spawn may set to null
+                    sheet: expect.any(String),
+                    type: expect.any(String)
+                }))
         });
+        // TODO: test state changes afected by callCommand()
     });
-});
 
-
-describe('Timetrap class data structure attributes', function() {
-    var timetrap = new Timetrap({});
-    test('Verify command_types data strucures', function() {
-        Object.keys(timetrap.command_types).forEach(function(key){
-            expect(timetrap.command_types[key]).toMatchObject({
-                description: expect.any(String),
-                _command: expect.any(Array),
-                description: expect.any(String),
-                args: expect.any(Array),
-                required: expect.any(Array),
-                allow_sheet: expect.any(Boolean),
-                special: expect.any(Boolean),
+    describe('Timetrap basic class properties', function() {
+        var timetrap = new Timetrap({});
+        test('Verify default class variable properties', function() {
+            expect(timetrap.config.working_directory).toBeDefined();
+        });
+        test('Verify default class variable getters work', function() {
+            expect(timetrap.command_types.changeSheet.allow_sheet).toBeDefined();
+        });
+        test('Verify command_types subgetters work', function() {
+            expect(timetrap.command_types.changeSheet.command).toEqual('sheet');
+            Object.keys(timetrap.command_types).forEach(function(key){
+                expect(timetrap.command_types[key].command).toBeDefined();
             });
         });
     });
-    test('Verify emmit_types data strucures', function() {
-        Object.keys(timetrap.emmit_types).forEach(function(key){
-            expect(timetrap.emmit_types[key]).toMatchObject({
-                description: expect.any(String),
-                name: expect.any(String),
-                data: expect.objectContaining(timetrap.command_types.output)
+
+    describe('Timetrap class data structure attributes', function() {
+        var timetrap = new Timetrap({});
+        test('Verify command_types data strucures', function() {
+            Object.keys(timetrap.command_types).forEach(function(key){
+                expect(timetrap.command_types[key]).toMatchObject({
+                    description: expect.any(String),
+                    _command: expect.any(Array),
+                    description: expect.any(String),
+                    args: expect.any(Array),
+                    required: expect.any(Array),
+                    allow_sheet: expect.any(Boolean),
+                    special: expect.any(Boolean),
+                });
             });
         });
+        test('Verify emmit_types data strucures', function() {
+            Object.keys(timetrap.emmit_types).forEach(function(key){
+                expect(timetrap.emmit_types[key]).toMatchObject({
+                    description: expect.any(String),
+                    name: expect.any(String),
+                    data: expect.any(Object)
+                });
+            });
+            //typed objects
+            expect(timetrap.emmit_types.command_complete.data).toEqual(timetrap.command_types.output);
+        });
     });
-    // test('Verify emit_types, command_complete.data is an command_types.output object', function() {
-    //     expect(timetrap.emmit_types.command_complete.data).toEqual(timetrap.command_types.output);
-    // });
+
+
+
+
+
+
 });
 

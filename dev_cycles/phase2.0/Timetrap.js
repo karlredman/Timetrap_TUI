@@ -2,11 +2,13 @@
 // class wrapper of Timetrap command line program
 "use strict"
 
-// debugging
+// DEBUGGING
 var util = require('util');
 
 // includes
 const {spawn} = require('child_process');
+const fs = require('fs');
+const path = require('path');
 
 
 // custom Error
@@ -29,13 +31,16 @@ class Timetrap extends EventEmitter {
 		watched_db_file = process.env.HOME+"/.timetrap.db"
 	} ={}){
 
-		//_this.watched_file = "/home/karl/Documents/Heorot/timetrap/timetrap.db"
 		super();
 		// Directory where we can call timetrap command without worrrying
 		// if recursive `nested_dotfiles`
 		this.config = {
 			working_directory: `${working_directory}`,
-			watched_db_file: `${watched_db_file}`,
+			db_monitor: {
+				IN_MODIFY_count: 0,			//aggregate file mod counter
+				watched_db_file: `${watched_db_file}`,
+				agg_time: 1000
+			},
 		};
 		this.data = {
 		};
@@ -56,6 +61,11 @@ Timetrap.prototype.registerEmmitTypes = function(){
 			description: "The type of object emitted after callCommand() completes",
 			name: "command_complete",
 			data: Object.assign({}, this.command_types.output)
+		},
+		db_change: {
+			description: "The type of object emitted from monitorDB when the database changes",
+			name: "db_change",
+			data: {}
 		}
 	};
 }
@@ -337,40 +347,48 @@ Timetrap.prototype.doCallCommand = function({
 	});
 }
 
-Timetrap.prototype.monitorDB = function(){
+Timetrap.prototype.monitorDBStart = function(){
 	// monitors the database
 
-    this.count = 0;
-    this.watcher = fs.watch(this.config.watched_db_file);
+	let _this = this;
 
-    this.watcher.on('change', (event, filename) => {
+	this.config.db_monitor.IN_MODIFY_count = 0;
 
-        if(filename == path.basename(this.config.watched_db_file) ){
-            //verify command
+	//start the watcher
+	this.config.db_monitor.watcher = fs.watch(this.config.db_monitor.watched_db_file);
 
-            //incriment counter
-            _this.count++;
+	this.config.db_monitor.watcher.on('change', (event, filename) => {
 
-            //start timer
-            if ( _this.count > 0) {
-                //the kernel emits multiple IN_MODIFY events via libuv + sometimes
-                // multiple writes occur for an action via timetrap -so we'll only
-                // report the composite within a (arbitrary) time window of 1 second.
-                // see [fs.watch has double change events for file writes · Issue #3042 · nodejs/node](https://github.com/nodejs/node/issues/3042)
-                setTimeout(function () {
-                    _this.catch_timer(_this.count);
-                }, 1000);
-                //}, 500);
-            }
-        }
-        //else {console.log("got here: "+filename)}
-    });
+		if(filename == path.basename(this.config.db_monitor.watched_db_file) ){
+
+			//incriment counter
+			this.config.db_monitor.IN_MODIFY_count++;
+
+			//start timer
+			if ( this.config.db_monitor.IN_MODIFY_count > 0) {
+				// The kernel emits multiple IN_MODIFY events via libuv +
+				// sometimes multiple writes occur for an action via timetrap
+				// -so we'll only report the composite within a (arbitrary)
+				// time window of 1 second.
+				// see [fs.watch has double change events for file writes · Issue #3042 · nodejs/node](https://github.com/nodejs/node/issues/3042)
+				setTimeout(function () {
+					_this.monitorDBCatchTimer(_this.config.db_monitor.IN_MODIFY_count);
+				}, this.config.db_monitor.agg_time);
+				//}, 500);
+			}
+		}
+		//else {console.log("got here: "+filename)}
+	});
 }
-Timetrap.prototype.catch_timer = function() {
-    if (this.count > 0){
-        this.emit('db_change');
-        //console.log("File "+_this.watched_file+" just changed "+count+" times!");
-        this.count=0;
-    }
+Timetrap.prototype.monitorDBCatchTimer = function() {
+	//triggers an emmit after a db change aggregate occurs (via timer)
+	if (this.config.db_monitor.IN_MODIFY_count > 0){
+		//data structure
+		this.config.db_monitor.IN_MODIFY_count=0;
+		let obj = Object.assign({}, this.emmit_types.db_change);
+		obj.data = Date.now();
+		this.emit('db_change', obj);
+		//console.log("File "+_this.watched_file+" just changed "+count+" times!");
+	}
 }
 module.exports = {Timetrap, Timetrap_Error};
