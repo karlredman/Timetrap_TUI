@@ -34,8 +34,19 @@ describe('Timetrap class properties', function() {
                 expect(timetrap.command_types[key].command).toBeDefined(); });
     });
 });
-// describe('Timetrap ', function() {
-// });
+describe('Timetrap callCommand and supporters (live)', function() {
+    var timetrap = new Timetrap({});
+    test('doCallcommand() promise returnes value', () => {
+        expect.assertions(1);
+        return timetrap.doCallCommand({
+			args: ['sheet', 'default'],
+            sheet: 'default',
+            type: 'changeSheet'
+        }).then(data => {
+            expect(data.stderrData).toBe("Switching to sheet \"default\"\n");
+        });
+    });
+});
 
 describe('Timetrap_Error class', function() {
     describe('Validate Timetrap_Error class instantiated as object', function() {
@@ -52,5 +63,11 @@ describe('Timetrap_Error class', function() {
         test('Verify default consructor values', function() {
             expect(error.name).toEqual(error.constructor.name);
         });
+        test('Verify throw behavior', function() {
+            expect(() => {
+                throw new Timetrap_Error("a test message");
+            }).toThrow("a test message");
+        });
+
     });
 });

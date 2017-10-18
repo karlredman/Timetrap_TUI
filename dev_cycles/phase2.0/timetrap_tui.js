@@ -11,9 +11,9 @@ function main(callback) {
 
     //timetrap.callCommand({type:'changeSheet'});
     //console.log("-------------------------------");
-    //timetrap.callCommand({type:'changeSheet', sheet:'Personal'});
-    timetrap.callCommand({type:'checkOut', sheet:'Personal'});
-    timetrap.callCommand({type:'checkIn', sheet:'Personal', content:"testing1"});
+    timetrap.callCommand({type:'changeSheet', sheet:'Personal'});
+    //timetrap.callCommand({type:'checkOut', sheet:'Personal'});
+    //timetrap.callCommand({type:'checkIn', sheet:'Personal', content:"testing1"});
 
 }
 

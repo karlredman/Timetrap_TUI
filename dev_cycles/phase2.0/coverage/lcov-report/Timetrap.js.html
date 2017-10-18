@@ -1,0 +1,932 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for Timetrap.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="prettify.css" />
+    <link rel="stylesheet" href="base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="index.html">All files</a> Timetrap.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">72.88% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>43/59</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">10.53% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>2/19</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">50% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>8/16</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">72.88% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>43/59</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line medium'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// Timetrap.js
+// class wrapper of Timetrap command line program
+"use strict"
+&nbsp;
+// debugging
+var util = require('util');
+&nbsp;
+// includes
+const {spawn} = require('child_process');
+&nbsp;
+&nbsp;
+// custom Error
+class Timetrap_Error extends Error {
+	constructor(message){
+		message = "Timetrap Error: "+message;
+		super(message);
+		this.name = this.constructor.name;
+		Error.captureStackTrace(this, this.constructor);
+	}
+}
+&nbsp;
+// parent
+const {EventEmitter} = require('events').EventEmitter;
+&nbsp;
+// class
+class Timetrap extends EventEmitter {
+	constructor({working_directory = '/tmp'
+	} =<span class="branch-0 cbranch-no" title="branch not covered" >{})</span>{
+		super();
+		// Directory where we can call timetrap command without worrrying
+		// if recursive `nested_dotfiles`
+		this.config = {
+			working_directory: `${working_directory}`,
+		};
+		this.data = {
+		};
+		this.registerCommandTypes();
+	};
+}
+&nbsp;
+Timetrap.prototype.registerCommandTypes = function(data){
+	this.command_types = {
+		timetrap: {
+			_command: ["timetrap", "t"],
+			args: [],
+			required: [],
+			allow_sheet: false,
+			special: true,
+			get command(){return this._command[0]}
+		},
+		changeSheet:{
+			_command: ["sheet", "s"],
+			args: [],
+			required: [],
+			allow_sheet: true,
+			special: false,
+			get command(){return this._command[0]}
+		},
+		checkIn:{
+			_command: ["in", "i"],
+			args: [["-a", "--at"]],
+			required: [],
+			allow_sheet: false,
+			special: false,
+			get command(){return this._command[0]}
+		},
+		checkOut:{
+			_command: ["out", "o"],
+			args: [["-a", "--at"]],
+			required: [],
+			allow_sheet: true,
+			special: false,
+			get command(){return this._command[0]}
+		},
+		resume:{
+			_command: ["resume", "r"],
+			args: [
+				["-a", "--at"],
+				["-i", "--id"]
+			],
+			required: [],
+			allow_sheet: false,
+			special: false,
+			get command(){return this._command[0]}
+		},
+		edit:{
+			_command: ["edit", "e"],
+			args: [
+				// TODO: test compound statements
+				["--id", "-i"],
+				["--start", "-s"],        //can not be used with --end
+				["--end", "-e"],          //can not be used with --start
+				["--append", "-z"],
+				["--move", "-m"]          //implement with EXTREME caution
+			],
+			required: [],
+			allow_sheet: false,
+			special: false,
+			get command(){return this._command[0]}
+		},
+		today:{
+			_command: ["today", "t"],
+			args: [["-v", "--ids"], ["-fjson", "--format json"]],
+			required: ["--ids", "--format json"],
+			allow_sheet: true,
+			special: false,
+			get command(){return this._command[0]}
+		},
+		yesterday:{
+			_command: ["yesterday", "y"],
+			args: [["-v", "--ids"], ["-fjson", "--format json"]],
+			required: ['--ids', '-fjson'],
+			allow_sheet: true,
+			special: false,
+			get command(){return this._command[0]}
+		},
+		week:{
+			_command: ["week", "w"],
+			args: [["-v", "--ids"], ["-fjson", "--format json"]],
+			required: ['--ids', '-fjson'],
+			//required: ['--ids'],
+			allow_sheet: true,
+			special: false,
+			get command(){return this._command[0]}
+		},
+		month:{
+			_command: ["month", "m"],
+			args: [["-v", "--ids", "-fjson", "--format json"]],
+			required: ['--ids', '-fjson'],
+			allow_sheet: true,
+			special: false,
+			get command(){return this._command[0]}
+		},
+		display: {
+			_command: ["display", "d"],
+			args: [
+				["--ids", "-v"],
+				["--start", "-s"],
+				["--end", "-e"],
+				["--grep", "-g"]
+			],
+			required: ['--ids'],
+			allow_sheet: true,
+			special: false,
+			get command(){return this._command[0]}
+		},
+		now:{
+			_command: ["now", "n"],
+			args: [],
+			required: [],
+			allow_sheet: false,
+			special: true,
+			get command(){return this._command[0]}
+		},
+		kill:{
+			_command: ["kill", "k"],
+			//TODO: handle delicately -deletes either id or timesheet
+			args: [["--id", "-i"]],
+			required: [],
+			allow_sheet: false,     //could be true but we'll make a special exception in code
+			special: true,
+			get command(){return this._command[0]}
+		},
+	};
+}
+&nbsp;
+Timetrap.prototype.callCommand = <span class="fstat-no" title="function not covered" >fu</span>nction({type = <span class="branch-0 cbranch-no" title="branch not covered" >'display',</span> sheet = <span class="branch-0 cbranch-no" title="branch not covered" >'default',</span> content = <span class="branch-0 cbranch-no" title="branch not covered" >''}</span> =<span class="branch-0 cbranch-no" title="branch not covered" >{})</span> {
+	// calls the timetrap program with the appropriat command 'type'
+	// performs actions like `timetrap --ids dispaly sheetName`
+&nbsp;
+	let _this = <span class="cstat-no" title="statement not covered" >this;</span>
+&nbsp;
+	let data = <span class="cstat-no" title="statement not covered" >{</span>
+		type: `${type}`,
+		sheet: `${sheet}`,
+		content: `${content}`,
+	};
+&nbsp;
+	let args = <span class="cstat-no" title="statement not covered" >[];</span>
+&nbsp;
+	// add required arguments
+<span class="cstat-no" title="statement not covered" >	if(this.command_types[data.type].required.length &gt; 0){</span>
+<span class="cstat-no" title="statement not covered" >		args = [this.command_types[data.type].command, this.command_types[data.type].required, data.content];</span>
+	}
+	else {
+<span class="cstat-no" title="statement not covered" >		args = [this.command_types[data.type].command, data.content];</span>
+	}
+&nbsp;
+	//some commands can be run with a sheet specification
+<span class="cstat-no" title="statement not covered" >	if( (data.type === 'checkOut')</span>
+		|| (data.type === 'changeSheet') )
+	{
+		//just push the sheet on to the args stack
+<span class="cstat-no" title="statement not covered" >		args.push(data.sheet);</span>
+	}
+&nbsp;
+	// for commands that don't allow a sheet to be specified, we have to switch
+	// to the sheet manually. this is done via a promis chain. There's probably
+	// a better way to do this....
+<span class="cstat-no" title="statement not covered" >	if( ! this.command_types[data.type].allow_sheet){</span>
+		// we have to change the sheet
+&nbsp;
+<span class="cstat-no" title="statement not covered" >		this.doCallCommand({command: this.command_types.timetrap.command,</span>
+			args: ['sheet', data.sheet],
+			sheet: data.sheet, type: 'changeSheet'} ).then(<span class="fstat-no" title="function not covered" >fu</span>nction(result){
+				// handle output
+&nbsp;
+				// now call the actual command
+<span class="cstat-no" title="statement not covered" >				_this.doCallCommand({command: _this.command_types.timetrap.command,</span>
+					args: args, sheet: data.sheet, type: data.type} ).then(<span class="fstat-no" title="function not covered" >fu</span>nction(result){
+						// handle output
+&nbsp;
+					}, <span class="fstat-no" title="function not covered" >fu</span>nction(err){
+						// handle error
+<span class="cstat-no" title="statement not covered" >						throw new Timetrap_Error("attempt to "+data.type+" sheet failed ["+err+"]");</span>
+&nbsp;
+					});
+			}, <span class="fstat-no" title="function not covered" >fu</span>nction(err){
+				// handle error
+<span class="cstat-no" title="statement not covered" >				throw new Timetrap_Error("attempt to change sheet failed ["+err+"]");</span>
+			});
+	}
+	else {
+		// call the command with the sheet (i.e. change sheet, checkout)
+<span class="cstat-no" title="statement not covered" >		this.doCallCommand({command: this.command_types.timetrap.command,</span>
+			args: args, sheet: data.sheet, type: data.type} ).then(<span class="fstat-no" title="function not covered" >fu</span>nction(result){
+				// handle output
+				//console.log(util.inspect(result, null, 2));
+			}, <span class="fstat-no" title="function not covered" >fu</span>nction(err){
+				// handle error
+<span class="cstat-no" title="statement not covered" >				throw new Timetrap_Error("attempt to "+data.type+" sheet failed ["+err+"]");</span>
+			});
+	}
+}
+&nbsp;
+Timetrap.prototype.doCallCommand = function({
+	command = this.command_types.timetrap.command,
+	args = <span class="branch-0 cbranch-no" title="branch not covered" >[['display'],['-v']],</span> sheet = <span class="branch-0 cbranch-no" title="branch not covered" >'default',</span>
+	type = <span class="branch-0 cbranch-no" title="branch not covered" >'display'}</span> =<span class="branch-0 cbranch-no" title="branch not covered" >{})</span>
+{
+	// return a promise of an asynch execution of the command
+	let _this = this;
+&nbsp;
+	let data = {
+		command: `${command}`,
+		args: `${args}`.split(','),		//TODO: understand why args is being turned into a string
+		sheet: `${sheet}`,
+		type: `${type}`,
+	}
+	let output = {
+		stdoutData: '',
+		stderrData: '',
+		code: 0,
+		signal: '',
+		sheet: data.sheet,
+		type: data.type
+	};
+&nbsp;
+&nbsp;
+	return new Promise(function(resolve, reject){
+&nbsp;
+		// we're using the promise to conditionally serialize a second call to
+		// the timetrap program for commands that require a sheet change before
+		// execution
+&nbsp;
+		//spawn the process
+		const cmd = spawn(_this.command_types.timetrap.command, data.args,
+			{cwd: _this.config.working_directory});
+&nbsp;
+		cmd.stdout.on('data', <span class="fstat-no" title="function not covered" >(d</span>ata) =&gt; {
+<span class="cstat-no" title="statement not covered" >			output.stdoutData += data;</span>
+		});
+&nbsp;
+		cmd.stderr.on('data', (data) =&gt; {
+			output.stderrData += data;
+		});
+&nbsp;
+		cmd.once('close', function (){
+			resolve(output);
+		});
+		cmd.on('close', (code, signal) =&gt; {
+			output.code = code;
+			output.signal = signal;
+			reject(output);
+		})
+	});
+}
+&nbsp;
+module.exports = {Timetrap, Timetrap_Error};
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Wed Oct 18 2017 01:52:22 GMT-0500 (CDT)
+</div>
+</div>
+<script src="prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="sorter.js"></script>
+</body>
+</html>
