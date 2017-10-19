@@ -28,7 +28,7 @@ describe('Timetrap_Error class', function() {
     });
 });
 
-describe('Timetrap class definition', function() {
+describe('Timetrap basic class definition', function() {
     describe('Validate Timetrap class instantiated as object', function() {
         var timetrap = new Timetrap({});
         test('Validate instatniation as object (with new)', function() {
@@ -40,6 +40,50 @@ describe('Timetrap class definition', function() {
         test('InstanceOf EventEmitter', function() {
             const {EventEmitter} = require('events').EventEmitter;
             expect(timetrap).toBeInstanceOf(EventEmitter);
+        });
+    });
+
+    describe('Timetrap basic class properties', function() {
+        var timetrap = new Timetrap({});
+        test('Verify default class variable properties', function() {
+            expect(timetrap.config.working_directory).toBeDefined();
+        });
+        test('Verify default class variable getters work', function() {
+            expect(timetrap.command_types.changeSheet.allow_sheet).toBeDefined();
+        });
+        test('Verify command_types subgetters work', function() {
+            expect(timetrap.command_types.changeSheet.command).toEqual('sheet');
+            Object.keys(timetrap.command_types).forEach(function(key){
+                expect(timetrap.command_types[key].command).toBeDefined();
+            });
+        });
+    });
+
+    describe('Timetrap class data structure attributes', function() {
+        var timetrap = new Timetrap({});
+        test('Verify command_types data strucures', function() {
+            Object.keys(timetrap.command_types).forEach(function(key){
+                expect(timetrap.command_types[key]).toMatchObject({
+                    description: expect.any(String),
+                    _command: expect.any(Array),
+                    description: expect.any(String),
+                    args: expect.any(Array),
+                    required: expect.any(Array),
+                    allow_sheet: expect.any(Boolean),
+                    special: expect.any(Boolean),
+                });
+            });
+        });
+        test('Verify emit_types data strucures', function() {
+            Object.keys(timetrap.emit_types).forEach(function(key){
+                expect(timetrap.emit_types[key]).toMatchObject({
+                    description: expect.any(String),
+                    name: expect.any(String),
+                    data: expect.anything()
+                });
+            });
+            //typed objects
+            expect(timetrap.emit_types.command_complete.data).toEqual(timetrap.command_types.output);
         });
     });
 
@@ -77,50 +121,25 @@ describe('Timetrap class definition', function() {
         // TODO: test state changes afected by callCommand()
     });
 
-    describe('Timetrap basic class properties', function() {
-        var timetrap = new Timetrap({});
-        test('Verify default class variable properties', function() {
-            expect(timetrap.config.working_directory).toBeDefined();
-        });
-        test('Verify default class variable getters work', function() {
-            expect(timetrap.command_types.changeSheet.allow_sheet).toBeDefined();
-        });
-        test('Verify command_types subgetters work', function() {
-            expect(timetrap.command_types.changeSheet.command).toEqual('sheet');
-            Object.keys(timetrap.command_types).forEach(function(key){
-                expect(timetrap.command_types[key].command).toBeDefined();
-            });
-        });
-    });
 
-    describe('Timetrap class data structure attributes', function() {
-        var timetrap = new Timetrap({});
-        test('Verify command_types data strucures', function() {
-            Object.keys(timetrap.command_types).forEach(function(key){
-                expect(timetrap.command_types[key]).toMatchObject({
-                    description: expect.any(String),
-                    _command: expect.any(Array),
-                    description: expect.any(String),
-                    args: expect.any(Array),
-                    required: expect.any(Array),
-                    allow_sheet: expect.any(Boolean),
-                    special: expect.any(Boolean),
-                });
-            });
-        });
-        test('Verify emmit_types data strucures', function() {
-            Object.keys(timetrap.emmit_types).forEach(function(key){
-                expect(timetrap.emmit_types[key]).toMatchObject({
-                    description: expect.any(String),
+    describe('MonitorDB... functionality', () => {
+        test('monitorDBCatchTimer() should emit \'db_change\'', function(done) {
+            var timetrap = new Timetrap({});
+            timetrap.on('db_change', (emit_obj) => {
+                expect(emit_obj).toEqual(expect.any(Object));
+                expect(emit_obj).toMatchObject({
+			        description: expect.any(String),
                     name: expect.any(String),
-                    data: expect.any(Object)
+                    data: expect.any(Number)
                 });
+                done();
             });
-            //typed objects
-            expect(timetrap.emmit_types.command_complete.data).toEqual(timetrap.command_types.output);
+            //set up condition trigger emit
+            timetrap.config.db_monitor.IN_MODIFY_count = 1;
+            timetrap.monitorDBCatchTimer();
         });
-    });
 
+    });
 
 
 

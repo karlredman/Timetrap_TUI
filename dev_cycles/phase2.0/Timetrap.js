@@ -39,7 +39,7 @@ class Timetrap extends EventEmitter {
 			db_monitor: {
 				IN_MODIFY_count: 0,			//aggregate file mod counter
 				watched_db_file: `${watched_db_file}`,
-				agg_time: 1000
+				agg_time: 500
 			},
 		};
 		this.data = {
@@ -47,7 +47,7 @@ class Timetrap extends EventEmitter {
 
 		//order is important
 		this.registerCommandTypes();
-		this.registerEmmitTypes();
+		this.registerEmitTypes();
 	};
 }
 
@@ -55,8 +55,8 @@ class Timetrap extends EventEmitter {
 /////////////// Data Structures
 ////////////////////////////////////////////
 
-Timetrap.prototype.registerEmmitTypes = function(){
-	this.emmit_types = {
+Timetrap.prototype.registerEmitTypes = function(){
+	this.emit_types = {
 		command_complete: {
 			description: "The type of object emitted after callCommand() completes",
 			name: "command_complete",
@@ -65,7 +65,7 @@ Timetrap.prototype.registerEmmitTypes = function(){
 		db_change: {
 			description: "The type of object emitted from monitorDB when the database changes",
 			name: "db_change",
-			data: {}
+			data: Number(0)		//unixtime
 		}
 	};
 }
@@ -370,7 +370,8 @@ Timetrap.prototype.monitorDBStart = function(){
 				// sometimes multiple writes occur for an action via timetrap
 				// -so we'll only report the composite within a (arbitrary)
 				// time window of 1 second.
-				// see [fs.watch has double change events for file writes · Issue #3042 · nodejs/node](https://github.com/nodejs/node/issues/3042)
+				// see: [fs.watch has double change events for file writes · Issue #3042 · nodejs/node]
+				// (https://github.com/nodejs/node/issues/3042)
 				setTimeout(function () {
 					_this.monitorDBCatchTimer(_this.config.db_monitor.IN_MODIFY_count);
 				}, this.config.db_monitor.agg_time);
@@ -381,14 +382,13 @@ Timetrap.prototype.monitorDBStart = function(){
 	});
 }
 Timetrap.prototype.monitorDBCatchTimer = function() {
-	//triggers an emmit after a db change aggregate occurs (via timer)
+	//triggers an emit after a db change aggregate occurs (via timer)
 	if (this.config.db_monitor.IN_MODIFY_count > 0){
 		//data structure
 		this.config.db_monitor.IN_MODIFY_count=0;
-		let obj = Object.assign({}, this.emmit_types.db_change);
+		let obj = Object.assign({}, this.emit_types.db_change);
 		obj.data = Date.now();
 		this.emit('db_change', obj);
-		//console.log("File "+_this.watched_file+" just changed "+count+" times!");
 	}
 }
 module.exports = {Timetrap, Timetrap_Error};

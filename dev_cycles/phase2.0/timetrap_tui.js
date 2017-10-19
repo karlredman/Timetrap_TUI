@@ -40,6 +40,10 @@ function main(callback) {
     //     // expect(timetrap.command_types[key].description).toBeDefined();
     //     console.log(key+":"+timetrap.command_types[key].required);
     // });
+    timetrap.config.db_monitor.IN_MODIFY_count = 1;
+    timetrap.monitorDBCatchTimer();
+
+    console.log(typeof timetrap.emit_types);
 }
 
 // Process loop
