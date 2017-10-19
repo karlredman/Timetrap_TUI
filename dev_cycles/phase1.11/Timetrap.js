@@ -378,7 +378,7 @@ Timetrap.prototype.callCommand = function(data){
         data: base_command.toString()+" "+options.toString(), //TODO: to be retired
         command: base_command.toString()+" "+options.toString(),
         target: data.target,
-        runnint: data.running
+        running: data.running
     };
     _this.emit('timetrap_command', response);
 
