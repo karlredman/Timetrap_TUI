@@ -2,8 +2,6 @@
 // entrypoint for timetrap_tui project
 "use strict"
 
-var util = require('util');
-
 var {Timetrap, Timetrap_Error} = require('./Timetrap');
 
 function register_actions(timetrap){
@@ -12,7 +10,7 @@ function register_actions(timetrap){
     });
     timetrap.on(timetrap.emit_types.command_complete.name, (payload) =>{
         console.log("got here: command_complete");
-        timetrap.dumpOutput(payload.data, 'console');
+        timetrap.dumpOutput(payload, 'console');
     });
 }
 
@@ -37,12 +35,12 @@ function main(callback) {
     // // Asynchronous calls
     // timetrap.callCommand();
     // timetrap.callCommand({type:'changeSheet', sheet:'default'});
-    // timetrap.callCommand({target: this, type:'checkOut', sheet:'default'});
+	timetrap.callCommand({target: this, type:'checkOut', sheet:'default'});
 	// timetrap.callCommand({type:'checkOut', sheet:'default'});
-    // timetrap.callCommand({type:'checkIn', sheet:'default', content:"testing checkin"+now});
+	// timetrap.callCommand({type:'checkIn', sheet:'default', content:"testing checkin"+now});
 	// timetrap.callCommand({type:'edit', sheet:'default', content:"testing checkin"+now});
     // timetrap.callCommand({type:'week', sheet:'default'});
-    timetrap.callCommand({type:'list'});
+    // timetrap.callCommand({type:'now'});
     // console.log("-------------------------------");
 
     // Syncronous calls

@@ -209,6 +209,16 @@ Timetrap.prototype.registerCommandTypes = function(){
 			override: false,
 			get command(){return this._command[0]}
 		},
+		list:{
+			description: "list command",
+			_command: ["list", "l"],
+			args: [],
+			required: [],
+			allow_sheet: false,
+			special: true,
+			override: false,
+			get command(){return this._command[0]}
+		},
 		kill:{
 			description: "kill command",
 			_command: ["kill", "k"],
@@ -241,13 +251,38 @@ Timetrap.prototype.registerCommandTypes = function(){
 	};
 }
 
+Timetrap.prototype.dumpOutput = function(output, method) {
+	switch(method){
+		case 'console':
+			console.log("["+(output.sync?'sync':'async')+"]");
+			for( let key in output){
+				//let sync =
+				console.log(key+": "+String(output[key]));
+			}
+			break;
+		default:
+			throw new Timetrap_Error("[dumpOutput] specified method not supported");
+			break;
+	}
+}
+
 ////////////////////////////////////////////
 /////////////// Commands Interface
 ////////////////////////////////////////////
 
-Timetrap.prototype.callCommand = function({type = 'display', sheet = 'default', content = '', sync = false} ={}) {
+Timetrap.prototype.callCommand = function({type = '', target = undefined, sheet = '', content = '', sync = false} ={}) {
 	// calls the timetrap program with the appropriat command 'type'
 	// performs actions like `timetrap --ids dispaly sheetName`
+
+	// required parameters
+	if(type === '')	{
+		throw new Timetrap_Error("[CallCommand] no type argument");
+	}
+	// if( ! target )	{
+	// 	throw new Timetrap_Error("[CallCommand] no target argument");
+	// }
+
+	// init the return object
 
 	let _this = this;
 
@@ -257,6 +292,10 @@ Timetrap.prototype.callCommand = function({type = 'display', sheet = 'default', 
 		content: content,
 		sync: sync
 	};
+
+	let emit_obj = Object.assign({}, this.emit_types.command_complete);
+	emit_obj.target = data.target;
+
 
 	let args = [];
 
@@ -281,43 +320,35 @@ Timetrap.prototype.callCommand = function({type = 'display', sheet = 'default', 
 		args.push(data.sheet);
 	}
 
+
 	if( ! data.sync ){
 		//run asynchronous
 		// for commands that don't allow a sheet to be specified, we have to switch
 		// to the sheet manually. this is done via a promise chain. There's probably
 		// a better way to do this....
-		if( ! this.command_types[data.type].allow_sheet){
-			// we have to change the sheet
 
+		if( ( ! this.command_types[data.type].allow_sheet)
+		&& ( ! this.command_types[data.type].special) ){
+			// we have to change the sheet
 
 			this.doCallCommandAsync({command: this.command_types.timetrap.command,
 				args: ['sheet', data.sheet],
 				sheet: data.sheet, type: 'changeSheet'} ).then(function(output){
 					// handle output
-					// console.log("async");
-					// console.log("changed sheet");
-					// console.log("sync sheet: "+String(output.sheet));
-					// console.log("sync type: "+String(output.type));
-					// console.log("sync args: "+String(output.args));
-					// console.log("sync _command: "+String(output._command));
-					// console.log("sync code: "+String(output.code));
-					// console.log("sync signal: "+String(output.signal));
-					// console.log("sync stdout: "+String(output.stdoutData));
-					// console.log("sync stderr: "+String(output.stderrData));
+					emit_obj.data = Object.assign({}, output);
+					_this.emit(_this.emit_types.command_complete.name, emit_obj);
 
-					for( let key of output){
-						console.log()
-					}
 
 					// now call the actual command
 					_this.doCallCommandAsync({command: _this.command_types.timetrap.command,
 						args: args, sheet: data.sheet, type: data.type} ).then(function(output){
 							// handle output
+					emit_obj.data = Object.assign({}, output);
+							_this.emit(_this.emit_types.command_complete.name, emit_obj);
 
 						}, function(err){
 							// handle error
 							throw new Timetrap_Error("attempt to "+data.type+" sheet failed ["+err+"]");
-
 						});
 				}, function(err){
 					// handle error
@@ -329,6 +360,9 @@ Timetrap.prototype.callCommand = function({type = 'display', sheet = 'default', 
 			this.doCallCommandAsync({command: this.command_types.timetrap.command,
 				args: args, sheet: data.sheet, type: data.type} ).then(function(output){
 					// handle output
+					emit_obj.data = Object.assign({}, output);
+					_this.emit(_this.emit_types.command_complete.name, emit_obj);
+					//_this.dumpOutput(output, 'console');
 
 				}, function(err){
 					// handle error
@@ -340,16 +374,21 @@ Timetrap.prototype.callCommand = function({type = 'display', sheet = 'default', 
 		// TODO: handle errors
 		//run synchronous
 		//doCallCommandSync
-		if( ! this.command_types[data.type].allow_sheet){
+		if( ( ! this.command_types[data.type].allow_sheet )
+		&& ( ! this.command_types[data.type].special) ){
 			// we have to change the sheet first
 			let output = this.doCallCommandSync({command: this.command_types.timetrap.command,
 				args: ['sheet', data.sheet],
 				sheet: data.sheet, type: 'changeSheet'} );
 			// handle output
+					emit_obj.data = Object.assign({}, output);
+			this.emit(this.emit_types.command_complete.name, emit_obj);
 		}
 		let output = this.doCallCommandSync({command: this.command_types.timetrap.command,
 			args: args, sheet: data.sheet, type: data.type} );
 		// handle output
+					emit_obj.data = Object.assign({}, output);
+		this.emit(this.emit_types.command_complete.name, emit_obj);
 	}
 }
 
@@ -370,7 +409,7 @@ Timetrap.prototype.doCallCommandSync = function({
 
 	// TODO: needs error block
 	const cmd = spawnSync(this.command_types.timetrap.command, data.args,
-			{cwd: this.config.working_directory});
+		{cwd: this.config.working_directory});
 
 	output.sheet = data.sheet;
 	output.type = data.type;
