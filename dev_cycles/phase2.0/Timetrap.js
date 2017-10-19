@@ -282,7 +282,6 @@ Timetrap.prototype.callCommand = function({type = '', target = undefined, sheet 
 	// 	throw new Timetrap_Error("[CallCommand] no target argument");
 	// }
 
-	// init the return object
 
 	let _this = this;
 
@@ -293,8 +292,10 @@ Timetrap.prototype.callCommand = function({type = '', target = undefined, sheet 
 		sync: sync
 	};
 
+	// init the return object
 	let emit_obj = Object.assign({}, this.emit_types.command_complete);
-	emit_obj.target = data.target;
+	//emit_obj.target = data.target;
+	emit_obj.target = undefined;
 
 
 	let args = [];
@@ -413,8 +414,8 @@ Timetrap.prototype.doCallCommandSync = function({
 
 	output.sheet = data.sheet;
 	output.type = data.type;
-	output.stdoutData = cmd.stdout;
-	output.stderrData = cmd.stderr;
+	output.stdoutData = String(cmd.stdout);
+	output.stderrData = String(cmd.stderr);
 	output.code = cmd.status;
 	output.signal = cmd.signal;
 	output.sync = true;

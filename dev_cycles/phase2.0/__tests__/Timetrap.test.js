@@ -89,7 +89,7 @@ describe('Timetrap basic class definition', function() {
         });
     });
 
-    describe('Timetrap callCommand() and supporters (live)', function() {
+    describe('Timetrap callCommand() and supporters (live async)', function() {
         let timetrap = new Timetrap({});
         test('doCallcommandAsync() promise returnes value stderrData', () => {
             expect.assertions(1);
@@ -123,15 +123,87 @@ describe('Timetrap basic class definition', function() {
                     sheet:          expect.any(String),
                     type:           expect.any(String),
                     override:       expect.any(Boolean),
-                    sync:           expect.any(Boolean),
-	                cmdln:          expect.any(Array)
+                    sync:           false,
+                    cmdln:          expect.any(Array)
                 }))
+        });
+        test('callcommand() emits command_complete emit_type (async)', (done) => {
+            timetrap.on(timetrap.emit_types.command_complete.name, (emit_obj) => {
+                expect(emit_obj).toEqual(expect.any(Object));
+                expect(emit_obj).toMatchObject({
+                    description: expect.any(String),
+                    name: expect.any(String),
+                    data: expect.anything(),
+                    //target: expect.any(Object) //TODO: wtf -
+                });
+            });
+            done();
+            timetrap.callCommand({type:'changeSheet', target: null, sheet:'default', sync: false});
+        });
+        test('DUMMY TEST: dumpOutput debugging convenience utility', (done) => {
+            timetrap.on(timetrap.emit_types.command_complete.name, (emit_obj) => {
+                console.log = function(){};
+                timetrap.dumpOutput(emit_obj.data, 'console');
+                expect(emit_obj).toEqual(expect.any(Object));
+                });
+            done();
+            timetrap.callCommand({type:'changeSheet', target: null, sheet:'default', sync: false});
         });
         // TODO: test state changes afected by callCommand()
     });
+    ////////
 
-
-    // TODO: I don't know how to thest this
+    describe('Timetrap callCommand() and supporters (live sync)', function() {
+        let timetrap = new Timetrap({});
+        test('doCallcommandSync() promise returnes value stderrData', () => {
+            let data = timetrap.doCallCommandSync({
+                args: ['sheet', 'default'],
+                sheet: 'default',
+                type: 'changeSheet'
+            })
+                expect(data.stderrData).toBe("Switching to sheet \"default\"\n");
+            });
+        test('doCallcommandSync() returnes correct data structure', () => {
+            //expect.assertions(1);
+            let data = timetrap.doCallCommandSync({
+                args: ['sheet', 'default'],
+                sheet: 'default',
+                type: 'changeSheet'
+            });
+                //timetrap.command_types.output
+                expect(data).toMatchObject({
+                    description:    expect.any(String),
+                    _command:       expect.any(Array),
+                    args:           expect.any(Array),
+                    required:       expect.any(Array),
+                    allow_sheet:    expect.any(Boolean),
+                    special:        expect.any(Boolean),
+                    stdoutData:     expect.any(String),
+                    stderrData:     expect.any(String),
+                    code:           expect.any(Number),
+                    signal:         expect.any(Object),     //spawn may set to null
+                    sheet:          expect.any(String),
+                    type:           expect.any(String),
+                    override:       expect.any(Boolean),
+                    sync:           true,
+                    cmdln:          expect.any(Array)
+                });
+        });
+        test('callcommand() emits command_complete emit_type (sync)', (done) => {
+            timetrap.on(timetrap.emit_types.command_complete.name, (emit_obj) => {
+                expect(emit_obj).toEqual(expect.any(Object));
+                expect(emit_obj).toMatchObject({
+                    description: expect.any(String),
+                    name: expect.any(String),
+                    data: expect.anything(),
+                    //target: expect.any(Object) //TODO: wtf -
+                });
+            });
+            done();
+            timetrap.callCommand({type:'changeSheet', target: null, sheet:'default', sync: false});
+        });
+        // TODO: further test state changes afected by callCommand()
+    });
     describe('MonitorDB... functionality', () => {
         describe('MonitorDB... support functionality', () => {
             let timetrap = new Timetrap({});
@@ -167,6 +239,8 @@ describe('Timetrap basic class definition', function() {
                     throw(err);
                 }
                 let timetrap = new Timetrap({watched_db_file: filepath});
+                //
+                // TODO: I don't know how to thest this
                 test.skip('monitorDBStart should start a timer, call monitorDBCatchTimer, and monitorDBStop should stop the monitor', (done) => {
 
                     //start the monitor
