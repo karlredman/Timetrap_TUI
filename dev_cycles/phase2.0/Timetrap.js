@@ -10,6 +10,9 @@ const {spawn, spawnSync} = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
+// parent
+const {EventEmitter} = require('events').EventEmitter;
+
 
 // custom Error
 class Timetrap_Error extends Error {
@@ -20,9 +23,6 @@ class Timetrap_Error extends Error {
 		Error.captureStackTrace(this, this.constructor);
 	}
 }
-
-// parent
-const {EventEmitter} = require('events').EventEmitter;
 
 // class
 class Timetrap extends EventEmitter {
@@ -59,15 +59,32 @@ Timetrap.prototype.registerEmitTypes = function(){
 		command_complete: {
 			description: "The object emitted after callCommand() completes",
 			name: "command_complete",
-			data: Object.assign({}, this.command_types.output),
-			target: {}				// owner
+            data: Object.assign({},
+                this.command_types.output),     //an command_types.output object
+			target: '',				            // target id
+			owner: '',				            // owner id
 		},
 		db_change: {
 			description: "The object emitted from monitorDB when the database changes",
 			name: "db_change",
-			data: Number(0),		// unixtime
-			target: {}				// owner
-		}
+			data: Number(0),		            // unixtime
+			target: '',				            // target id
+			owner: '',				            // owner id
+		},
+		checkout_all_sheets: {
+			description: "The object emitted from monitorDB when the database changes",
+			name: "checkout_all_sheets",
+			data: Array(),		                // array of scheets checked out
+			target: '',				            // target id
+			owner: '',				            // owner id
+        },
+		timetrap_internal: {
+			description: "The object emitted from monitorDB when the database changes",
+			name: "timetrap_internal",
+			data: Array(),		                // array
+			target: '',				            // target id
+			owner: '',				            // owner id
+        },
 	};
 }
 
@@ -233,6 +250,7 @@ Timetrap.prototype.registerCommandTypes = function(){
 		output: {
 			description: "callCommand output data structure",
 			_command: [''],
+            content: '',
 			args: [],
 			required: [],
 			allow_sheet: false,
@@ -270,7 +288,7 @@ Timetrap.prototype.dumpOutput = function(output, method) {
 /////////////// Commands Interface
 ////////////////////////////////////////////
 
-Timetrap.prototype.callCommand = function({type = '', target = undefined, sheet = '', content = '', sync = false} ={}) {
+Timetrap.prototype.callCommand = function({type = '', owner = '', timetrap_internal = false, sheet = '', content = '', sync = false} ={}) {
 	// calls the timetrap program with the appropriat command 'type'
 	// performs actions like `timetrap --ids dispaly sheetName`
 
@@ -278,10 +296,12 @@ Timetrap.prototype.callCommand = function({type = '', target = undefined, sheet 
 	if(type === '')	{
 		throw new Timetrap_Error("[CallCommand] no type argument");
 	}
-	// if( ! target )	{
-	// 	throw new Timetrap_Error("[CallCommand] no target argument");
-	// }
 
+    let emit_target = this.emit_types.command_complete.name;
+    if(timetrap_internal){
+        // change the target to an internal operation
+        emit_target = emit_target+"-"+this.emit_types.timetrap_internal.name;
+    }
 
 	let _this = this;
 
@@ -289,25 +309,25 @@ Timetrap.prototype.callCommand = function({type = '', target = undefined, sheet 
 		type: type,
 		sheet: sheet,
 		content: content,
-		sync: sync
+		sync: sync,
+        owner: owner
 	};
 
 	// init the return object
 	let emit_obj = Object.assign({}, this.emit_types.command_complete);
-	//emit_obj.target = data.target;
-	emit_obj.target = undefined;
-
+    // preserve the emit target
+	emit_obj.target = emit_target;
+	emit_obj.owner = data.owner
 
 	let args = [];
 
 	// add required arguments
 	if(this.command_types[data.type].required.length > 0){
-		console.log("got here");
 		args = [this.command_types[data.type].command, this.command_types[data.type].required, data.content];
 
 		// TODO: derp flatten args -inconsistent data....
 		args = [].concat.apply([], args);
-		console.log(args)
+        // console.log(args)
 	}
 	else {
 		args = [this.command_types[data.type].command, data.content];
@@ -334,18 +354,18 @@ Timetrap.prototype.callCommand = function({type = '', target = undefined, sheet 
 
 			this.doCallCommandAsync({command: this.command_types.timetrap.command,
 				args: ['sheet', data.sheet],
-				sheet: data.sheet, type: 'changeSheet'} ).then(function(output){
+				sheet: data.sheet, type: 'changeSheet', content: data.content} ).then(function(output){
 					// handle output
 					emit_obj.data = Object.assign({}, output);
-					_this.emit(_this.emit_types.command_complete.name, emit_obj);
+					_this.emit(emit_target, emit_obj);
 
 
 					// now call the actual command
 					_this.doCallCommandAsync({command: _this.command_types.timetrap.command,
-						args: args, sheet: data.sheet, type: data.type} ).then(function(output){
+						args: args, sheet: data.sheet, type: data.type, content: data.content} ).then(function(output){
 							// handle output
 					emit_obj.data = Object.assign({}, output);
-							_this.emit(_this.emit_types.command_complete.name, emit_obj);
+					_this.emit(emit_target, emit_obj);
 
 						}, function(err){
 							// handle error
@@ -359,10 +379,10 @@ Timetrap.prototype.callCommand = function({type = '', target = undefined, sheet 
 		else {
 			// call the command with the sheet (i.e. change sheet, checkout)
 			this.doCallCommandAsync({command: this.command_types.timetrap.command,
-				args: args, sheet: data.sheet, type: data.type} ).then(function(output){
+				args: args, sheet: data.sheet, type: data.type, content: data.content} ).then(function(output){
 					// handle output
 					emit_obj.data = Object.assign({}, output);
-					_this.emit(_this.emit_types.command_complete.name, emit_obj);
+					_this.emit(emit_target, emit_obj);
 					//_this.dumpOutput(output, 'console');
 
 				}, function(err){
@@ -380,16 +400,16 @@ Timetrap.prototype.callCommand = function({type = '', target = undefined, sheet 
 			// we have to change the sheet first
 			let output = this.doCallCommandSync({command: this.command_types.timetrap.command,
 				args: ['sheet', data.sheet],
-				sheet: data.sheet, type: 'changeSheet'} );
+				sheet: data.sheet, type: 'changeSheet', content: data.content} );
 			// handle output
 					emit_obj.data = Object.assign({}, output);
-			this.emit(this.emit_types.command_complete.name, emit_obj);
+					_this.emit(emit_target, emit_obj);
 		}
 		let output = this.doCallCommandSync({command: this.command_types.timetrap.command,
-			args: args, sheet: data.sheet, type: data.type} );
+			args: args, sheet: data.sheet, type: data.type, content: data.content} );
 		// handle output
 					emit_obj.data = Object.assign({}, output);
-		this.emit(this.emit_types.command_complete.name, emit_obj);
+					_this.emit(emit_target, emit_obj);
 	}
 }
 
@@ -513,7 +533,6 @@ Timetrap.prototype.monitorDBStart = function(){
 				}, this.config.db_monitor.agg_time);
 			}
 		}
-		//else {console.log("got here: "+filename)}
 	});
 }
 
@@ -524,7 +543,7 @@ Timetrap.prototype.monitorDBCatchTimer = function() {
 		this.config.db_monitor.IN_MODIFY_count=0;
 		let obj = Object.assign({}, this.emit_types.db_change);
 		obj.data = Date.now();
-		this.emit('db_change', obj);
+		this.emit(this.emit_types.db_change.name, obj);
 	}
 }
 
@@ -538,12 +557,58 @@ Timetrap.prototype.monitorDBStop = function(){
 }
 
 ////////////////////////////////////////////
-/////////////// Under Development
+/////////////// Extended API
 ////////////////////////////////////////////
 
 //Timetrap.prototype.stopAllTimers = function(data){
-Timetrap.prototype.checkoutAllSheets = function(data){
+Timetrap.prototype.checkoutAllSheets = function({target = {}, data = {}} ={}){
+    // check out of all running sheets
+
+    let _this = this;
+
+    //eat our own dogfood
+    this.once("command_complete-timetrap_internal", (payload) =>{
+        // receive data
+
+        // arr will have arr.length-1 valid lines.
+        // It ends up with the last element being ' '
+        // The sheet name will be preceded by 1 char
+        // that indicates the 'active' state for that sheet.
+        let arr = payload.data.stdoutData.split("\n");
+
+        //build an array of running sheets
+        let sheets = [];
+        if(arr.length > 1) {
+            for ( let i=0; i < arr.length-1; i++ ) {
+                let chunk = arr[i].slice(1,arr[i].length);
+                sheets.push(chunk.split(':')[0])
+            }
+        }
+
+        // checkout of running sheets
+        for ( let s in sheets ) {
+            this.once("command_complete-timetrap_internal", (payload) =>{
+                // TODO: handle errors etc.
+            });
+
+            _this.callCommand({type: 'checkOut', sheet: sheets[s], timetrap_internal: true,  owner: 'timetrap', sync: true})
+        }
+
+        let emit_obj = Object.assign({}, this.emit_types.checkout_all_sheets);
+        emit_obj.target = payload.target;
+        emit_obj.target = payload.user_target;
+        emit_obj.data = sheets
+        _this.emit(emit_obj.name, emit_obj);
+    });
+
+    // get list of sheets via 'now'
+    this.callCommand({type: 'now',
+        timetrap_internal: true,
+        owner: 'timetrap',
+        sync: true,
+    });
 }
+
 
 ////////////////////////////////// TODO
 // Timetrap.prototype.fetchRunningInfo = function(running_list){

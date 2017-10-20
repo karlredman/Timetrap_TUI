@@ -8,11 +8,15 @@ var {Timetrap, Timetrap_Error} = require('./Timetrap');
 
 function register_actions(timetrap){
     timetrap.on(timetrap.emit_types.db_change.name, (payload) =>{
-        console.log("got here: db_change");
+        console.log("main|got here: db_change");
     });
     timetrap.on(timetrap.emit_types.command_complete.name, (payload) =>{
-        console.log("got here: command_complete");
-        timetrap.dumpOutput(payload.data, 'console');
+        console.log("main|got here: command_complete");
+        //timetrap.dumpOutput(payload.data, 'console');
+    });
+    timetrap.on(timetrap.emit_types.checkout_all_sheets.name, (payload) =>{
+        console.log("main|got here: checkout_all_sheets");
+        //timetrap.dumpOutput(payload.data, 'console');
     });
 }
 
@@ -42,11 +46,11 @@ function main(callback) {
     // timetrap.callCommand({type:'checkIn', sheet:'default', content:"testing checkin"+now});
 	// timetrap.callCommand({type:'edit', sheet:'default', content:"testing checkin"+now});
     // timetrap.callCommand({type:'week', sheet:'default'});
-    timetrap.callCommand({type:'list'});
+    // timetrap.callCommand({type:'list'});
     // console.log("-------------------------------");
 
     // Syncronous calls
-    // timetrap.callCommand({sync: true});
+    // timetrap.callCommand({type: 'now', sync: true});
     // timetrap.callCommand({type:'changeSheet', sheet:'default'});
     // timetrap.callCommand({target: this, type:'checkOut', sheet:'default', sync: true});
     // timetrap.callCommand({target: this, type:'checkIn', sheet:'default', content:"testing checkin"+now, sync: false});
@@ -69,6 +73,7 @@ function main(callback) {
     // timetrap.monitorDBCatchTimer();
     //console.log(typeof timetrap.emit_types.db_change);
 
+    timetrap.checkoutAllSheets();
 
 	// const {spawn, spawnSync} = require('child_process');
 	// const cmd = spawnSync('timetrap', ['out','default'], {cwd: '/tmp'});

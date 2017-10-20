@@ -81,7 +81,7 @@ describe('Timetrap basic class definition', function() {
                     description: expect.any(String),
                     name: expect.any(String),
                     data: expect.anything(),
-                    target: expect.any(Object)
+                    target: expect.any(String)
                 });
             });
             //typed objects
