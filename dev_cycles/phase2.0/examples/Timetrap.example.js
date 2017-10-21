@@ -103,7 +103,7 @@ function main(callback) {
     // NOTE: multiple **async** writing commands (i.e. edit, checkin) will happen in the wrong order
     // switching to different sheets is faster for timetrap to execute than checkins.
     //
-    // timetrap.callCommand({type:'checkIn', sheet:'default', content:"testing checkin"+now});
+     timetrap.callCommand({type:'checkIn', sheet:'default', content:"testing checkin"+now});
     // timetrap.callCommand({type:'checkIn', sheet:'Personal', content:"testing checkin"+now});
     // timetrap.callCommand({type:'checkIn', sheet:'Projects', content:"testing checkin"+now});
     // timetrap.callCommand({type:'checkIn', sheet:'testsheet', content:"testing checkin"+now});

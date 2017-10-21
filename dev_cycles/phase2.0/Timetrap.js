@@ -3,7 +3,7 @@
 "use strict"
 
 // DEBUGGING
-var util = require('util');
+// var util = require('util');
 
 // includes
 const {spawn, spawnSync} = require('child_process');
@@ -541,7 +541,7 @@ Timetrap.prototype.monitorDBStart = function(){
 
     //start the watcher
     this.config.db_monitor.watcher = fs.watch(
-    this.config.db_monitor.watched_db_file);
+        this.config.db_monitor.watched_db_file);
 
     this.config.db_monitor.watcher.on('change', (event, filename) => {
 
@@ -560,7 +560,7 @@ Timetrap.prototype.monitorDBStart = function(){
                 // (https://github.com/nodejs/node/issues/3042)
                 this.config.db_monitor.agg_timer = setTimeout(function () {
                     _this.monitorDBCatchTimer(
-                    _this.config.db_monitor.IN_MODIFY_count);
+                        _this.config.db_monitor.IN_MODIFY_count);
                 }, this.config.db_monitor.agg_time);
             }
         }
@@ -582,7 +582,7 @@ Timetrap.prototype.monitorDBStop = function(){
     if(this.config.db_monitor.agg_timer){
         //TODO: bette way to do this?
         delete this.config.db_monitor.watcher;
-        clearTimer(this.config.db_monitor.agg_timer);
+        clearTimeout(this.config.db_monitor.agg_timer);
         this.config.db_monitor.agg_timer = 0;
     }
 }

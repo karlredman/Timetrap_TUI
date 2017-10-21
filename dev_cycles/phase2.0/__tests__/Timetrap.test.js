@@ -66,12 +66,12 @@ describe('Timetrap basic class definition', function() {
                 expect(timetrap.command_types[key]).toMatchObject({
                     description: expect.any(String),
                     _command: expect.any(Array),
-                    description: expect.any(String),
                     args: expect.any(Array),
                     required: expect.any(Array),
                     allow_sheet: expect.any(Boolean),
                     special: expect.any(Boolean),
-                    override: expect.any(Boolean)
+                    override: expect.any(Boolean),
+                    command: expect.anything() // ??
                 });
             });
         });
@@ -81,7 +81,8 @@ describe('Timetrap basic class definition', function() {
                     description: expect.any(String),
                     name: expect.any(String),
                     data: expect.anything(),
-                    target: expect.any(String)
+                    target: expect.any(String),
+                    owner: expect.any(String)
                 });
             });
             //typed objects
@@ -134,20 +135,88 @@ describe('Timetrap basic class definition', function() {
                     description: expect.any(String),
                     name: expect.any(String),
                     data: expect.anything(),
-                    //target: expect.any(Object) //TODO: wtf -
+                    owner: expect.any(String)
                 });
             });
             done();
-            timetrap.callCommand({type:'changeSheet', target: null, sheet:'default', sync: false});
+            timetrap.callCommand({type:'now', target: null, sheet:'default', sync: false});
         });
-        test('DUMMY TEST: dumpOutput debugging convenience utility', (done) => {
+        test('callcommand() options coverage [branch] (async) (live)', (done) => {
             timetrap.on(timetrap.emit_types.command_complete.name, (emit_obj) => {
-                console.log = function(){};
-                timetrap.dumpOutput(emit_obj.data, 'console');
                 expect(emit_obj).toEqual(expect.any(Object));
+                expect(emit_obj).toMatchObject({
+                    description: expect.any(String),
+                    name: expect.any(String),
+                    data: expect.anything(),
+                    owner: expect.any(String)
                 });
+            });
             done();
-            timetrap.callCommand({type:'changeSheet', target: null, sheet:'default', sync: false});
+            // TODO: possibly a problem with this
+            //timetrap.callCommand({type:'CheckIn', timetrap_internal: true, sheet:'default', sync: false});
+            timetrap.callCommand({type:'checkIn', sheet:'default', content:"testing checkin", sync: false});
+        });
+        test.skip('callcommand() options coverage [branch] (async) (live)', (done) => {
+            timetrap.on(timetrap.emit_types.command_complete.name+"-timetrap_internal", (emit_obj) => {
+                expect(emit_obj).toEqual(expect.any(Object));
+                expect(emit_obj).toMatchObject({
+                    description: expect.any(String),
+                    name: expect.any(String),
+                    data: expect.anything(),
+                    owner: expect.any(String)
+                });
+            });
+            done();
+            // TODO: possibly a problem with this
+            timetrap.callCommand({type:'CheckIn', timetrap_internal: true, sheet:'default', sync: false});
+            //timetrap.callCommand({type:'checkIn', sheet:'default', content:"testing checkin"});
+        });
+        describe('dumpOutput debugging convenience utility', () => {
+            // ??? I'm not sure why this doesn't help code coverage....
+            test('execution path', (done) => {
+                timetrap.on(timetrap.emit_types.command_complete.name, (emit_obj) => {
+                    console.log = function(){};
+                    timetrap.dumpOutput(emit_obj.data, 'console');
+                    expect(emit_obj).toEqual(expect.any(Object));
+                });
+                done();
+                timetrap.callCommand({type:'changeSheet', target: null, sheet:'default', sync: false});
+            });
+            test('execution path console', () => {
+                timetrap.on(timetrap.emit_types.command_complete.name, (emit_obj) => {
+                    let output = {
+                        description: "callCommand output data structure",
+                        _command: [''],
+                        content: '',
+                        args: [],
+                        required: [],
+                        allow_sheet: false,
+                        special: true,
+                        stdoutData: '',
+                        stderrData: '',
+                        code: 0,
+                        signal: '',
+                        sheet: '',
+                        type: '',
+                        override: false,
+                        sync: false,
+                        cmdln: [],
+                        get command(){return this._command[0]}
+                    }
+                    console.log = function(data){
+                        expect(data).toEqual(expect.any(String));
+                    };
+                    timetrap.dumpOutput(output, 'console');
+                    //expect(emit_obj).toEqual(expect.any(Object));
+                });
+            });
+            test('throws error with incorrect method', () => {
+                let output = {};
+                expect(() => {
+                    timetrap.dumpOutput(output, 'somethingNotValid')
+                        .toThrow(Timetrap_Error);
+                });
+            });
         });
         // TODO: test state changes afected by callCommand()
     });
@@ -161,8 +230,8 @@ describe('Timetrap basic class definition', function() {
                 sheet: 'default',
                 type: 'changeSheet'
             })
-                expect(data.stderrData).toBe("Switching to sheet \"default\"\n");
-            });
+            expect(data.stderrData).toBe("Switching to sheet \"default\"\n");
+        });
         test('doCallcommandSync() returnes correct data structure', () => {
             //expect.assertions(1);
             let data = timetrap.doCallCommandSync({
@@ -170,37 +239,62 @@ describe('Timetrap basic class definition', function() {
                 sheet: 'default',
                 type: 'changeSheet'
             });
-                //timetrap.command_types.output
-                expect(data).toMatchObject({
-                    description:    expect.any(String),
-                    _command:       expect.any(Array),
-                    args:           expect.any(Array),
-                    required:       expect.any(Array),
-                    allow_sheet:    expect.any(Boolean),
-                    special:        expect.any(Boolean),
-                    stdoutData:     expect.any(String),
-                    stderrData:     expect.any(String),
-                    code:           expect.any(Number),
-                    signal:         expect.any(Object),     //spawn may set to null
-                    sheet:          expect.any(String),
-                    type:           expect.any(String),
-                    override:       expect.any(Boolean),
-                    sync:           true,
-                    cmdln:          expect.any(Array)
-                });
+            //timetrap.command_types.output
+            expect(data).toMatchObject({
+                description:    expect.any(String),
+                _command:       expect.any(Array),
+                args:           expect.any(Array),
+                required:       expect.any(Array),
+                allow_sheet:    expect.any(Boolean),
+                special:        expect.any(Boolean),
+                stdoutData:     expect.any(String),
+                stderrData:     expect.any(String),
+                code:           expect.any(Number),
+                signal:         expect.any(Object),     //spawn may set to null
+                sheet:          expect.any(String),
+                type:           expect.any(String),
+                override:       expect.any(Boolean),
+                sync:           true,
+                cmdln:          expect.any(Array)
+            });
         });
-        test('callcommand() emits command_complete emit_type (sync)', (done) => {
+        test('callcommand() emits command_complete emit_type (sync) (live)', (done) => {
             timetrap.on(timetrap.emit_types.command_complete.name, (emit_obj) => {
                 expect(emit_obj).toEqual(expect.any(Object));
                 expect(emit_obj).toMatchObject({
                     description: expect.any(String),
                     name: expect.any(String),
                     data: expect.anything(),
-                    //target: expect.any(Object) //TODO: wtf -
+                    target: expect.any(String),
+                    owner: expect.any(String)
                 });
             });
             done();
             timetrap.callCommand({type:'changeSheet', target: null, sheet:'default', sync: false});
+        });
+        test('callcommand() options coverage [branch] (sync) (live)', (done) => {
+            timetrap.on(timetrap.emit_types.command_complete.name+"-timetrap_internal", (emit_obj) => {
+                expect(emit_obj).toEqual(expect.any(Object));
+                expect(emit_obj).toMatchObject({
+                    description: expect.any(String),
+                    name: expect.any(String),
+                    data: expect.anything(),
+                    target: expect.any(String),
+                    owner: expect.any(String)
+                });
+            });
+            done();
+            timetrap.callCommand({type:'display', timetrap_internal: true, sheet:'default', sync: true});
+            timetrap.checkoutAllSheets();
+            //timetrap.callCommand({type:'CheckIn', timetrap_internal: true, sheet:'default', sync: true});
+        });
+
+        describe('CallCommand() Error Checking', () => {
+            test('throws error if type argument is not specified', () => {
+                expect( () => {
+                    timetrap.callCommand();
+                }).toThrow(Timetrap_Error);
+            });
         });
         // TODO: further test state changes afected by callCommand()
     });
@@ -213,7 +307,9 @@ describe('Timetrap basic class definition', function() {
                     expect(emit_obj).toMatchObject({
                         description: expect.any(String),
                         name: expect.any(String),
-                        data: expect.any(Number)
+                        data: expect.any(Number),
+                        target: expect.any(String),
+                        owner: expect.any(String)
                     });
                     done();
                 });
@@ -240,8 +336,8 @@ describe('Timetrap basic class definition', function() {
                 }
                 let timetrap = new Timetrap({watched_db_file: filepath});
                 //
-                // TODO: I don't know how to thest this
-                test.skip('monitorDBStart should start a timer, call monitorDBCatchTimer, and monitorDBStop should stop the monitor', (done) => {
+                // TODO: I don't know how to test this
+                test('monitorDBStart should start a timer, call monitorDBCatchTimer, and monitorDBStop should stop the monitor', (done) => {
 
                     //start the monitor
                     timetrap.monitorDBStart();
@@ -256,7 +352,7 @@ describe('Timetrap basic class definition', function() {
                     }
 
                     //wait for at least long enough for the counter to increase
-                    setTimeout(function(){
+                    setTimeout(function(done){
                         //timer should start once the file has been touched
                         expect(timetrap.config.db_monitor.timer).not.toEqual(0);
 
@@ -272,9 +368,13 @@ describe('Timetrap basic class definition', function() {
                         timetrap.monitorDBStop();
                         expect(timetrap.config.db_monitor.timer).toBe(0);
                         expect(timetrap.config.db_monitor.watcher).toBe(undefined);
-
                         done();
                     }, 1000);
+                    done();
+
+                    // TODO: this test needs to be reworked entirely
+                    timetrap.config.db_monitor.agg_timer=1;
+                    timetrap.monitorDBStop();
                 });
             });
         });
