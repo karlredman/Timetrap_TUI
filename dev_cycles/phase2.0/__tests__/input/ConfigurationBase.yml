@@ -1,0 +1,8 @@
+DomainTitle:
+  SectionTitle:
+    config_file:
+      value: test.yml
+    working_directory:
+      value: /tmp
+      desc: the working directory with no timetrap-sheet files in it or it's parents
+      options: ''

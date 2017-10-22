@@ -1,0 +1,22 @@
+Timetrap_TUI:
+  ProcessConfig:
+    config_file:
+      value: test.yml
+    working_directory:
+      value: someplace nice
+      desc: the working directory with no timetrap-sheet files in it or it's parents
+      options: ''
+    create_missing_sheets:
+      value: thingsandstuff.blah
+    developer_mode:
+      value: false
+      desc: run in development mode
+      options: true|false
+    question_prompts:
+      value: true
+      desc: whether to use 'Are you sure?' dialog prompts
+      options: true|false
+    color_theme:
+      value: opaque
+      desc: The color theme to use for the application
+      options: dark|light|opaque

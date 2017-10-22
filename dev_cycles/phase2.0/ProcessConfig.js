@@ -5,7 +5,7 @@ var {ConfigurationBase} = require('./ConfigurationBase');
 class ProcessConfig extends ConfigurationBase {
     constructor({version = null, config_file = null, config_options = null} ={}) {
 
-        super({title: 'ProcessConfig', file: file, options: options});
+        super({title: 'ProcessConfig', root_title: 'Timetrap_TUI', config_file: config_file, config_options: config_options});
 
         if(typeof version !== 'string'){
             let type = typeof version;
@@ -21,14 +21,15 @@ ProcessConfig.prototype.loadDefaults = function() {
         // timetrap config defaults
         this.data = {
             config_file: {
-                value: "./config_file.yml",
-                desc: "the timetrap config file path",
+                //value: './config_file.yml',
+                value: './config_file.yml',
+                desc: 'the timetrap config file path',
                 options: ''
             },
 			working_directory: {
-				value: "/tmp",
-				desc: "the working directory with no timetrap-sheet "
-				+"files in it or it's parents",
+				value: '/tmp',
+				desc: 'the working directory with no timetrap-sheet '
+				+'files in it or it\'s parents',
 				options: ''
 			},
             create_missing_sheets: {

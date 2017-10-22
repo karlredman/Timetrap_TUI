@@ -13,5 +13,9 @@
     "babel-jest": "^21.2.0",
     "babel-preset-env": "^1.6.0",
     "js-yaml": "^3.10.0"
-  }
+  },
+ "jest": {
+     "verbose": true,
+     "testPathIgnorePatterns": ["<rootDir>/node_modules/", "<rootDir>/__tests__/wip/"]
+ }
 }
