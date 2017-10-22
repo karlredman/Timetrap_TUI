@@ -1,8 +1,10 @@
 "use Strict"
 
+var {ConfigurationBase} = require('./ConfigurationBase');
+
 class LoggerConfig {
-    constructor(){
-        this.loadDefaults();
+    constructor({config_file = null, config_options = null} ={}) {
+        super({title: 'LoggerConfig', config_file: file, config_options: options});
     }
 }
 
@@ -83,16 +85,4 @@ LoggerConfig.prototype.loadDefaults = function() {
     };
 }
 
-LoggerConfig.prototype.getConfigObj = function(){
-	let config_obj = {
-		Logger: {
-		}
-	};
-
-	for( let key in this.data ){
-		config_obj.Logger[key] = this.data[key];
-	}
-
-    return config_obj;
-}
 module.exports = {LoggerConfig};

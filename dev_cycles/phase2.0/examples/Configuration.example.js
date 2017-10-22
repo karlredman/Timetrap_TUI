@@ -3,12 +3,9 @@
 var util = require('util');
 
 
-var {Configuration} = require('../Configuration');
-var {LoggerConfig} = require('../widget_LoggerConfig');
+var {ProcessConfig} = require('../ProcessConfig');
+//var {LoggerConfig} = require('../widget_LoggerConfig');
 
-let config = new Configuration({});
-let logger_conf = new LoggerConfig({});
+let process_conf = new ProcessConfig({version: '0.2.0'});
 
-//console.log(util.inspect(conf.process, true, 10));
-config.addConfigObj(logger_conf.getConfigObj());
-config.dumpConfig();
+process_conf.dumpConfig();

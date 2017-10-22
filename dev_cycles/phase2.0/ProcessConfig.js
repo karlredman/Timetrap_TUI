@@ -1,30 +1,25 @@
-"use strict"
-//     path = require('path'),
-//     minimatch = require('minimatch');
+"use strict";
 
-// includes
-var fs = require('fs'),
-    yaml = require('js-yaml');
+var {ConfigurationBase} = require('./ConfigurationBase');
 
-class Configuration extends Object {
+class ProcessConfig extends ConfigurationBase {
+    constructor({version = null, config_file = null, config_options = null} ={}) {
 
-    constructor(options) {
-        super();
+        super({title: 'ProcessConfig', file: file, options: options});
 
-        // app level
-        this.version = "0.2.00";
+        if(typeof version !== 'string'){
+            let type = typeof version;
+            throw new Error("ProcessConfig: argument requirements not met.");
+        }
 
-		// our config data
-		this.data = {};
-
-        // load defaults
-        this.loadDefaults();
+        // app version
+        this.version = version;
     }
 }
 
-Configuration.prototype.loadDefaults = function() {
+ProcessConfig.prototype.loadDefaults = function() {
         // timetrap config defaults
-        this.data.process = {
+        this.data = {
             config_file: {
                 value: "./config_file.yml",
                 desc: "the timetrap config file path",
@@ -58,29 +53,4 @@ Configuration.prototype.loadDefaults = function() {
             }
         };
 }
-
-Configuration.prototype.addConfigObj = function(obj){
-	//assign ?? checking ??
-	//this.data[obj] = obj;
-	for( let key in obj){
-		this.data[key] = obj[key];
-	}
-}
-
-Configuration.prototype.dumpConfig = function({ file = this.config_file } ={}){
-	// setup the layout root level
-	let dump_obj = {
-		Timetrap_TUI: {
-		}
-	};
-
-	for( let key in this.data ){
-		dump_obj.Timetrap_TUI[key] = this.data[key];
-	}
-
-    let dump = yaml.safeDump(dump_obj);
-    console.log(dump);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-module.exports = {Configuration};
+module.exports = {ProcessConfig};
