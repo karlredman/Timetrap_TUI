@@ -28,27 +28,30 @@ class ViewController extends EventEmitter {
 
         // sometimes we have widgets at this level
         this.widgets = {};
-
-        this.registerActions();
     }
 
     run(){
         this.widgets.loading = blessed.loading({
             parent: this.screen,
             top: '50%',
-            left: '50%',
+            left: '50%'
         });
 
         this.widgets.loading.load("loading program...")
 
         this.views.main = new ViewMain({
             screen: this.screen,
-            process_config: this.process_config
+            process_config: this.process_config,
+            controller: this
         });
+
+        this.registerActions();
+
     }
 }
 
-ViewController.prototype.registerActions = function(){
+ViewController.prototype.registerActions = () => {
+    let _this = this;
 }
 
 module.exports = {ViewController};
