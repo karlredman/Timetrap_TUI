@@ -2,9 +2,9 @@
 
 var {ConfigurationBase} = require('./ConfigurationBase');
 
-class LoggerConfig {
+class LoggerConfig extends ConfigurationBase {
     constructor({config_file = null, config_options = null} ={}) {
-        super({title: 'LoggerConfig', config_file: file, config_options: options});
+        super({root_title: 'Timetrap_TUI', title: 'LoggerConfig', config_options: config_options});
     }
 }
 

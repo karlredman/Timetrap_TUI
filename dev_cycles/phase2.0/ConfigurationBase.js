@@ -17,7 +17,7 @@ class ConfigurationBase extends Object {
 		let _this = this;
 
 		// require the title for the yaml domain
-		if ( ( typeof root_title !== 'string' ) && ( typeof title !== 'string' )){
+		if ( ( typeof root_title !== 'string' ) || ( typeof title !== 'string' )){
 			throw new Error("ConfigurationBase constructor argument reqirements not met.");
 		}
 
@@ -33,12 +33,10 @@ class ConfigurationBase extends Object {
 		// load defaults
 		this.loadDefaults();
 
-
 		// config file overrides defaults
 		if(config_file !== null){
 			//this.loadFile();
 			this.loadFile({config_file: config_file});
-			//this.loadFile({config_file: config_file});
 		}
 
 
@@ -70,7 +68,7 @@ ConfigurationBase.prototype.loadFile = function({config_file = null} ={}) {
 		this.data = Object.assign(this.data, config[this.root_title][this.title]);
 
 	} catch(e) {
-		throw new Error("ConfigurationBase: unable to load configuration file: ", config_file);
+            throw new Error("ConfigurationBase: unable to load configuration file: ", config_file);
 	}
 }
 
@@ -119,14 +117,13 @@ ConfigurationBase.prototype.dumpToYAML = function({file = null, obj = null, add_
 		dump = yaml.safeDump(obj);
 	}
 
-	if( (file !== null) && (typeof file === 'string')){
-		//write to file
-		fs.writeFileSync(file, dump, (err) =>{
-			if(err){
-				throw new Error("ConfigurationBase: unable to write to configuration dump file: ", file);
-			}
-		});
-	}
+    if( (file !== null) && (typeof file === 'string')){
+        try {
+            fs.writeFileSync(file, dump);
+        }catch(e){
+            throw new Error("ConfigurationBase: unable to write to configuration dump file: ", file);
+        }
+    }
 
 	return dump;
 }
@@ -141,11 +138,17 @@ ConfigurationBase.prototype.updateYAML = function({file = null, obj = null} ={})
 		file = this.data.config_file.value;
 	}
 	//// get the config object
-	let config = yaml.safeLoad(fs.readFileSync(file, 'utf8', (err) => {
-		if(err){
-			throw new Error("ConfigurationBase: unable to read to configuration dump file: ", file);
-		}
-	}));
+	// let config = yaml.safeLoad(fs.readFileSync(file, 'utf8', (err) => {
+	// 	if(err){
+	// 		throw new Error("ConfigurationBase: unable to read to configuration dump file: ", file);
+	// 	}
+	// }));
+    let config;
+    try{
+        config = yaml.safeLoad(fs.readFileSync(file, 'utf8'));
+    } catch(e) {
+        throw new Error("ConfigurationBase: unable to read to configuration dump file: ", file);
+    }
 
 	//assign only our values relative to context
 	if ( obj === null ) {

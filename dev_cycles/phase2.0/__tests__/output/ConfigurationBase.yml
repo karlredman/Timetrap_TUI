@@ -1,13 +1,13 @@
-Timetrap_TUI:
-  ProcessConfig:
+DomainTitle:
+  SectionTitle:
     config_file:
-      value: ./config_file.yml
+      value: ./__tests__/output/ConfigurationBase.yml
       desc: the timetrap config file path
       options: ''
     working_directory:
-      value: /tmp
-      desc: the working directory with no timetrap-sheet files in it or it's parents
-      options: ''
+      value: /someplace
+      desc: some description
+      options: nothing specific
     create_missing_sheets:
       value: false
       desc: create missing sheets from name hiarchy
@@ -24,3 +24,7 @@ Timetrap_TUI:
       value: opaque
       desc: The color theme to use for the application
       options: dark|light|opaque
+    ExtraSection:
+      value: some value
+      desc: description of extra section
+      options: none

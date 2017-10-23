@@ -34,8 +34,8 @@ class Timetrap_Error extends Error {
 class Timetrap extends EventEmitter {
     constructor({
         working_directory = '/tmp',
-        watched_db_file = process.env.HOME+"/.timetrap.db"
-    } ={}){
+        watched_db_file = process.env.HOME+"/.timetrap.db" } ={})
+    {
 
         super();
         this.config = {
@@ -288,7 +288,6 @@ Timetrap.prototype.dumpOutput = function(output, method) {
             break;
         default:
             throw new Timetrap_Error("[dumpOutput] specified method not supported");
-            break;
     }
 }
 

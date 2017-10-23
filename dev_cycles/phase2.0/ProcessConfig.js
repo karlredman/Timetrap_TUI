@@ -8,7 +8,6 @@ class ProcessConfig extends ConfigurationBase {
         super({title: 'ProcessConfig', root_title: 'Timetrap_TUI', config_file: config_file, config_options: config_options});
 
         if(typeof version !== 'string'){
-            let type = typeof version;
             throw new Error("ProcessConfig: argument requirements not met.");
         }
 
@@ -28,8 +27,7 @@ ProcessConfig.prototype.loadDefaults = function() {
             },
 			working_directory: {
 				value: '/tmp',
-				desc: 'the working directory with no timetrap-sheet '
-				+'files in it or it\'s parents',
+				desc: 'the working directory sans .timetrap-sheet files',
 				options: ''
 			},
             create_missing_sheets: {
