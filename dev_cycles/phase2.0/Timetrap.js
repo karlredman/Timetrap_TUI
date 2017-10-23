@@ -36,7 +36,6 @@ class Timetrap extends EventEmitter {
         working_directory = '/tmp',
         watched_db_file = process.env.HOME+"/.timetrap.db" } ={})
     {
-
         super();
         this.config = {
             working_directory: `${working_directory}`,
