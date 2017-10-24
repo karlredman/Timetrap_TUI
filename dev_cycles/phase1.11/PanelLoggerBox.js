@@ -57,9 +57,6 @@ function PanelLoggerBox(options) {
 
     options.height = options.height || undefined;
 
-    // options.border = options.border || {};
-    // options.border.type = options.border.type || "line";
-    // options.border.fg = options.border.fg || "cyan";
 
     options.scrollable = options.scrollable || true;
     options.scrollbar = options.scrollbar || {};
@@ -98,7 +95,6 @@ function PanelLoggerBox(options) {
             message_prefix: "",
             warning_prefix: "{bold}Warning: {/bold}",
             error_prefix: "{bold}Error: {/bold}",
-
         },
         production: {
             message: 0,

@@ -11,14 +11,19 @@ var fs = require('fs'),
 
 class ConfigurationBase extends Object {
 
-	constructor({title = null, root_title = null, config_file = null, config_options = null} ={}) {
+	constructor({title = null, root_title = null,
+		config_file = null, config_options = null} ={})
+	{
 		super();
 
 		let _this = this;
 
 		// require the title for the yaml domain
-		if ( ( typeof root_title !== 'string' ) || ( typeof title !== 'string' )){
-			throw new Error("ConfigurationBase constructor argument reqirements not met.");
+		if ( ( typeof root_title !== 'string' )
+			|| ( typeof title !== 'string' ))
+		{
+			throw new Error("ConfigurationBase constructor argument "
+				+"reqirements not met.");
 		}
 
 		//our yaml title under the root
@@ -65,10 +70,12 @@ ConfigurationBase.prototype.loadFile = function({config_file = null} ={}) {
 		let config = yaml.safeLoad(fs.readFileSync(config_file, 'utf8'));
 
 		// now map the yaml stuff into the config object
-		this.data = Object.assign(this.data, config[this.root_title][this.title]);
+		this.data = Object.assign(
+			this.data, config[this.root_title][this.title]);
 
 	} catch(e) {
-            throw new Error("ConfigurationBase: unable to load configuration file: ", config_file);
+		throw new Error("ConfigurationBase: unable to load "
+			+"configuration file: ", config_file);
 	}
 }
 
@@ -95,7 +102,9 @@ ConfigurationBase.prototype.exportConfigObj = function({obj = null} ={}) {
 	return dump_obj;
 }
 
-ConfigurationBase.prototype.dumpToYAML = function({file = null, obj = null, add_heading = true} ={}) {
+ConfigurationBase.prototype.dumpToYAML = function({file = null, obj = null,
+	add_heading = true} ={})
+{
 	// * returnes this.data as yml
 	// * overwrites file if 'file' is provided
 	// * unconditinally converts 'obj' instead of this.data if provided
@@ -117,18 +126,21 @@ ConfigurationBase.prototype.dumpToYAML = function({file = null, obj = null, add_
 		dump = yaml.safeDump(obj);
 	}
 
-    if( (file !== null) && (typeof file === 'string')){
-        try {
-            fs.writeFileSync(file, dump);
-        }catch(e){
-            throw new Error("ConfigurationBase: unable to write to configuration dump file: ", file);
-        }
-    }
+	if( (file !== null) && (typeof file === 'string')){
+		try {
+			fs.writeFileSync(file, dump);
+		}catch(e){
+			throw new Error("ConfigurationBase: unable to write to "
+				+"configuration dump file: "+ file);
+		}
+	}
 
 	return dump;
 }
 
-ConfigurationBase.prototype.updateYAML = function({file = null, obj = null} ={}) {
+ConfigurationBase.prototype.updateYAML = function({
+	file = null, obj = null} ={})
+{
 	// * similar to dumpToYAML but reads in the config file first and sets data
 	// * writes to alternate file if specified
 	// * will use obj instead if specified
@@ -143,12 +155,13 @@ ConfigurationBase.prototype.updateYAML = function({file = null, obj = null} ={})
 	// 		throw new Error("ConfigurationBase: unable to read to configuration dump file: ", file);
 	// 	}
 	// }));
-    let config;
-    try{
-        config = yaml.safeLoad(fs.readFileSync(file, 'utf8'));
-    } catch(e) {
-        throw new Error("ConfigurationBase: unable to read to configuration dump file: ", file);
-    }
+	let config;
+	try{
+		config = yaml.safeLoad(fs.readFileSync(file, 'utf8'));
+	} catch(e) {
+		throw new Error("ConfigurationBase: unable to read to configuration "+
+			"dump file: ", file);
+	}
 
 	//assign only our values relative to context
 	if ( obj === null ) {
