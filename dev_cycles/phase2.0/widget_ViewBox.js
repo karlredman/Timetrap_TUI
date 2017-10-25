@@ -13,22 +13,30 @@ var blessed = require('blessed'),
 ////////////////////////////////////////////
 
 class ViewBox extends Box {
-    //constructor({options ={}, screen = null} ={}) {
-	constructor({parent = helpers.requiredParam('parent'), options ={},
-		theme = 'opaque', config = helpers.requiredParam('config')} ={}) {
+    constructor({parent = helpers.requiredParam('parent'), options ={},
+        theme = 'opaque', config = helpers.requiredParam('config')} ={})
     {
         let defaults = {
             parent: parent,
             //
-            top: 0,
+            top: 1,
+            bottom: 1
             left: 0,
             width: '100%',
-            height: '100%',
+            //height: '100%',
             content: "",
+            bg: config.data.colors.fg[theme],
+            fg: config.data.colors.fg[theme],
+            style: {
+                bg: config.data.colors.style.bg[theme],
+                fg: config.data.colors.style.fg[theme]
+            }
         }
         // merge options into defaults
         options = Object.assign(defaults, options);
         super(options);
+        this.theme = theme;
     }
 }
+
 module.exports = {ViewBox};

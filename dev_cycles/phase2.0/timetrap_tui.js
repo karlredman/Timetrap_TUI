@@ -106,6 +106,11 @@ function process_opts({app = null, env_config_file = null} ={}){
             +app.process_config.data.question_prompts.value+']',
             /^(true|false)$/i,
             app.process_config.data.question_prompts.value)
+        .option('-t, --theme <color theme>',
+            app.process_config.data.color_theme.desc+' ['
+            +app.process_config.data.color_theme.value+']',
+            /^.+$/i,
+            app.process_config.data.color_theme.value)
         .option('-w, --working_directory <$HOME>',
             app.process_config.data.working_directory.desc+' ['
             +app.process_config.data.working_directory.value+']',
@@ -137,6 +142,9 @@ function process_opts({app = null, env_config_file = null} ={}){
         },
         question_prompts: {
             value: opt.question_prompts
+        },
+        color_theme: {
+            value: opt.theme
         },
         working_directory: {
             value: opt.working_directory

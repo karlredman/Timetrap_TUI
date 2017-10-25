@@ -3,8 +3,11 @@
 // project dependencies
 require('./Errors');
 var {ViewBox} = require('./widget_ViewBox');
+var {ViewBoxConfig} = require('./widget_ViewBoxConfig');
 var {Logger} = require('./widget_Logger');
 var {LoggerConfig} = require('./widget_LoggerConfig');
+var {Menubar} = require('./widget_Menubar');
+var {MenubarConfig} = require('./widget_MenubarConfig');
 
 
 // parent
@@ -23,6 +26,7 @@ class ViewMain extends EventEmitter {
         super();
         this.screen = screen;
         this.process_config = process_config;
+        this.theme: this.process_config.data.color_theme.value
         this.controller = controller;
 
         // widgets
@@ -30,6 +34,7 @@ class ViewMain extends EventEmitter {
 
         //create widgets
         this.createWidgets();
+
 
         // view actions
         this.registerActions();
@@ -48,8 +53,8 @@ ViewMain.prototype.registerActions = function(){
 
 ViewMain.prototype.createWidgets = function(){
     // view base object
-    let logger_config = new LoggerConfig();
-    this.widgets.viewbox = new viewBox({
+    let viewbox_config = new ViewBoxConfig();
+    this.widgets.viewbox = new ViewBox({
         parent: this.screen,
         config: viewbox_config,
         theme: this.process_config.data.color_theme.value
@@ -61,7 +66,19 @@ ViewMain.prototype.createWidgets = function(){
     this.widgets.logger = new Logger({
         parent: this.widgets.viewbox,
         config: logger_config,
-        theme: this.process_config.data.color_theme.value
+        theme: this.theme,
+        view: this
+    });
+    this.log = this.widgets.logger;
+
+    // menubar
+    let menubar_config = new MenubarConfig();
+    this.widgets.menubar = new Menubar({
+        parent: this.widgets.viewbox,
+        config: menubar_config,
+        theme: this.theme,
+        logger: this.widget.logger,
+        view: this
     });
 }
 

@@ -14,8 +14,9 @@ var helpers = require('./helpers');
 var util = require('util');
 
 class Logger extends ContribLog {
-	constructor({parent = helpers.requiredParam('parent'), options ={},
-		theme = 'opaque', config = helpers.requiredParam('config')} ={}) {
+    constructor({parent = helpers.requiredParam('parent'), options ={},
+        theme = 'opaque', config = helpers.requiredParam('config'),
+        view = helpers.requiredParam('view')} ={}) {
 
         let defaults = {
             parent: parent,
@@ -33,13 +34,21 @@ class Logger extends ContribLog {
             tags: true,
             wrap: true,
             //
-			bg: config.data.colors.bg[theme],
-			fg: config.data.colors.fg[theme],
+            bg: config.data.colors.bg[theme],
+            fg: config.data.colors.fg[theme],
             //
             style:{
-				//hightlighted?? //TODO: figure out which fg/bg to use
-                bg: config.data.colors.bg[theme],
-                fg: config.data.colors.fg[theme],
+                //hightlighted?? //TODO: figure out which fg/bg to use
+                bg: config.data.colors.style.bg[theme],
+                fg: config.data.colors.style.fg[theme],
+                selected: {
+                    bg: config.data.colors.style.selected.bg[theme],
+                    fg: config.data.colors.style.selected.fg[theme],
+                },
+                item: {
+                    bg: config.data.colors.style.item.bg[theme],
+                    fg: config.data.colors.style.item.fg[theme],
+                },
                 scrollbar: {
                     inverse: true,
                 },
@@ -60,14 +69,18 @@ class Logger extends ContribLog {
 
         // saved options
         this.theme = theme;
+        this.config = config;
+        this.view = view;
 
-        // log is interactive
+        // log is interactive (for parent contrib.log)
         this.interactive = true
 
+        // grab local datascructures, etc.
+        this.init();
+        this.log_count = 0;
+
         // initial message // TODO: this belongs someplace else
-        this.log("{center}0 Welcome to Timetrap TUI! [C-c to exit, ? for help]{/center}");
-        this.log("{center}1 Welcome to Timetrap TUI! [C-c to exit, ? for help]{/center}");
-        this.log("{center}2 Welcome to Timetrap TUI! [C-c to exit, ? for help]{/center}");
+        this.log("{center}Welcome to Timetrap TUI! [C-c to exit, ? for help]{/center}");
     }
 }
 
@@ -77,7 +90,7 @@ Logger.prototype.init = function()
     this.loglevel = {
         //this is structured to enforce intended audience declaration for log messages
         //i.e. this.msg("something interesting", this.loglevel.production.warning)
-        value: this.config.settings.tui_logger_loglevel.value,
+        //value: this.config.settings.tui_logger_loglevel.value,
         meta: {
             bg: this.config.data.colors.bg[this.theme],
             fg: this.config.data.colors.fg[this.theme],
@@ -111,5 +124,59 @@ Logger.prototype.init = function()
             error: 22,
         },
     }
+}
+Logger.prototype.msg = function(message, loglevel){
+    // usage: this.log.msg("test message", this.log.loglevel.production.warning);
+
+    //we default to message
+    let bg = this.loglevel.meta.bg;
+    let fg = this.loglevel.meta.fg;
+    let prefix = this.loglevel.meta.message_prefix;
+
+    if (
+        ( loglevel == this.loglevel.production.warning )
+        || ( loglevel == this.loglevel.debug.warning )
+        || ( loglevel == this.loglevel.devel.warning )
+    ){
+        bg = this.loglevel.meta.warning_bg;
+        fg = this.loglevel.meta.warning_fg;
+        prefix = this.loglevel.meta.warning_prefix;
+    }
+    if (
+        ( loglevel == this.loglevel.production.error )
+        || ( loglevel == this.loglevel.debug.error )
+        || ( loglevel == this.loglevel.devel.error )
+    ){
+        bg = this.loglevel.meta.error_bg;
+        fg = this.loglevel.meta.error_fg;
+        prefix = this.loglevel.meta.error_prefix;
+    }
+
+    //log the unixtime
+    let date = Date.now();
+
+    // TODO: this is a mess
+
+    this.log_count++;
+    this.log(
+        //"{"+bg+"-bg}"
+        '{center}'
+        //+ '['+this.log_count+'|'+date+'] '
+        + '['+this.log_count+']'
+        //+ (typeof fg === 'undefined') ? '{blue-fg}' : "{"+fg+"-fg}"
+        + "{"+fg+"-fg}"
+        + prefix
+        //+ (typeof fg === 'undefinded') ? '{/blue-fg}' : "{/"+fg+"-fg}"
+        + "{/"+fg+"-fg}"
+        //
+        //+ '{'+this.loglevel.meta.fg+'-fg}'
+        + message
+        //+ '{/'+this.loglevel.meta.fg+'-fg}'
+        //
+        + '{/center}'
+        //+ "{/"+bg+"-bg}"
+    );
+
+    //TODO: async write to file if specified
 }
 module.exports = {Logger};
