@@ -24,6 +24,8 @@ class Menubar extends Listbar {
             autoCommandKeys: true,
             //
             height: 1,
+            top: 0,
+            left: 0,
             width: '100%',
             //
             keys: null,            //we're overriding keys
@@ -32,9 +34,14 @@ class Menubar extends Listbar {
             vi: true,
             //
             scrollable: true,
-            options.invertSelected = false,
+            invertSelected: false,
+            //
+            bg: config.data.colors.bg[theme],
+            fg: config.data.colors.fg[theme],
             //
             style: {
+                    bg: config.data.colors.style.bg[theme],
+                    fg: config.data.colors.style.fg[theme],
                 item: {
                     bg: config.data.colors.style.item.bg[theme],
                     fg: config.data.colors.style.item.fg[theme],
@@ -105,3 +112,4 @@ Menubar.prototype.init = function() {
     }
     this.setItems(items);
 }
+module.exports = {Menubar};

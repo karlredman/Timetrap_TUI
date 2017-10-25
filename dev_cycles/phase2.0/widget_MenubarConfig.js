@@ -6,15 +6,44 @@ class MenubarConfig extends ConfigurationBase {
         super({root_title: 'Timetrap_TUI', title: 'MenubarConfig', config_options: config_options});
     }
 }
+
 MenubarConfig.prototype.loadDefaults = function() {
     this.data = {
         colors: {
+            bg: {
+                none: null,
+                opaque: "white",
+                dark: "white",
+                light: null,
+                desc: "the bg color of the menu item"
+            },
+            fg: {
+                none: null,
+                opaque: "white",
+                dark: "white",
+                light: "black",
+                desc: "the fg color of the menu item"
+            },
             style: {
+                    bg: {
+                        none: null,
+                        opaque: "black",
+                        dark: "black",
+                        light: null,
+                        desc: "the bg color of the menu item"
+                    },
+                    fg: {
+                        none: null,
+                        opaque: "white",
+                        dark: "white",
+                        light: "black",
+                        desc: "the fg color of the menu item"
+                    },
                 item: {
                     bg: {
                         none: null,
-                        opaque: null,
-                        dark: null,
+                        opaque: "black",
+                        dark: "black",
                         light: null,
                         desc: "the bg color of the menu item"
                     },
@@ -29,8 +58,8 @@ MenubarConfig.prototype.loadDefaults = function() {
                 prefix: {
                     bg: {
                         none: null,
-                        opaque: null,
-                        dark: null,
+                        opaque: "lightblack",
+                        dark: "lightblack",
                         light: null,
                         desc: "the bg color of the menu item prefix"
                     },
@@ -45,8 +74,8 @@ MenubarConfig.prototype.loadDefaults = function() {
                 selected: {
                     bg: {
                         none: null,
-                        opaque: "black",
-                        dark: "black",
+                        opaque: "lightblack",
+                        dark: "lightblack",
                         light: "white",
                         desc: "the bg color of the selected menu item"
                     },

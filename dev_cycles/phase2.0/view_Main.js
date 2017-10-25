@@ -26,7 +26,7 @@ class ViewMain extends EventEmitter {
         super();
         this.screen = screen;
         this.process_config = process_config;
-        this.theme: this.process_config.data.color_theme.value
+        this.theme = this.process_config.data.color_theme.value
         this.controller = controller;
 
         // widgets
@@ -77,7 +77,7 @@ ViewMain.prototype.createWidgets = function(){
         parent: this.widgets.viewbox,
         config: menubar_config,
         theme: this.theme,
-        logger: this.widget.logger,
+        logger: this.widgets.logger,
         view: this
     });
 }

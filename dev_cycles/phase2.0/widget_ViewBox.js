@@ -19,19 +19,20 @@ class ViewBox extends Box {
         let defaults = {
             parent: parent,
             //
-            top: 1,
-            bottom: 1
+            top: 0,
+            //bottom: 0,
             left: 0,
             width: '100%',
-            //height: '100%',
+            height: '100%',
             content: "",
             bg: config.data.colors.fg[theme],
             fg: config.data.colors.fg[theme],
             style: {
                 bg: config.data.colors.style.bg[theme],
                 fg: config.data.colors.style.fg[theme]
-            }
-        }
+            },
+        };
+
         // merge options into defaults
         options = Object.assign(defaults, options);
         super(options);
