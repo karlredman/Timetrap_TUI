@@ -77,6 +77,9 @@ class Menubar extends Listbar {
     }
 }
 
+Menubar.prototype.registerActions = function() {
+}
+
 Menubar.prototype.init = function() {
     let items = {
         // 1

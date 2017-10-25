@@ -8,6 +8,8 @@ var {Logger} = require('./widget_Logger');
 var {LoggerConfig} = require('./widget_LoggerConfig');
 var {Menubar} = require('./widget_Menubar');
 var {MenubarConfig} = require('./widget_MenubarConfig');
+var {SheetTree} = require('./widget_SheetTree');
+var {SheetTreeConfig} = require('./widget_SheetTreeConfig');
 
 
 // parent
@@ -71,6 +73,7 @@ ViewMain.prototype.createWidgets = function(){
     });
     this.log = this.widgets.logger;
 
+    // TODO: debug -kill
     usage: this.log.msg("test message", this.log.loglevel.production.message);
     usage: this.log.msg("test message", this.log.loglevel.production.warning);
     usage: this.log.msg("test message", this.log.loglevel.production.error);
@@ -80,6 +83,16 @@ ViewMain.prototype.createWidgets = function(){
     this.widgets.menubar = new Menubar({
         parent: this.widgets.viewbox,
         config: menubar_config,
+        theme: this.theme,
+        logger: this.widgets.logger,
+        view: this
+    });
+
+    // menubar
+    let sheettree_config = new SheetTreeConfig();
+    this.widgets.sheettree = new SheetTree({
+        parent: this.widgets.viewbox,
+        config: sheettree_config,
         theme: this.theme,
         logger: this.widgets.logger,
         view: this
