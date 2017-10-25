@@ -13,32 +13,36 @@ ViewBoxConfig.prototype.loadDefaults = function() {
         // TODO: figure out color meanings
         colors: {
             bg: {
-                none: "",
-                opaque: "yellow",
-                dark: "black",
-                light: "white",
+                none: null,
+                opaque: "black",
+                dark: null,
+                light: null,
+                frosty: "white",
                 desc: "the bg color of the view"
             },
             fg: {
-                none: "",
-                opaque: "lightblack",
-                dark: "black",
-                light: "white",
+                none: null,
+                opaque: "black",
+                dark: null,
+                light: null,
+                frosty: "white",
                 desc: "the fg color of the view"
             },
             style: {
                 bg: {
-                    none: "",
-                    opaque: "lightblack",
-                    dark: "black",
-                    light: "white",
+                    none: null,
+                    opaque: "black",
+                    dark: null,
+                    light: null,
+                    frosty: "white",
                     desc: "the bg color of the view"
                 },
                 fg: {
-                    none: "",
+                    none: null,
                     opaque: "white",
                     dark: "white",
                     light: "black",
+                    frosty: "black",
                     desc: "the fg color of the view"
                 },
             }

@@ -14,7 +14,8 @@ MenubarConfig.prototype.loadDefaults = function() {
                 none: null,
                 opaque: "white",
                 dark: "white",
-                light: null,
+                light: "black",
+                frosty: "black",
                 desc: "the bg color of the menu item"
             },
             fg: {
@@ -22,52 +23,59 @@ MenubarConfig.prototype.loadDefaults = function() {
                 opaque: "white",
                 dark: "white",
                 light: "black",
+                frosty: "black",
                 desc: "the fg color of the menu item"
             },
             style: {
                     bg: {
                         none: null,
                         opaque: "black",
-                        dark: "black",
+                        dark: null,
                         light: null,
+                        frosty: "white",
                         desc: "the bg color of the menu item"
                     },
                     fg: {
                         none: null,
                         opaque: "white",
-                        dark: "white",
+                        dark: "gray",
                         light: "black",
+                        frosty: "red",
                         desc: "the fg color of the menu item"
                     },
                 item: {
                     bg: {
                         none: null,
                         opaque: "black",
-                        dark: "black",
+                        dark: null,
                         light: null,
+                        frosty: "white",
                         desc: "the bg color of the menu item"
                     },
                     fg: {
                         none: null,
                         opaque: "white",
-                        dark: "white",
+                        dark: "gray",
                         light: "black",
+                        frosty: "gray",
                         desc: "the fg color of the menu item"
                     },
                 },
                 prefix: {
                     bg: {
                         none: null,
-                        opaque: "lightblack",
-                        dark: "lightblack",
+                        opaque: null,
+                        dark: null,
                         light: null,
+                        frosty: null,
                         desc: "the bg color of the menu item prefix"
                     },
                     fg: {
                         none: null,
                         opaque: "yellow",
                         dark: "yellow",
-                        light: "black",
+                        light: "yellow",
+                        frosty: "blue",
                         desc: "the fg color of the menu item prefix"
                     },
                 },
@@ -75,15 +83,17 @@ MenubarConfig.prototype.loadDefaults = function() {
                     bg: {
                         none: null,
                         opaque: "lightblack",
-                        dark: "lightblack",
-                        light: "white",
+                        dark: null,
+                        light: null,
+                        frosty: "lightblue",
                         desc: "the bg color of the selected menu item"
                     },
                     fg: {
                         none: null,
                         opaque: "lightblue",
                         dark: "lightblue",
-                        light: "black",
+                        light: "blue",
+                        frosty: "black",
                         desc: "the fg color of the selected menu item"
                     },
                 },

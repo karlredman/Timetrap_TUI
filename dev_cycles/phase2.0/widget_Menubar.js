@@ -105,6 +105,7 @@ Menubar.prototype.init = function() {
         },
         // 9
         Test1: () => {
+            this.view.widgets.viewbox.focus();
         },
         // 0
         Test2: () => {

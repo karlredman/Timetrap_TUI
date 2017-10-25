@@ -34,89 +34,100 @@ LoggerConfig.prototype.loadDefaults = function() {
         },
         colors: {
             bg: {
-                none: "",
+                none: null,
                 opaque: "black",
-                dark: "black",
-                light: "white",
+                dark: null,
+                light: null,
+                frosty: "white",
                 desc: "the bg color of the logger"
             },
             fg: {
-                none: "",
+                none: null,
                 opaque: "white",
-                dark: "white",
+                dark: "gray",
                 light: "black",
+                frosty: "black",
                 desc: "the fg color of the logger"
             },
             style: {
                 bg: {
-                    none: "",
+                    none: null,
                     opaque: "black",
-                    dark: "black",
-                    light: "white",
+                    dark: null,
+                    light: null,
+                    frosty: "white",
                     desc: "the style bg color of the logger"
                 },
                 fg: {
-                    none: "",
+                    none: null,
                     opaque: "white",
-                    dark: "white",
+                    dark: "gray",
                     light: "black",
+                    frosty: "black",
                     desc: "the style fg color of the logger"
                 },
                 item: {
                     bg: {
-                        none: "",
+                        none: null,
                         opaque: "black",
-                        dark: "black",
-                        light: "white",
+                        dark: null,
+                        light: null,
+                        frosty: "white",
                         desc: "the style item bg color of the logger"
                     },
                     fg: {
-                        none: "",
+                        none: null,
                         opaque: "white",
-                        dark: "white",
+                        dark: "gray",
                         light: "black",
+                        frosty: "gray",
                         desc: "the style item fg color of the logger"
                     },
                 },
                 selected: {
                     bg: {
-                        none: "",
-                        opaque: "black",
-                        dark: "black",
-                        light: "white",
+                        none: null,
+                        opaque: "lightblack",
+                        dark: null,
+                        light: null,
+                        frosty: "gray",
                         desc: "the style selected bg color of the logger"
                     },
                     fg: {
-                        none: "",
+                        none: null,
                         opaque: "white",
                         dark: "white",
                         light: "black",
+                        frosty: "lightblue",
                         desc: "the style selected fg color of the logger"
                     },
                 }
             },
             message: {
                 bg: {
-                    none: "",
+                    none: null,
                     opaque: "black",
                     dark: "black",
                     light: "white",
+                    frosty: "white",
                     desc: "the bg color of a message"
                 },
                 fg: {
-                    none: "",
+                    none: null,
                     opaque: "white",
                     dark: "white",
                     light: "black",
+                    frosty: "black",
                     desc: "the fg color of a message"
                 },
             },
             warning: {
                 bg: {
-                    none: "",
+                    none: null,
                     opaque: "black",
                     dark: "black",
                     light: "white",
+                    frosty: "white",
                     desc: "the bg color of a warning"
                 },
                 fg: {
@@ -124,15 +135,17 @@ LoggerConfig.prototype.loadDefaults = function() {
                     opaque: "yellow",
                     dark: "yellow",
                     light: "yellow",
+                    frosty: "yellow",
                     desc: "the fg color of a warning"
                 },
             },
             error: {
                 bg: {
-                    none: "",
+                    none: null,
                     opaque: "black",
                     dark: "black",
                     light: "white",
+                    frosty: "white",
                     desc: "the bg color of an error"
                 },
                 fg: {
@@ -140,6 +153,7 @@ LoggerConfig.prototype.loadDefaults = function() {
                     opaque: "red",
                     dark: "red",
                     light: "red",
+                    frosty: "red",
                     desc: "the fg color of an error"
                 },
             }

@@ -71,6 +71,10 @@ ViewMain.prototype.createWidgets = function(){
     });
     this.log = this.widgets.logger;
 
+    usage: this.log.msg("test message", this.log.loglevel.production.message);
+    usage: this.log.msg("test message", this.log.loglevel.production.warning);
+    usage: this.log.msg("test message", this.log.loglevel.production.error);
+
     // menubar
     let menubar_config = new MenubarConfig();
     this.widgets.menubar = new Menubar({
