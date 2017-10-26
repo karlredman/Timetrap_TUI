@@ -679,18 +679,35 @@ module.exports = Timetrap;
 //         }
 //     }
 
+//     try {
+//         let jsonfile = JSON.stringify(output);
+//         fs.writeFileSync('./tree.json', jsonfile, 'utf8');
+//     }catch(e){
+//         throw new Error("fatality");
+//     }
 //     console.log(util.inspect(output, null, 10));
 //     //console.log(JSON.stringify(family, null, 2));
 // });
 
-// t.on('tree', function(tree){
-//     console.log(util.inspect(tree[0], null, 10));
-// })
 
+
+// /////////////////////////////////////////////////
+// // .................. keep below for generating a t jason file
 // var t = new Timetrap(null);
-// t.on('running_list_updated', function(){
-//     console.log("end list: "+util.inspect(t.running_data, null, 10));
-// });
+
+// t.on('fetch_tree', function(tree){
+//     console.log(util.inspect(tree, null, 10));
+//     //console.log(JSON.stringify(tree, null, 2))
+
+//     try {
+//         fs.writeFileSync('./tree.json', JSON.stringify(tree), 'utf8');
+//     }catch(e){
+//         throw new Error("fatality");
+//     }
+// })
+// t.on('fetch_list', function(list){
+//     t.fetch_tree(list);
+// })
 
 // t.fetch_list();
 

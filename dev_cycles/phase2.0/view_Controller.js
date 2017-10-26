@@ -5,6 +5,7 @@ var blessed = require('blessed');
 
 // project dependencies
 var {ViewMain} = require('./view_Main');
+var {ViewMainConfig} = require('./view_MainConfig');
 require('./Errors');
 
 // parent
@@ -39,10 +40,12 @@ class ViewController extends EventEmitter {
 
         this.widgets.loading.load("loading program...")
 
+        let main_config = new ViewMainConfig();
         this.views.main = new ViewMain({
             screen: this.screen,
             process_config: this.process_config,
-            controller: this
+            controller: this,
+            config: main_config,
         });
 
         this.registerActions();

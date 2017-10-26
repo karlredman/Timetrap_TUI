@@ -126,6 +126,7 @@ ConfigurationBase.prototype.dumpToYAML = function({file = null, obj = null,
 		dump = yaml.safeDump(obj);
 	}
 
+    let fs = require('fs');
 	if( (file !== null) && (typeof file === 'string')){
 		try {
 			fs.writeFileSync(file, dump);

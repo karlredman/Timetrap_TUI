@@ -78,6 +78,75 @@ class Menubar extends Listbar {
 }
 
 Menubar.prototype.registerActions = function() {
+    let _this = this;
+
+    this.on('blur', function() {
+        //always reset the menu to first option
+        _this.select(0);
+    });
+
+    this.on('keypress', function(ch, key) {
+        // custom key bindings
+        if (key.name === 'tab') {
+            if (!key.shift) {
+                _this.view.setWinFocusNext();
+            } else {
+                _this.view.setWinFocusPrev();
+            }
+            return;
+        }
+        if (key.name === 'left'
+            || (_this.options['vi'] && key.name === 'h')
+            //|| (key.shift && key.name === 'tab')
+        ) {
+            // let item = _this.items[_this.selected];
+            // item.style.bg = null;
+            // item.style.fg = "white";
+            _this.moveLeft();
+            //item = _this.items[_this.selected];
+            // item.style.bg = "black";
+            // item.style.fg = "lightblue";
+            _this.screen.render();
+            // Stop propagation if we're in a form.
+            //if (key.name === 'tab') return false;
+            return;
+        }
+        if (key.name === 'right'
+            || (_this.options['vi'] && key.name === 'l')
+            //|| key.name === 'tab'
+        ) {
+            // let item = _this.items[_this.selected];
+            // item.style.bg = null;
+            // item.style.fg = "white";
+            _this.moveRight();
+            // item = _this.items[_this.selected];
+            // item.style.bg = "black";
+            // item.style.fg = "lightblue";
+            _this.screen.render();
+            // Stop propagation if we're in a form.
+            //if (key.name === 'tab') return false;
+            return;
+        }
+        if (key.name === 'enter'
+            || (_this.options['vi'] && key.name === 'k' && !key.shift)) {
+            _this.emit('action', _this.items[_this.selected], _this.selected);
+            _this.emit('select', _this.items[_this.selected], _this.selected);
+            let item = _this.items[_this.selected];
+            if (item._.cmd.callback) {
+                item._.cmd.callback();
+
+                // //TODO: timer to set 'unselected'
+                // setTimeout(function(){
+                //     // item.style.bg = null;
+                //     // item.style.fg = "white";
+                //     _this.select(0);
+                //     _this.screen.render();
+                // }, 1000);
+            }
+            _this.screen.render();
+            return;
+        }
+    });
 }
 
 Menubar.prototype.init = function() {

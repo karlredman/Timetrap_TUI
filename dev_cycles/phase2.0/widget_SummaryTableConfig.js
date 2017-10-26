@@ -1,16 +1,18 @@
 "use strict";
 var {ConfigurationBase} = require('./ConfigurationBase');
 
-class SheetTreeConfig extends ConfigurationBase {
+class SummaryTableConfig extends ConfigurationBase {
     constructor({config_file = null, config_options = null} ={}) {
-        super({root_title: 'Timetrap_TUI', title: 'SheetTreeConfig', config_options: config_options});
+        super({root_title: 'Timetrap_TUI', title: 'SummaryTableConfig', config_options: config_options});
     }
 }
 
-SheetTreeConfig.prototype.loadDefaults = function() {
+SummaryTableConfig.prototype.loadDefaults = function() {
     this.data = {
         traits: {
-            width: 25,      //initial width ?? shrink ??
+            // width: 25,      //initial width ?? shrink ??
+            //left: config.data.traits.left,
+            left: 24,
         },
         colors: {
             bg: {
@@ -28,6 +30,22 @@ SheetTreeConfig.prototype.loadDefaults = function() {
                 light: "black",
                 frosty: "red",
                 desc: "the fg color of the menu item"
+            },
+            selectedBg: {
+                none: null,
+                opaque: "black",
+                dark: "stupid", //NOTE: TODO: this still hightlights no matter what -bug?! 'stupid' does a fallback -pfft!
+                light: "none",
+                frosty: "lightblue",
+                desc: "the bg color of the selected menu item"
+            },
+            selectedFg: {
+                none: null,
+                opaque: "lightblue",
+                dark: "white",
+                light: "blue",
+                frosty: "black",
+                desc: "the fg color of the selected menu item"
             },
             style: {
                 border: {
@@ -61,7 +79,7 @@ SheetTreeConfig.prototype.loadDefaults = function() {
                 fg: {
                     none: null,
                     opaque: "white",
-                    dark: "blue",
+                    dark: null,
                     light: "black",
                     frosty: "red",
                     desc: "the fg color of the menu item"
@@ -72,7 +90,7 @@ SheetTreeConfig.prototype.loadDefaults = function() {
                     bg: {
                         none: null,
                         opaque: "lightblack",
-                        dark: "none",
+                        dark: null,
                         light: null,
                         frosty: "lightblue",
                         desc: "the bg color of the selected menu item"
@@ -80,7 +98,7 @@ SheetTreeConfig.prototype.loadDefaults = function() {
                     fg: {
                         none: null,
                         opaque: "lightblue",
-                        dark: "white",
+                        dark: "lightblue",
                         light: "blue",
                         frosty: "black",
                         desc: "the fg color of the selected menu item"
@@ -98,7 +116,7 @@ SheetTreeConfig.prototype.loadDefaults = function() {
                     fg: {
                         none: null,
                         opaque: "white",
-                        dark: "blue",
+                        dark: "white",
                         light: "black",
                         frosty: "gray",
                         desc: "the fg color of the menu item"
@@ -109,7 +127,7 @@ SheetTreeConfig.prototype.loadDefaults = function() {
                         bg: {
                             none: null,
                             opaque: "black",
-                            dark: "green",
+                            dark: null,
                             light: null,
                             frosty: "white",
                             desc: "the bg color of the menu item"
@@ -117,7 +135,7 @@ SheetTreeConfig.prototype.loadDefaults = function() {
                         fg: {
                             none: null,
                             opaque: "white",
-                            dark: null,
+                            dark: "white",
                             light: "black",
                             frosty: "gray",
                             desc: "the fg color of the menu item"
@@ -128,4 +146,4 @@ SheetTreeConfig.prototype.loadDefaults = function() {
         }
     }
 }
-module.exports = {SheetTreeConfig};
+module.exports = {SummaryTableConfig};

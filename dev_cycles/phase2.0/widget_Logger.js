@@ -84,6 +84,31 @@ class Logger extends ContribLog {
     }
 }
 
+Logger.prototype.registerActions = function() {
+    let _this = this;
+    this.on('focus', function(){
+        _this.select(this.items.length -1);
+        _this.parent.render();
+    });
+
+    this.on('blur', function(){
+        _this.select(this.items.length -1);
+        _this.parent.render();
+    });
+
+    this.on('keypress', function(ch, key) {
+        //custom key bindings
+        if (key.name === 'tab') {
+            if (!key.shift) {
+                _this.view.setWinFocusNext();
+            } else {
+                _this.view.setWinFocusPrev();
+            }
+            return;
+        }
+    });
+}
+
 Logger.prototype.init = function()
 {
     //log levels

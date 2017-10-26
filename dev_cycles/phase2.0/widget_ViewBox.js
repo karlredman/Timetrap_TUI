@@ -40,4 +40,7 @@ class ViewBox extends Box {
     }
 }
 
+ViewBox.prototype.registerActions = function() {
+}
+
 module.exports = {ViewBox};

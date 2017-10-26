@@ -61,6 +61,24 @@ MenubarConfig.prototype.loadDefaults = function() {
                         desc: "the fg color of the menu item"
                     },
                 },
+                inactive: {
+                    bg: {
+                        none: null,
+                        opaque: "black",
+                        dark: null,
+                        light: null,
+                        frosty: "white",
+                        desc: "the bg color of the menu item"
+                    },
+                    fg: {
+                        none: null,
+                        opaque: "white",
+                        dark: "gray",
+                        light: "black",
+                        frosty: "gray",
+                        desc: "the fg color of the menu item"
+                    },
+                },
                 prefix: {
                     bg: {
                         none: null,
