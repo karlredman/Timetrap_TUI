@@ -13,15 +13,15 @@ ViewMainConfig.prototype.loadDefaults = function() {
         },
         colors: {
             bg: {
-                none: null,
+                none: "none",
                 opaque: "black",
-                dark: null,
-                light: null,
+                dark: "none",
+                light: "none",
                 frosty: "white",
                 desc: "the bg color of the menu item"
             },
             fg: {
-                none: null,
+                none: "none",
                 opaque: "white",
                 dark: "gray",
                 light: "black",
@@ -30,32 +30,32 @@ ViewMainConfig.prototype.loadDefaults = function() {
             },
             focuslines: {
                 bg: {
-                    none: null,
+                    none: "none",
                     opaque: "black",
-                    dark: null,
-                    light: null,
+                    dark: "none",
+                    light: "none",
                     frosty: "white",
                     desc: "the bg color of the menu item"
                 },
                 fg: {
-                    none: null,
+                    none: "none",
                     opaque: "green",
                     dark: "green",
                     light: "green",
-                    frosty: "green",
+                    frosty: "blue",
                     desc: "the fg color of the menu item"
                 },
                 disabled: {
                     bg: {
-                        none: null,
+                        none: "none",
                         opaque: "black",
-                        dark: null,
-                        light: null,
+                        dark: "none",
+                        light: "none",
                         frosty: "white",
                         desc: "the bg color of the menu item"
                     },
                     fg: {
-                        none: null,
+                        none: "none",
                         opaque: "red",
                         dark: "red",
                         light: "red",

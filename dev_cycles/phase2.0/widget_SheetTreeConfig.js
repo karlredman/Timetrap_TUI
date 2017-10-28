@@ -14,15 +14,15 @@ SheetTreeConfig.prototype.loadDefaults = function() {
         },
         colors: {
             bg: {
-                none: null,
+                none: "none",
                 opaque: "black",
-                dark: null,
-                light: null,
+                dark: "none",
+                light: "none",
                 frosty: "white",
                 desc: "the bg color of the menu item"
             },
             fg: {
-                none: null,
+                none: "none",
                 opaque: "white",
                 dark: "gray",
                 light: "black",
@@ -32,34 +32,34 @@ SheetTreeConfig.prototype.loadDefaults = function() {
             style: {
                 border: {
                     bg: {
-                        none: null,
+                        none: "none",
                         opaque: "black",
-                        dark: null,
-                        light: null,
+                        dark: "none",
+                        light: "none",
                         frosty: "white",
                         desc: "the bg color of the menu item"
                     },
                     fg: {
-                        none: null,
+                        none: "none",
                         opaque: "green",
                         dark: "green",
-                        light: "black",
-                        frosty: "black",
+                        light: "green",
+                        frosty: "blue",
                         desc: "the fg color of the menu item"
                     },
                 },
-                // bg: null,
+                // bg: "none",
                 // fg: "blue",
                 bg: {
-                    none: null,
+                    none: "none",
                     opaque: "black",
-                    dark: null,
-                    light: null,
+                    dark: "none",
+                    light: "none",
                     frosty: "white",
                     desc: "the bg color of the menu item"
                 },
                 fg: {
-                    none: null,
+                    none: "none",
                     opaque: "white",
                     dark: "blue",
                     light: "black",
@@ -70,15 +70,15 @@ SheetTreeConfig.prototype.loadDefaults = function() {
                     // bg: "blue",
                     // fg: "white",
                     bg: {
-                        none: null,
+                        none: "none",
                         opaque: "lightblack",
                         dark: "none",
-                        light: null,
+                        light: "none",
                         frosty: "lightblue",
                         desc: "the bg color of the selected menu item"
                     },
                     fg: {
-                        none: null,
+                        none: "none",
                         opaque: "lightblue",
                         dark: "white",
                         light: "blue",
@@ -88,15 +88,15 @@ SheetTreeConfig.prototype.loadDefaults = function() {
                 },
                 item: {
                     bg: {
-                        none: null,
+                        none: "none",
                         opaque: "black",
-                        dark: null,
-                        light: null,
+                        dark: "none",
+                        light: "none",
                         frosty: "white",
                         desc: "the bg color of the menu item"
                     },
                     fg: {
-                        none: null,
+                        none: "none",
                         opaque: "white",
                         dark: "blue",
                         light: "black",
@@ -105,19 +105,19 @@ SheetTreeConfig.prototype.loadDefaults = function() {
                     },
                     hover: {
                         // bg: "green",
-                        // fg: null,
+                        // fg: "none",
                         bg: {
-                            none: null,
+                            none: "none",
                             opaque: "black",
                             dark: "green",
-                            light: null,
+                            light: "none",
                             frosty: "white",
                             desc: "the bg color of the menu item"
                         },
                         fg: {
-                            none: null,
+                            none: "none",
                             opaque: "white",
-                            dark: null,
+                            dark: "none",
                             light: "black",
                             frosty: "gray",
                             desc: "the fg color of the menu item"

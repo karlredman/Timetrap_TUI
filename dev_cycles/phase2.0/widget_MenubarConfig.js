@@ -7,6 +7,7 @@ class MenubarConfig extends ConfigurationBase {
     }
 }
 
+// NOTE: bug issue(?!) nulls over "none"
 MenubarConfig.prototype.loadDefaults = function() {
     this.data = {
         colors: {

@@ -83,6 +83,7 @@ class SummaryTable extends ContribTable {
         this.rows.options.style.fg = config.data.colors.style.fg[theme];
 
         // saved options
+        this.log = logger;
         this.theme = theme;
         this.config = config;
         this.view = view;
@@ -101,98 +102,39 @@ class SummaryTable extends ContribTable {
 }
 
 SummaryTable.prototype.init = function() {
-    let items = {
-                headers: [" Running", " Today", " Total Time"],
-        data: [
-        ["XX000:00:00","XX000:00:00","00000:00:00"],
-        ["000:00:00","000:00:00","00000:00:00"],
-        ["000:00:00","000:00:00","00000:00:00"],
-        ["000:00:00","000:00:00","00000:00:00"],
-        ["000:00:00","000:00:00","00000:00:00"],
-        ["000:00:00","000:00:00","00000:00:00"],
-        ["000:00:00","000:00:00","00000:00:00"],
-        ["000:00:00","000:00:00","00000:00:00"],
-        ["000:00:00","000:00:00","00000:00:00"],
-        ["000:00:00","000:00:00","00000:00:00"],
-        ["000:00:00","000:00:00","00000:00:00"],
-        ["000:00:00","000:00:00","00000:00:00"],
-        ["000:00:00","000:00:00","00000:00:00"],
-        ["000:00:00","000:00:00","00000:00:00"],
-        ["000:00:00","000:00:00","00000:00:00"],
-        ["000:00:00","000:00:00","00000:00:00"],
-        ["000:00:00","000:00:00","00000:00:00"],
-        ["000:00:00","000:00:00","00000:00:00"],
-        ["000:00:00","000:00:00","00000:00:00"],
-        ["000:00:00","000:00:00","00000:00:00"],
-    ]};
-    this.setData(items);
-    this.rows.select(0)
+    //debug
+    // let items = {
+    //             headers: [" Running", " Today", " Total Time"],
+    //     data: [
+    //     ["XX000:00:00","XX000:00:00","00000:00:00"],
+    //     ["000:00:00","000:00:00","00000:00:00"],
+    //     ["000:00:00","000:00:00","00000:00:00"],
+    //     ["000:00:00","000:00:00","00000:00:00"],
+    //     ["000:00:00","000:00:00","00000:00:00"],
+    //     ["000:00:00","000:00:00","00000:00:00"],
+    //     ["000:00:00","000:00:00","00000:00:00"],
+    //     ["000:00:00","000:00:00","00000:00:00"],
+    //     ["000:00:00","000:00:00","00000:00:00"],
+    //     ["000:00:00","000:00:00","00000:00:00"],
+    //     ["000:00:00","000:00:00","00000:00:00"],
+    //     ["000:00:00","000:00:00","00000:00:00"],
+    //     ["000:00:00","000:00:00","00000:00:00"],
+    //     ["000:00:00","000:00:00","00000:00:00"],
+    //     ["000:00:00","000:00:00","00000:00:00"],
+    //     ["000:00:00","000:00:00","00000:00:00"],
+    //     ["000:00:00","000:00:00","00000:00:00"],
+    //     ["000:00:00","000:00:00","00000:00:00"],
+    //     ["000:00:00","000:00:00","00000:00:00"],
+    //     ["000:00:00","000:00:00","00000:00:00"],
+    // ]};
+    // this.setData(items);
+    // this.rows.select(0)
 }
 
 SummaryTable.prototype.registerActions = function() {
     let _this = this;
 
-    // // manage mouse things
-    // _this.rows.on('element wheeldown', function(foo, bar) {
-    //     this.down();
-    //     //console.log("element wheeldown")
-    //     let idx = this.getItemIndex(this.selected);
-    //     _this.view.widgets.sidebar.emit('syncSelect', idx, 'element wheeldown');
-    // });
-    // _this.rows.on('element wheelup', function(foo, bar) {
-    //     this.up();
-    //     //console.log("element wheelup")
-    //     let idx = this.getItemIndex(this.selected);
-    //     //self.select(idx);
-    //     _this.view.widgets.sidebar.emit('syncSelect', idx, 'element wheelup');
-    // });
-    // _this.rows.on('element click', function(foo, data) {
-    //     let idx = data.y-4
-    //     // this.select(idx);
-    //     // this.view.widgets.sidebar.emit('syncSelect', idx, 'element click');
-    // });
-    // _this.rows.on('click', function(data, bar) {
-    //     //console.log(JSON.stringify(foo));
-    //     let idx = data.y-4
-    //     this.select(idx);
-    //     this.view.widgets.sidebar.emit('syncSelect', idx, 'element click');
-    //     // console.log("click")
-    //     // console.log(JSON.stringify(foo));
-    //     // let idx = this.getItemIndex(this.selected);
-    //     // this.select(idx);
-    //     // this.view.widgets.sidebar.emit('syncSelect', idx, 'element click');
-    // });
-
-
-    // // manage selections
-    // _this.rows.on('element select', function(foo, bar) {
-    //     //console.log("element select")
-    //     let idx = this.getItemIndex(this.selected);
-    //     //self.select(idx);
-    //     _this.view.widgets.sidebar.emit('syncSelect', idx, 'element select');
-    // });
-    // _this.rows.on('select', function(foo, bar){
-    //     //console.log("select")
-    //     let idx = this.getItemIndex(this.selected);
-    //     //self.select(idx);
-    //     _this.view.widgets.sidebar.emit('syncSelect', idx, 'select');
-    // });
-
-    // manage keypresses
-    // _this.rows.key('tab', function(ch, key) {
-    //             console.log("thing")
-    // });
-    // _this.rows.on('mouse', function(ch, key) {
-    //     let idx = this.getItemIndex(this.selected);
-    //     this.select(idx);
-    //     _this.view.widgets.sidebar.emit('syncSelect', idx, 'keypress');
-    // });
-
     this.rows.on('keypress', function(ch, key) {
-        //let idx = this.getItemIndex(this.selected);
-        //self.select(idx);
-        //_this.view.widgets.sidebar.emit('syncSelect', idx, 'keypress');
-        //custom key bindings
         if (key.name === 'tab') {
             if (!key.shift) {
                 _this.view.setWinFocusNext();
@@ -202,16 +144,54 @@ SummaryTable.prototype.registerActions = function() {
             return;
         }
     });
-    // _this.view.widgets.summarytable.emit('syncSelect', idx, 'element click');
+
     this.on('syncSelect', function(idx){
         _this.rows.select(idx);
         _this.screen.render();
     });
 
-    // _this.on('syncSelect', function(idx,name) {
-    //     _this.rows.select(idx);
-    //     _this.screen.render();
-    // });
+    this.on('updateData', () => {
+        _this.updateSummaryData();
+    });
+}
+
+SummaryTable.prototype.updateSummaryData = function(){
+
+    //TODO: move this to workspace
+    let _this = this;
+
+    let node_lines = _this.view.widgets.sheettree.nodeLines;      //data in sidebar tree
+
+    let items = {
+        headers: [" Running", " Today", " Total Time",""],
+        data: []
+    };
+    items.data = new Array(node_lines.length);
+
+    for ( let i in node_lines){
+        items.data[i] = ['','','',''];
+    }
+
+    let note = "";
+
+    for ( let i in node_lines){
+        if( typeof node_lines[i].info.note !== 'undefined' ){
+            note = String(node_lines[i].info.note);
+        }
+        items.data[i] = [
+            node_lines[i].info.running,
+            node_lines[i].info.today,
+            node_lines[i].info.total_time,
+            note
+            //( node_lines[i].info.note == 'undefined' ) ? "" : node_lines[i].info.note.toString()
+        ];
+        note = ""
+    }
+
+
+    this.log.msg("updated summary list", this.log.loglevel.devel.message)
+    _this.setData(items);
+    _this.view.screen.render();
 }
 
 module.exports = {SummaryTable};

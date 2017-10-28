@@ -95,6 +95,10 @@ Logger.prototype.registerActions = function() {
         _this.select(this.items.length -1);
         _this.parent.render();
     });
+    this.on('resize', () => {
+        _this.select(this.items.length -1);
+        _this.parent.render();
+    });
 
     this.on('keypress', function(ch, key) {
         //custom key bindings

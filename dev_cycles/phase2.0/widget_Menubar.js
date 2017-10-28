@@ -84,6 +84,10 @@ Menubar.prototype.registerActions = function() {
         //always reset the menu to first option
         _this.select(0);
     });
+    this.on('focus', function() {
+        //always reset the menu to first option
+        _this.select(0);
+    });
 
     this.on('keypress', function(ch, key) {
         // custom key bindings

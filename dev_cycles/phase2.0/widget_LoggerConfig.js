@@ -34,15 +34,15 @@ LoggerConfig.prototype.loadDefaults = function() {
         },
         colors: {
             bg: {
-                none: null,
+                none: "none",
                 opaque: "black",
-                dark: null,
-                light: null,
+                dark: "none",
+                light: "none",
                 frosty: "white",
                 desc: "the bg color of the logger"
             },
             fg: {
-                none: null,
+                none: "none",
                 opaque: "white",
                 dark: "gray",
                 light: "black",
@@ -51,15 +51,15 @@ LoggerConfig.prototype.loadDefaults = function() {
             },
             style: {
                 bg: {
-                    none: null,
+                    none: "none",
                     opaque: "black",
-                    dark: null,
-                    light: null,
+                    dark: "none",
+                    light: "none",
                     frosty: "white",
                     desc: "the style bg color of the logger"
                 },
                 fg: {
-                    none: null,
+                    none: "none",
                     opaque: "white",
                     dark: "gray",
                     light: "black",
@@ -68,15 +68,15 @@ LoggerConfig.prototype.loadDefaults = function() {
                 },
                 item: {
                     bg: {
-                        none: null,
+                        none: "none",
                         opaque: "black",
-                        dark: null,
-                        light: null,
+                        dark: "none",
+                        light: "none",
                         frosty: "white",
                         desc: "the style item bg color of the logger"
                     },
                     fg: {
-                        none: null,
+                        none: "none",
                         opaque: "white",
                         dark: "gray",
                         light: "black",
@@ -86,15 +86,15 @@ LoggerConfig.prototype.loadDefaults = function() {
                 },
                 selected: {
                     bg: {
-                        none: null,
+                        none: "none",
                         opaque: "lightblack",
-                        dark: null,
-                        light: null,
+                        dark: "none",
+                        light: "none",
                         frosty: "gray",
                         desc: "the style selected bg color of the logger"
                     },
                     fg: {
-                        none: null,
+                        none: "none",
                         opaque: "white",
                         dark: "white",
                         light: "black",
@@ -105,7 +105,7 @@ LoggerConfig.prototype.loadDefaults = function() {
             },
             message: {
                 bg: {
-                    none: null,
+                    none: "none",
                     opaque: "black",
                     dark: "black",
                     light: "white",
@@ -113,7 +113,7 @@ LoggerConfig.prototype.loadDefaults = function() {
                     desc: "the bg color of a message"
                 },
                 fg: {
-                    none: null,
+                    none: "none",
                     opaque: "white",
                     dark: "white",
                     light: "black",
@@ -123,7 +123,7 @@ LoggerConfig.prototype.loadDefaults = function() {
             },
             warning: {
                 bg: {
-                    none: null,
+                    none: "none",
                     opaque: "black",
                     dark: "black",
                     light: "white",
@@ -141,7 +141,7 @@ LoggerConfig.prototype.loadDefaults = function() {
             },
             error: {
                 bg: {
-                    none: null,
+                    none: "none",
                     opaque: "black",
                     dark: "black",
                     light: "white",

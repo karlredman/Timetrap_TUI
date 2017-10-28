@@ -4,8 +4,9 @@
 var blessed = require('blessed');
 
 // project dependencies
-var {ViewMain} = require('./view_Main');
-var {ViewMainConfig} = require('./view_MainConfig');
+var {ViewMain} = require('./view_Main'),
+    {ViewMainConfig} = require('./view_MainConfig'),
+    {Timetrap} = require('./Timetrap');
 require('./Errors');
 
 // parent
@@ -29,6 +30,7 @@ class ViewController extends EventEmitter {
 
         // sometimes we have widgets at this level
         this.widgets = {};
+        this.timetrap = new Timetrap({});
     }
 
     run(){

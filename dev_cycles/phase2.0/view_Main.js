@@ -91,18 +91,24 @@ ViewMain.prototype.setWinFocus = function(win){
             // this.widgets.summarytable.focus();
             break;
         case this.pwin.sheettree:
-            this.widgets.summarytable.options.style.border.fg = "green";
-            this.widgets.sheettree.options.style.border.fg = "green";
+            // this.widgets.summarytable.options.style.border.fg = "green";
+            // this.widgets.sheettree.options.style.border.fg = "green";
+            this.widgets.summarytable.options.style.border.fg = this.widgets.summarytable.config.data.colors.style.border.fg[this.theme];
+            this.widgets.sheettree.options.style.border.fg = this.widgets.sheettree.config.data.colors.style.border.fg[this.theme];
             this.widgets.sheettree.focus();
             break;
         case this.pwin.menubar:
-            this.widgets.summarytable.options.style.border.fg = "red";
-            this.widgets.sheettree.options.style.border.fg = "red";
+            // this.widgets.summarytable.options.style.border.fg = "red";
+            // this.widgets.sheettree.options.style.border.fg = "red";
+            this.widgets.summarytable.options.style.border.fg = this.config.data.colors.focuslines.disabled.fg[this.theme];
+            this.widgets.sheettree.options.style.border.fg = this.config.data.colors.focuslines.disabled.fg[this.theme];
              this.widgets.menubar.focus();
             break;
         case this.pwin.logger:
-            this.widgets.summarytable.options.style.border.fg = "red";
-            this.widgets.sheettree.options.style.border.fg = "red";
+            // this.widgets.summarytable.options.style.border.fg = "red";
+            // this.widgets.sheettree.options.style.border.fg = "red";
+            this.widgets.summarytable.options.style.border.fg = this.config.data.colors.focuslines.disabled.fg[this.theme];
+            this.widgets.sheettree.options.style.border.fg = this.config.data.colors.focuslines.disabled.fg[this.theme];
             this.widgets.logger.focus();
             break;
         default:
@@ -181,6 +187,9 @@ ViewMain.prototype.setWinFocusPrev = function(){
 
 
 ViewMain.prototype.registerActions = function(){
+    // this.screen.on('resize', () => {
+    //     this.log.
+    // });
 }
 
 ViewMain.prototype.createWidgets = function(){
@@ -205,9 +214,9 @@ ViewMain.prototype.createWidgets = function(){
     this.log = this.widgets.logger;
 
     // TODO: debug -kill
-    usage: this.log.msg("test message", this.log.loglevel.production.message);
-    usage: this.log.msg("test message", this.log.loglevel.production.warning);
-    usage: this.log.msg("test message", this.log.loglevel.production.error);
+    // usage: this.log.msg("test message", this.log.loglevel.production.message);
+    // usage: this.log.msg("test message", this.log.loglevel.production.warning);
+    // usage: this.log.msg("test message", this.log.loglevel.production.error);
 
     // menubar
     let menubar_config = new MenubarConfig();

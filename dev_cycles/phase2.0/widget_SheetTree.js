@@ -68,7 +68,7 @@ class SheetTree extends ContribTree {
                     },
                 },
             },
-            data: options.data || {},
+            data: {},
         };
         // merge options into defaults
         //shallow copy is fine here
@@ -77,9 +77,11 @@ class SheetTree extends ContribTree {
         super(options);
 
         // saved options
+        this.view = view;
+        this.log = logger;
         this.theme = theme;
         this.config = config;
-        this.view = view;
+        this.timetrap = this.view.controller.timetrap;
 
         // log is interactive (for parent contrib.log)
         //this.interactive = true
@@ -105,12 +107,12 @@ SheetTree.prototype.render = function() {
 SheetTree.prototype.init = function() {
 
     // debug testing -fake data for tree
-    let fs = require('fs');
-    let file = './__tests__/input/tree.json';
-    let data = fs.readFileSync(file, 'utf8');
-    let obj = JSON.parse(data);
-    this.setData(obj);
-    this.view.screen.render();
+	// let fs = require('fs');
+	// let file = './__tests__/input/tree.json';
+	// let data = fs.readFileSync(file, 'utf8');
+	// let obj = JSON.parse(data);
+	// this.setData(obj);
+	// this.view.screen.render();
 
 
     // setTimeout(() => {
@@ -118,10 +120,185 @@ SheetTree.prototype.init = function() {
         // this.options.style.border.fg = "yellow";
         // this.options.parent.render();
     // }5000)
+
+    /////////////////////////////////////
+    // request data
+
+    this.view.controller.timetrap.callCommand({type:'list', owner: 'sheettree', sync: false});
+}
+SheetTree.prototype.processList = function(result) {
+    let _this = this;
+        //parse the sheets
+
+        //console.log(result);
+        let arr = result.toString().split("\n");
+
+        let running = 0;
+
+        let running_list = [];
+        let jarr = [];
+        let i = 1; //skip the header line
+        for ( ; i < arr.length; i++){
+            let j = {};
+
+            //determine active state
+            if( arr[i][0] == ' ' ) {
+                j.active = '';
+            }
+            else {
+                if( arr[i][0] == '-' ) {
+                    j.active = 'previous';
+                }
+                else {
+                    if( arr[i][0] == '*' ) {
+                        j.active = 'current';
+                    }
+                    else {
+                        j.active = undefined;
+                    }
+                }
+            }
+
+            //get the rest of the fields
+            let darr = arr[i].substr(1, arr[i].length).match(/\S+/g);
+            if(darr != null){
+                j.name = darr[0];
+                j.running = darr[1];
+                j.today = darr[2];
+                j.total_time = darr[3];
+
+                jarr.push(j);
+
+                if( j.running != '0:00:00')
+                {
+                    //update our total running
+                    running++;
+
+                    //add j.name for grabbing the running ID and Note
+                    //TODO: this will have to be asynch at some point
+                    running_list.push({name: j.name});
+                }
+            }
+        }
+        //save the list
+	//_this.list = jarr;
+        //_this.running_list = running_list;
+        //console.log(util.inspect(_this.running_list, null, 10));
+
+        //get running ids in the background
+        _this.num_running = running;
+        _this.num_clocks = jarr.length;
+	//_this.fetchRunningInfo(running_list);
+        //_this.emit('getRunningIDs', running_list);
+	//_this.emit('fetch_list', jarr);
+        //console.log(JSON.stringify(jarr, null, 2));
+
+	this.buildTree(jarr);
+};
+
+
+SheetTree.prototype.buildTree = function(list){
+    let _this = this;
+
+    //altered from:
+    //https://stackoverflow.com/questions/6232753/convert-delimited-string-into-hierarchical-json-with-jquery
+
+    var input = list;
+    var output = [];
+    for (var i = 0; i < input.length; i++) {
+        var chain = input[i].name.split(".");
+        var currentNode = output;
+        for (var j = 0; j < chain.length; j++) {
+            var wantedNode = chain[j];
+            var lastNode = currentNode;
+            for (var k = 0; k < currentNode.length; k++) {
+                if (currentNode[k].name == wantedNode) {
+                    currentNode = currentNode[k].children;
+                    break;
+                }
+            }
+            // If we couldn't find an item in this list of children
+            // that has the right name, create one:
+            if (lastNode == currentNode) {
+
+                // set the sheet as part of the data
+                //let sheet_arr = sheet.split('.');
+                let sheet_arr = chain;
+                let sheet_val = input[i].name;
+                let list_info_val = {
+                    running: input[i].running,
+                    today: input[i].today,
+                    total_time: input[i].total_time,
+                    active: input[i].active
+                }
+                //add info from running_data if available
+                if(typeof _this.running_data !== 'undefined'){
+                    for ( let r in _this.running_data){
+                        if( sheet_val === _this.running_data[r].name ){
+                            list_info_val.id = _this.running_data[r].id
+                            list_info_val.note = _this.running_data[r].note
+                        }
+                        else{
+                            list_info_val.id = undefined;
+                            list_info_val.note = undefined;
+                        }
+                    }
+                }
+                if ( wantedNode != sheet_arr[sheet_arr.length-1] ) {
+                    //this isn't the endpoint so it's just a hiarchy element
+                    sheet_val = '';
+                    list_info_val = {
+                        running: '-:--:--',
+                        today: '-:--:--',
+                        total_time: '-:--:--',
+                        active: '',
+                        id: undefined,
+                        note: undefined,
+                    };
+                }
+                var newNode = currentNode[k] = {name: wantedNode, extended: true, sheet: sheet_val, info: list_info_val, children: []};
+                currentNode = newNode.children;
+            }
+        }
+    }
+
+    // TODO: default should be set by the user
+    let tree = {name: "Timetrap", extended: true, sheet: "default",
+        info: {
+            running: '-:--:--',
+            today: '-:--:--',
+            total_time: '-:--:--',
+            active: ''
+        },
+        children: output}
+
+    _this.emit('fetch_tree', tree);
+
 }
 
 SheetTree.prototype.registerActions = function() {
     let _this = this;
+
+	//update the list for the tree
+	this.view.controller.timetrap.on(
+		this.view.controller.timetrap.emit_types.command_complete.name,
+		(emit_obj) => {
+			if(emit_obj.owner === 'sheettree'){
+				if(emit_obj.type = 'list'){
+					this.processList(emit_obj.data.stdoutData);
+				}
+			}
+		});
+
+	//update the tree
+	this.on('fetch_tree', (tree) => {
+		this.setData(tree);
+		this.view.screen.render();
+		this.log.msg("updated sheet tree", this.log.loglevel.devel.message)
+
+		//call summaryList to update
+		this.view.widgets.summarytable.emit('updateData');
+	})
 
     this.on('keypress', function(ch, key) {
         let self = this;
