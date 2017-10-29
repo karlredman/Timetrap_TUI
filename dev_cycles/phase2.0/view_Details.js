@@ -168,12 +168,34 @@ ViewDetails.prototype.setWinFocusPrev = function(){
 
 
 ViewDetails.prototype.registerActions = function(){
+    let _this=this;
 
     // this.view.controller.timetrap.on('db_change', function(){
     //     //update the sheet tree and summary table when the db changes
     //     _this.view.controller.timetrap.callCommand({type:'list', owner: 'sheettree', sync: false});
     //     this.log.msg("database changed externally", this.log.loglevel.production.message);
     // });
+
+    this.on('hide_view', () => {
+        _this.log.msg("hiding details view", _this.log.loglevel.devel.message);
+        _this.widgets.viewbox.hide();
+    });
+    this.on('show_view', () => {
+        _this.log.msg("showing details view", _this.log.loglevel.devel.message);
+        _this.widgets.viewbox.show();
+    });
+}
+
+ViewDetails.prototype.destroyAllWidgets = function() {
+    // TODO: copy logs to main view's logs
+
+    // destroy all widgets
+    for (let key in this.widgets) {
+        if ( ! this.widgets.hasOwnProperty(key)) continue;
+        this.widgets[key].destroy()
+        this.widgets[key].free()
+        delete this.widgets[key];
+    }
 }
 
 ViewDetails.prototype.createWidgets = function(){

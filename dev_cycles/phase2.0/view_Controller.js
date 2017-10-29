@@ -69,20 +69,45 @@ ViewController.prototype.registerActions = function() {
     //view creators
     this.on('create_view', (info) => {
         if (info.view_name === 'details'){
-            if(typeof _this.pickview === 'undefined'){
+            if(typeof _this.views.details === 'undefined'){
                 // hide main view / show loading
-                this.widgets.loading.load("loading...")
-                this.views.main.emit('hide_view');
+                _this.widgets.loading.load("loading...")
+                _this.views.main.emit('hide_view');
 
                 // // kill the view.menubar
                 this.views.main.emit('destroy_widget', 'menubar');
 
                 // create the view
                 let details_config = new ViewMainConfig();          //recycling main config
-                this.views.details = new ViewDetails({
-                    screen: this.screen,
-                    process_config: this.process_config,
-                    controller: this,
+                _this.views.details = new ViewDetails({
+                    screen: _this.screen,
+                    process_config: _this.process_config,
+                    controller: _this,
+                    config: details_config,
+                });
+
+                // log it
+                _this.views.main.widgets.logger.msg("Created view: Details", _this.views.main.widgets.logger.loglevel.devel.message);
+            }
+        }
+    });
+    this.on('Xcreate_view', (info) => {
+        if (info.view_name === 'details'){
+            if(typeof _this.views.details === 'undefined'){
+                console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx Xcreate: got here")
+                // hide main view / show loading
+                _this.widgets.loading.load("loading...")
+                _this.views.main.emit('hide_view');
+
+                // // kill the view.menubar
+                this.views.main.emit('destroy_widget', 'menubar');
+
+                // create the view
+                let details_config = new ViewMainConfig();          //recycling main config
+                _this.views.details = new ViewDetails({
+                    screen: _this.screen,
+                    process_config: _this.process_config,
+                    controller: _this,
                     config: details_config,
                 });
 
@@ -95,24 +120,35 @@ ViewController.prototype.registerActions = function() {
     //view destroyers
     _this.on('destroy_view', (info) => {
         if (info.view_name === 'details'){
-            if (typeof _this.pickview !== 'undefined'){
-                // hide the view (show loading)
+            if (typeof _this.views.details !== 'undefined'){
 
-                // get a copy of the loggs from the outgoing view
+                // hide the details view
+                _this.views.details.emit('hide_view');
+
+                // recreate the menubar
+                this.views.main.emit('create_widget', 'menubar');
+
+                // show main view
+                _this.views.main.emit('show_view');
+
+                //focus the main view
+                _this.views.main.emit('focus_default');
+
+
+                // TODO: get a copy of the loggs from the outgoing view
 
                 // tell the view to destory all of it's widgets
+                _this.views.details.destroyAllWidgets();
 
                 // destroy the view
+                delete _this.views.details;
+                _this.views.details = undefined;
+
 
                 // copy logs over to main view logger
 
-                // recreate the menubar
 
-                //stop loading screen
-
-                // show main view
-
-                // log it
+                // TODO: log it
                 //_this.logger.msg("Destroyed view: Details View", _this.logger.loglevel.devel.message);
             }
         }

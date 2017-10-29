@@ -189,21 +189,45 @@ ViewMain.prototype.setWinFocusPrev = function(){
 
 
 ViewMain.prototype.registerActions = function(){
-    // this.screen.on('resize', () => {
-    //     this.log.
-    // });
+    let _this = this;
+
     this.on('hide_view', () => {
-        this.log.msg("hiding main view", this.log.loglevel.devel.message);
-        this.widgets.viewbox.hide();
+        _this.log.msg("hiding main view", _this.log.loglevel.devel.message);
+        _this.widgets.viewbox.hide();
+    });
+    this.on('show_view', () => {
+        _this.log.msg("showing main view", _this.log.loglevel.devel.message);
+        _this.widgets.viewbox.show();
     });
     this.on('destroy_widget', (widget) => {
         if(widget === 'menubar'){
-            this.widgets.menubar.destroy();
-            this.widgets.menubar.free();
-            delete this.widgets.menubar;
-            this.log.msg("destroyed menubar while creating view details", this.log.loglevel.devel.message);
+            _this.widgets.menubar.destroy();
+            _this.widgets.menubar.free();
+            delete _this.widgets.menubar.config;
+            delete _this.widgets.menubar;
+            _this.log.msg("destroyed menubar while creating view details", _this.log.loglevel.devel.message);
         }
     });
+    this.on('create_widget', (widget) => {
+        if(widget === 'menubar'){
+            // menubar
+            let menubar_config = new MenubarConfig();
+            _this.widgets.menubar = new Menubar({
+                //parent: _this.widgets.viewbox,
+                parent: _this.widgets.viewbox,
+                config: menubar_config,
+                theme: _this.theme,
+                logger: _this.widgets.logger,
+                view: _this
+            });
+            _this.widgets.menubar.registerActions();
+        }
+    });
+    this.on('focus_default', () => {
+        //_this.widgets.sheettree.rows.select(0);
+        _this.setWinFocus(_this.pwin.sheettree);
+    });
+
 }
 
 ViewMain.prototype.createWidgets = function(){

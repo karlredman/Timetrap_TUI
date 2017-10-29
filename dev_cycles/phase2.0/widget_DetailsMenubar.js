@@ -159,6 +159,7 @@ Menubar.prototype.init = function() {
     let items = {
         // 1
         Close: () => {
+            _this.view.controller.emit('destroy_view', {view_name: 'details'})
         },
         // 2
         Resume: () => {
