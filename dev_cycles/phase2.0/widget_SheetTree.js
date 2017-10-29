@@ -284,7 +284,7 @@ SheetTree.prototype.registerActions = function() {
     this.view.controller.timetrap.on('db_change', function(){
         //update the sheet tree and summary table when the db changes
         _this.view.controller.timetrap.callCommand({type:'list', owner: 'sheettree', sync: false});
-        this.log.msg("database changed externally", this.log.loglevel.production.message);
+        _this.log.msg("database changed externally", _this.log.loglevel.production.message);
     });
 
     //update the list for the tree

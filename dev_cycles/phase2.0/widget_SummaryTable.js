@@ -197,7 +197,8 @@ SummaryTable.prototype.fakeTimer = function(command){
         if (typeof _this.fake_timer === 'undefined' ) {
             _this.fake_timer = setInterval(function(){
                 _this.emit('updateTimes');
-            }, 1000);
+            }, _this.config.data.traits.clock_interval*1000);
+            //}, 1000);
         }
     }
 

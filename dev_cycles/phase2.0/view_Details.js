@@ -53,12 +53,11 @@ class ViewDetails extends EventEmitter {
 
         //set up focus
         this.pwin ={
-            sheettree: 1,
+            table: 1,
             menubar: 2,
-            logger: 3,
-            summarytable: 4,
+            logger: 3
         };
-        this.pwin.first = this.pwin.sheettree;
+        this.pwin.first = this.pwin.table;
         this.pwin.last = this.pwin.logger;
         this.pwin.curWin;
 
@@ -70,7 +69,7 @@ class ViewDetails extends EventEmitter {
 
 
         //initial focus
-        this.setWinFocus(this.pwin.sheettree);
+        this.setWinFocus(this.pwin.table);
 
         //hide loading // TODO: should be an event
         this.controller.widgets.loading.stop();
@@ -78,6 +77,61 @@ class ViewDetails extends EventEmitter {
 }
 
 ViewDetails.prototype.setWinFocus = function(win){
+    // The focus and effects are managed here so mouse actions don't cause
+    // false positives.
+    switch(win){
+        case this.pwin.table:
+            this.widgets.detailstable.options.style.border.fg = this.widgets.detailstable.config.data.colors.style.border.fg[this.theme];
+            this.widgets.detailstable.focus();
+            break;
+        case this.pwin.menubar:
+            this.widgets.detailstable.options.style.border.fg = this.config.data.colors.focuslines.disabled.fg[this.theme];
+             this.widgets.menubar.focus();
+            break;
+        case this.pwin.logger:
+            this.widgets.detailstable.options.style.border.fg = this.config.data.colors.focuslines.disabled.fg[this.theme];
+            this.widgets.logger.focus();
+            break;
+        default:
+            this.loading_dialog = new DialogMessage({target: this, parent: this.screen});
+            this.loading_dialog.alert('Bad window number');
+            break;
+    }
+
+    this.pwin.curWin = win;
+
+    //TODO: rework this for color themes
+
+    //toggle menu colors
+    if ( win === this.pwin.menubar ) {
+        // menu is active highlight only the selected one
+        this.widgets.menubar.options.style.bg = this.widgets.menubar.config.data.colors.style.bg[this.theme];
+        this.widgets.menubar.options.style.fg = this.widgets.menubar.config.data.colors.style.fg[this.theme];
+
+        this.widgets.menubar.options.style.item.bg = this.widgets.menubar.config.data.colors.style.item.bg[this.theme];
+        this.widgets.menubar.options.style.item.fg = this.widgets.menubar.config.data.colors.style.item.fg[this.theme];
+
+        this.widgets.menubar.options.style.prefix.bg = this.widgets.menubar.config.data.colors.style.prefix.bg[this.theme];
+        this.widgets.menubar.options.style.prefix.fg = this.widgets.menubar.config.data.colors.style.prefix.fg[this.theme];
+
+        this.widgets.menubar.options.style.selected.bg = this.widgets.menubar.config.data.colors.style.selected.bg[this.theme];
+        this.widgets.menubar.options.style.selected.fg = this.widgets.menubar.config.data.colors.style.selected.fg[this.theme];
+    }
+    else {
+        // menu is not active don't show highlights
+        this.widgets.menubar.options.style.bg = this.widgets.menubar.config.data.colors.style.inactive.bg[this.theme];
+        this.widgets.menubar.options.style.fg = this.widgets.menubar.config.data.colors.style.inactive.fg[this.theme];
+
+        this.widgets.menubar.options.style.item.bg = this.widgets.menubar.config.data.colors.style.inactive.bg[this.theme];
+        this.widgets.menubar.options.style.item.fg = this.widgets.menubar.config.data.colors.style.inactive.fg[this.theme];
+
+        this.widgets.menubar.options.style.prefix.bg = this.widgets.menubar.config.data.colors.style.inactive.bg[this.theme];
+        this.widgets.menubar.options.style.prefix.fg = this.widgets.menubar.config.data.colors.style.inactive.fg[this.theme];
+
+        this.widgets.menubar.options.style.selected.bg = this.widgets.menubar.config.data.colors.style.inactive.bg[this.theme];
+        this.widgets.menubar.options.style.selected.fg = this.widgets.menubar.config.data.colors.style.inactive.fg[this.theme];
+    }
+    this.screen.render();
 }
 
 ViewDetails.prototype.setWinFocusNext = function(){
@@ -85,13 +139,13 @@ ViewDetails.prototype.setWinFocusNext = function(){
     //specific behavior
     switch(this.pwin.curWin){
         case this.pwin.menubar:
-            this.setWinFocus(this.pwin.sheettree);
+            this.setWinFocus(this.pwin.table);
             break;
-        case this.pwin.sheettree:
+        case this.pwin.table:
             this.setWinFocus(this.pwin.menubar);
             break;
         case this.pwin.logger:
-            this.setWinFocus(this.pwin.sheettree);
+            this.setWinFocus(this.pwin.table);
             break;
     }
 }
@@ -101,21 +155,24 @@ ViewDetails.prototype.setWinFocusPrev = function(){
     //specific behaovior
     switch(this.pwin.curWin){
         case this.pwin.menubar:
-            this.setWinFocus(this.pwin.sheettree);
+            this.setWinFocus(this.pwin.table);
             break;
-        case this.pwin.sheettree:
+        case this.pwin.table:
             this.setWinFocus(this.pwin.logger);
             break;
         case this.pwin.logger:
-            this.setWinFocus(this.pwin.sheettree);
+            this.setWinFocus(this.pwin.table);
             break;
     }
 }
 
 
 ViewDetails.prototype.registerActions = function(){
-    // this.screen.on('resize', () => {
-    //     this.log.
+
+    // this.view.controller.timetrap.on('db_change', function(){
+    //     //update the sheet tree and summary table when the db changes
+    //     _this.view.controller.timetrap.callCommand({type:'list', owner: 'sheettree', sync: false});
+    //     this.log.msg("database changed externally", this.log.loglevel.production.message);
     // });
 }
 
@@ -152,7 +209,7 @@ ViewDetails.prototype.createWidgets = function(){
 
     // details table
     let summarytable_config = new SummaryTableConfig();
-    this.widgets.details_table = new DetailsTable({
+    this.widgets.detailstable = new DetailsTable({
         parent: this.widgets.viewbox,
         config: summarytable_config,
         theme: this.theme,
