@@ -199,51 +199,29 @@ DetailsTable.prototype.registerActions = function() {
     _this.rows.on('mouse', function(ch, key) {
         let idx = this.getItemIndex(this.selected);
         this.select(idx);
-        // _this.view.widgets.sidebar.emit('syncSelect', idx, 'keypress');
     });
     _this.rows.on('element wheeldown', function(foo, bar) {
         this.down();
-        //console.log("element wheeldown")
         let idx = this.getItemIndex(this.selected);
-        // _this.view.widgets.sidebar.emit('syncSelect', idx, 'element wheeldown');
     });
     _this.rows.on('element wheelup', function(foo, bar) {
         this.up();
-        //console.log("element wheelup")
         let idx = this.getItemIndex(this.selected);
-        //self.select(idx);
-        //_this.view.widgets.sidebar.emit('syncSelect', idx, 'element wheelup');
     });
     _this.rows.on('element click', function(foo, data) {
         let idx = data.y-4
-        // this.select(idx);
-        // this.view.widgets.sidebar.emit('syncSelect', idx, 'element click');
     });
     _this.rows.on('click', function(data, bar) {
-        //console.log(JSON.stringify(foo));
         let idx = data.y-4
         this.select(idx);
-        //this.view.widgets.sidebar.emit('syncSelect', idx, 'element click');
-        // console.log("click")
-        // console.log(JSON.stringify(foo));
-        // let idx = this.getItemIndex(this.selected);
-        // this.select(idx);
-        // this.view.widgets.sidebar.emit('syncSelect', idx, 'element click');
     });
-
 
     // manage selections
     _this.rows.on('element select', function(foo, bar) {
-        //console.log("element select")
         let idx = this.getItemIndex(this.selected);
-        //self.select(idx);
-        // _this.view.widgets.sidebar.emit('syncSelect', idx, 'element select');
     });
     _this.rows.on('select', function(foo, bar){
-        //console.log("select")
         let idx = this.getItemIndex(this.selected);
-        //self.select(idx);
-        // _this.view.widgets.sidebar.emit('syncSelect', idx, 'select');
     });
 
 }
