@@ -15,7 +15,9 @@ var {ViewBox} = require('./widget_ViewBox'),
     {SheetTree} = require('./widget_SheetTree'),
     {SheetTreeConfig} = require('./widget_SheetTreeConfig'),
     {SummaryTable} = require('./widget_SummaryTable'),
-    {SummaryTableConfig} = require('./widget_SummaryTableConfig');
+    {SummaryTableConfig} = require('./widget_SummaryTableConfig'),
+    {RunningBox} = require('./widget_RunningBox'),
+    {RunningBoxConfig} = require('./widget_RunningBoxConfig');
 var helpers = require('./helpers');
 
 // debugging
@@ -248,6 +250,7 @@ ViewMain.prototype.createWidgets = function(){
         view: this
     });
 
+
     //manage focus
     let logline = blessed.line({
         parent: this.widgets.viewbox,
@@ -279,6 +282,18 @@ ViewMain.prototype.createWidgets = function(){
             fg: this.config.data.colors.focuslines.disabled.fg[this.theme],
             bg: this.config.data.colors.focuslines.disabled.bg[this.theme]
         }, Object);
+
+    // running box
+    let runningbox_config = new RunningBoxConfig();
+    this.widgets.runningbox = new RunningBox({
+        parent: this.widgets.viewbox,
+        //parent: this.screen,
+        config: runningbox_config,
+        theme: this.theme,
+        logger: this.widgets.logger,
+        view: this
+    });
+
 
     this.screen.render();
 }

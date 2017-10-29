@@ -18,6 +18,7 @@ ViewMainConfig.prototype.loadDefaults = function() {
                 dark: "none",
                 light: "none",
                 frosty: "white",
+                console: "none",
                 desc: "the bg color of the menu item"
             },
             fg: {
@@ -26,6 +27,7 @@ ViewMainConfig.prototype.loadDefaults = function() {
                 dark: "gray",
                 light: "black",
                 frosty: "red",
+                console: "yellow",
                 desc: "the fg color of the menu item"
             },
             focuslines: {
@@ -35,6 +37,7 @@ ViewMainConfig.prototype.loadDefaults = function() {
                     dark: "none",
                     light: "none",
                     frosty: "white",
+                    console: "none",
                     desc: "the bg color of the menu item"
                 },
                 fg: {
@@ -43,6 +46,7 @@ ViewMainConfig.prototype.loadDefaults = function() {
                     dark: "green",
                     light: "green",
                     frosty: "blue",
+                    console: "yellow",
                     desc: "the fg color of the menu item"
                 },
                 disabled: {
@@ -52,6 +56,7 @@ ViewMainConfig.prototype.loadDefaults = function() {
                         dark: "none",
                         light: "none",
                         frosty: "white",
+                        console: "none",
                         desc: "the bg color of the menu item"
                     },
                     fg: {
@@ -60,6 +65,7 @@ ViewMainConfig.prototype.loadDefaults = function() {
                         dark: "red",
                         light: "red",
                         frosty: "red",
+                        console: "red",
                         desc: "the fg color of the menu item"
                     },
                 }

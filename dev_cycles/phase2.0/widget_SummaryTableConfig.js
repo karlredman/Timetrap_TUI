@@ -10,9 +10,10 @@ class SummaryTableConfig extends ConfigurationBase {
 SummaryTableConfig.prototype.loadDefaults = function() {
     this.data = {
         traits: {
-            // width: 25,      //initial width ?? shrink ??
+            // width: 25,       //initial width ?? shrink ??
             //left: config.data.traits.left,
             left: 24,
+            clock_interval: 1,  //interval in whole seconds
         },
         colors: {
             bg: {

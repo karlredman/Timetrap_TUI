@@ -50,7 +50,7 @@ ProcessConfig.prototype.loadDefaults = function() {
 		color_theme: {
 			value: 'opaque',
 			desc: "The color theme to use for the application",
-			options: 'opaque|none|dark|light'
+			options: 'opaque|none|dark|light|console'
 		}
 	};
 }

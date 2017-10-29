@@ -4,7 +4,7 @@
 var blessed = require('blessed'),
     Contrib = require('blessed-contrib'),
     ContribTree = Contrib.tree,
-    Box = blessed.Box;
+    BlessedBox = blessed.Box;
 
 // project includes
 //var {SheetTreeConfig} = require('./widget_SheetTreeConfig');
@@ -21,6 +21,10 @@ class SheetTree extends ContribTree {
         view = helpers.requiredParam('view')} ={}) {
 
         let defaults = {
+    wrap: true,
+    hidden: false,
+    fixed: false,
+            //
             parent: parent,
             //
             left: 0,
@@ -46,6 +50,7 @@ class SheetTree extends ContribTree {
             border: {type: "line"},
             //
             style: {
+                inverse: false,
                 bg: config.data.colors.style.bg[theme],
                 fg: config.data.colors.style.fg[theme],
                 //
@@ -83,6 +88,12 @@ class SheetTree extends ContribTree {
         this.config = config;
         this.timetrap = this.view.controller.timetrap;
 
+        //internal stats
+        this.num_running = 0;
+        this.num_sheets = 0;
+        this.curret_idx = 0;
+        this.tree_data = {};
+
         // log is interactive (for parent contrib.log)
         //this.interactive = true
 
@@ -94,14 +105,14 @@ class SheetTree extends ContribTree {
 SheetTree.prototype.render = function() {
     //replace parent's render to accomidate for tree placement
 
-    //if (this.screen.focused === this.rows) this.rows.focus();
+    if (this.screen.focused === this.rows) this.rows.focus();
 
     this.rows.top = this.top+1;
     this.rows.width = this.width - 3;
     this.rows.height = this.height - 4;
 
     //TODO: this is a cheat !!! and memory leak ?? -investigate
-    Box.prototype.render.call(this);
+    BlessedBox.prototype.render.call(this);
 };
 
 SheetTree.prototype.init = function() {
@@ -186,14 +197,15 @@ SheetTree.prototype.processList = function(result) {
         //console.log(util.inspect(_this.running_list, null, 10));
 
         //get running ids in the background
-        _this.num_running = running;
-        _this.num_clocks = jarr.length;
+        this.num_running = running;
+        this.num_sheets = jarr.length;
 	//_this.fetchRunningInfo(running_list);
         //_this.emit('getRunningIDs', running_list);
 	//_this.emit('fetch_list', jarr);
         //console.log(JSON.stringify(jarr, null, 2));
 
 	this.buildTree(jarr);
+    this.view.widgets.runningbox.emit('update', this.num_running, this.num_sheets);
 };
 
 
@@ -279,41 +291,74 @@ SheetTree.prototype.buildTree = function(list){
 SheetTree.prototype.registerActions = function() {
     let _this = this;
 
+    this.view.controller.timetrap.on('db_change', function(){
+        //update the sidebar and workspace when the db changes
+        _this.view.controller.timetrap.callCommand({type:'list', owner: 'sheettree', sync: false});
+    });
+
 	//update the list for the tree
 	this.view.controller.timetrap.on(
-		this.view.controller.timetrap.emit_types.command_complete.name,
+		_this.view.controller.timetrap.emit_types.command_complete.name,
 		(emit_obj) => {
 			if(emit_obj.owner === 'sheettree'){
 				if(emit_obj.type = 'list'){
-					this.processList(emit_obj.data.stdoutData);
+					_this.processList(emit_obj.data.stdoutData);
 				}
 			}
 		});
 
 	//update the tree
 	this.on('fetch_tree', (tree) => {
-		this.setData(tree);
-		this.view.screen.render();
-		this.log.msg("updated sheet tree", this.log.loglevel.devel.message)
+        _this.tree_data = tree;
+		_this.setData(tree);
+		_this.view.screen.render();
+		_this.log.msg("updated sheet tree", _this.log.loglevel.devel.message)
 
 		//call summaryList to update
-		this.view.widgets.summarytable.emit('updateData');
+		_this.view.widgets.summarytable.emit('updateData');
 	})
 
-    this.on('keypress', function(ch, key) {
-        let self = this;
-        if (key.name === 'tab') {
-            if (!key.shift) {
-                _this.view.setWinFocusNext();
-            } else {
-                _this.view.setWinFocusPrev();
-            }
-            return;
-        }
-    });
+    // this.on('keypress', function(ch, key) {
+    //     if (key.name === 'tab') {
+    //         if (!key.shift) {
+    //             _this.view.setWinFocusNext();
+    //         } else {
+    //             _this.view.setWinFocusPrev();
+    //         }
+    //         return;
+    //     }
+    // });
+
+    this.on('syncSelect', function(idx) {
+        //console.log(idx+":"+name);
+        //this.rows.focusOffset(idx);
+        //this.rows.down(1);
+        this.rows.select(idx);
+        this.screen.render();
+	});
+
+    // // manage selections
+    // _this.rows.on('element select', function(foo, bar) {
+    //     //console.log("element select")
+    //     let idx = this.getItemIndex(this.selected);
+    //     //self.select(idx);
+    //     _this.view.widgets.summarytable.emit('syncSelect', idx, 'element select');
+    // });
+    // _this.rows.on('select', function(foo, bar){
+    //     //console.log("select")
+    //     let idx = this.getItemIndex(this.selected);
+    //     //self.select(idx);
+    //     _this.view.widgets.summarytable.emit('syncSelect', idx, 'select');
+    // });
 
     this.rows.on('keypress', function(ch, key) {
-        let self = this;
+        //Note: be mindful of this vs _this
+
+        //_this.view.widgets.summarytable.rows.emit('keypress', ch, key);
+
+        let idx = this.getItemIndex(this.selected);
+        _this.view.widgets.summarytable.emit('syncSelect', idx, 'element click');
+
         if (key.name === 'tab') {
             if (!key.shift) {
                 _this.view.setWinFocusNext();
@@ -344,26 +389,33 @@ SheetTree.prototype.registerActions = function() {
             this.emit('keypress', 'C-u',{name:'u', ctrl: true, full:'C-u'})
         }
 
-        let idx = self.getItemIndex(this.selected);
-        _this.view.widgets.summarytable.emit('syncSelect', idx, 'element click');
 
+        // let idx = this.getItemIndex(this.selected);
+        // _this.curret_idx = idx;
+        // _this.view.widgets.summarytable.emit('syncSelect', idx, 'element click');
+
+        // let idx = this.getItemIndex(this.selected);
+        // _this.view.widgets.summarytable.rows.select(idx);
+        // _this.view.screen.render();
     });
 
-    // manage mouse things
-    _this.rows.on('element wheeldown', function(foo, bar) {
-        let self = this;
-        let idx = self.getItemIndex(this.selected);
-        _this.view.widgets.summarytable.emit('syncSelect', idx, 'element wheeldown');
-    });
-    _this.rows.on('element wheelup', function(foo, bar) {
-        let self = this;
-        let idx = self.getItemIndex(this.selected);
-        _this.view.widgets.summarytable.emit('syncSelect', idx, 'element wheelup');
-    });
-    _this.rows.on('element click', function(foo, bar) {
-        let self = this;
-        let idx = self.getItemIndex(this.selected);
-        _this.view.widgets.summarytable.emit('syncSelect', idx, 'element click');
-    });
+    // this.on('syncSelect', function(idx){
+    //     _this.rows.select(idx);
+    //     _this.screen.render();
+    // });
+
+    // // manage mouse things
+    // _this.rows.on('element wheeldown', function(foo, bar) {
+    //     let idx = this.getItemIndex(this.selected);
+    //     _this.view.widgets.summarytable.emit('syncSelect', idx, 'element wheeldown');
+    // });
+    // _this.rows.on('element wheelup', function(foo, bar) {
+    //     let idx = this.getItemIndex(this.selected);
+    //     _this.view.widgets.summarytable.emit('syncSelect', idx, 'element wheelup');
+    // });
+    // _this.rows.on('element click', function(foo, bar) {
+    //     let idx = this.getItemIndex(this.selected);
+    //     _this.view.widgets.summarytable.emit('syncSelect', idx, 'element click');
+    // });
 }
 module.exports = {SheetTree};

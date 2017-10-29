@@ -30,7 +30,14 @@ class ViewController extends EventEmitter {
 
         // sometimes we have widgets at this level
         this.widgets = {};
-        this.timetrap = new Timetrap({});
+
+        // new timetrap
+        // TODO: fix check that this value is coming from the timetrap config file
+        this.timetrap = new Timetrap({watched_db_file: '/home/karl/Documents/Heorot/timetrap/timetrap.db'});
+
+        // monitor db for changes
+        this.timetrap.monitorDBStart();
+
     }
 
     run(){
