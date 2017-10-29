@@ -37,10 +37,8 @@ class SummaryTable extends ContribTable {
             columnWidth: [11,11,11,64],
             columnSpacing: 2,
             //
-            //////////////////////////////
             // ignoreKeys: true,
             // scrollable: true,
-            //////////////////////////////
             //
             mouse: true,
             keys: true,
@@ -153,8 +151,8 @@ SummaryTable.prototype.registerActions = function() {
     let _this = this;
 
     this.on('syncSelect', function(idx,name) {
-        let nidx = this.view.widgets.sheettree.rows.getItemIndex(this.view.widgets.sheettree.rows.selected);
-        this.rows.select(nidx);
+        //let nidx = this.view.widgets.sheettree.rows.getItemIndex(this.view.widgets.sheettree.rows.selected);
+        this.rows.select(idx);
         this.screen.render();
     });
 
@@ -175,28 +173,6 @@ SummaryTable.prototype.registerActions = function() {
     this.on('updateTimes', () => {
         _this.updateSummaryTimes();
     });
-
-    // manage selections
-    _this.rows.on('element select', function(foo, bar) {
-        //console.log("element select")
-        let idx = this.getItemIndex(this.selected);
-        //self.select(idx);
-        _this.view.widgets.sheettree.emit('syncSelect', idx, 'element select');
-    });
-    _this.rows.on('select', function(foo, bar){
-        //console.log("select")
-        let idx = this.getItemIndex(this.selected);
-        //self.select(idx);
-        _this.view.widgets.sheettree.emit('syncSelect', idx, 'select');
-    });
-}
-
-SummaryTable.prototype.render = function() {
-    if(this.screen.focused == this.rows) this.rows.focus()
-
-    this.rows.width = this.width-3
-    this.rows.height = this.height-4
-    BlessedBox.prototype.render.call(this)
 }
 
 SummaryTable.prototype.fakeTimer = function(command){
@@ -219,14 +195,7 @@ SummaryTable.prototype.fakeTimer = function(command){
     if(command === 'on'){
         _this.fake_timer_time = Date.now();
         if (typeof _this.fake_timer === 'undefined' ) {
-            //_this.fake_timer = setInterval(function(){
             _this.fake_timer = setInterval(function(){
-                //only process if semaphore is 0 so as to not waste cycles
-                //yes, i know node.js is single threaded. we're serializing
-                //the display side in the view -so the fake update timer doesn't
-                //overwrite a rereading of the database via fetch_list.
-                //if( _this.fake_timer_semaphore)
-                //_this.updateSummaryTimes();
                 _this.emit('updateTimes');
             }, 1000);
         }
@@ -244,7 +213,6 @@ SummaryTable.prototype.fakeTimer = function(command){
 }
 
 SummaryTable.prototype.updateSummaryTimes = function(){
-    //let _this = this
 
     // now
     let now = Date.now();
@@ -322,25 +290,14 @@ SummaryTable.prototype.updateSummaryData = function(){
         note = ""
     }
 
-    //this.log.msg("updated summary list", this.log.loglevel.devel.message)
-    //this.list = node_lines;
     this.setData(items);
-    //this.view.widgets.sheettree.emit('fetch_tree', this.view.widgets.sheettree.tree_data);
     this.view.widgets.sheettree.setData(this.view.widgets.sheettree.tree_data);
-    //this.view.widgets.sheettree.render();
 
+    let idx = this.view.widgets.sheettree.rows.getItemIndex(this.view.widgets.sheettree.rows.selected);
+    this.rows.select(idx);
+    this.screen.render();
 
-    // let idx = this.view.widgets.sheettree.rows.getItemIndex(this.view.widgets.sheettree.rows.selected);
-    // this.rows.select(idx);
     this.view.screen.render();
-
-    //console.log(idx+"|"+this.rows.getItemIndex(this.rows.selected));
-
-    // let idx = this.rows.getItemIndex(this.rows.selected);
-    // this.view.widgets.sheettree.emit('syncSelect', idx, 'element click');
-
-    // let idx = this.view.widgets.sheettree.rows.getItemIndex(this.view.widgets.sheettree.rows.selected);
-    // this.rows.select(idx);
 }
 
 module.exports = {SummaryTable};

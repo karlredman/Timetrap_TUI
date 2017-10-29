@@ -48,7 +48,7 @@ class app extends Object {
         // Quit on `Control-C`
         this.screen.key(['C-c'], function(ch, key) {
             _this.screen.destroy();
-			//process.exit(0);
+			process.exit(0);
         });
     }
 }
