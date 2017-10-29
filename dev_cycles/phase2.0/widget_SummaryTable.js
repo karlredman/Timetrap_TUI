@@ -23,9 +23,9 @@ class SummaryTable extends ContribTable {
     {
 
         let defaults = {
-    wrap: true,
-    hidden: false,
-    fixed: true,
+            // wrap: true,
+            // hidden: false,
+            // fixed: true,
             parent: parent,
             screen: options.parent,
             //
