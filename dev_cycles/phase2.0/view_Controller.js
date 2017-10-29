@@ -5,6 +5,7 @@ var blessed = require('blessed');
 
 // project dependencies
 var {ViewMain} = require('./view_Main'),
+    {ViewDetails} = require('./view_Details'),
     {ViewMainConfig} = require('./view_MainConfig'),
     {Timetrap} = require('./Timetrap');
 require('./Errors');
@@ -62,8 +63,61 @@ class ViewController extends EventEmitter {
     }
 }
 
-ViewController.prototype.registerActions = () => {
+ViewController.prototype.registerActions = function() {
     let _this = this;
+
+    //view creators
+    this.on('create_view', (info) => {
+        if (info.view_name === 'details'){
+            if(typeof _this.pickview === 'undefined'){
+                // hide main view / show loading
+                this.widgets.loading.load("loading...")
+                this.views.main.emit('hide_view');
+
+                // // kill the view.menubar
+                this.views.main.emit('destroy_widget', 'menubar');
+
+                // create the view
+                let details_config = new ViewMainConfig();          //recycling main config
+                this.views.details = new ViewDetails({
+                    screen: this.screen,
+                    process_config: this.process_config,
+                    controller: this,
+                    config: details_config,
+                });
+
+                // log it
+                _this.views.main.widgets.logger.msg("Created view: Details", _this.views.main.widgets.logger.loglevel.devel.message);
+            }
+        }
+    });
+
+    //view destroyers
+    _this.on('destroy_view', (info) => {
+        if (info.view_name === 'details'){
+            if (typeof _this.pickview !== 'undefined'){
+                // hide the view (show loading)
+
+                // get a copy of the loggs from the outgoing view
+
+                // tell the view to destory all of it's widgets
+
+                // destroy the view
+
+                // copy logs over to main view logger
+
+                // recreate the menubar
+
+                //stop loading screen
+
+                // show main view
+
+                // log it
+                //_this.logger.msg("Destroyed view: Details View", _this.logger.loglevel.devel.message);
+            }
+        }
+    });
+
 }
 
 module.exports = {ViewController};

@@ -192,6 +192,18 @@ ViewMain.prototype.registerActions = function(){
     // this.screen.on('resize', () => {
     //     this.log.
     // });
+    this.on('hide_view', () => {
+        this.log.msg("hiding main view", this.log.loglevel.devel.message);
+        this.widgets.viewbox.hide();
+    });
+    this.on('destroy_widget', (widget) => {
+        if(widget === 'menubar'){
+            this.widgets.menubar.destroy();
+            this.widgets.menubar.free();
+            delete this.widgets.menubar;
+            this.log.msg("destroyed menubar while creating view details", this.log.loglevel.devel.message);
+        }
+    });
 }
 
 ViewMain.prototype.createWidgets = function(){
@@ -203,7 +215,7 @@ ViewMain.prototype.createWidgets = function(){
         config: viewbox_config,
         theme: this.process_config.data.color_theme.value
     });
-    this.widgets.viewbox.setContent("things and stuff");
+    this.widgets.viewbox.setContent("main view viewbox");
 
     // logger
     let logger_config = new LoggerConfig();
@@ -211,7 +223,8 @@ ViewMain.prototype.createWidgets = function(){
         parent: this.widgets.viewbox,
         config: logger_config,
         theme: this.theme,
-        view: this
+        view: this,
+        first_msg: "{center}Welcome to Timetrap TUI! [C-c to exit, ? for help]{/center}"
     });
     this.log = this.widgets.logger;
 

@@ -16,7 +16,8 @@ var util = require('util');
 class Logger extends ContribLog {
     constructor({parent = helpers.requiredParam('parent'), options ={},
         theme = 'opaque', config = helpers.requiredParam('config'),
-        view = helpers.requiredParam('view')} ={}) {
+        view = helpers.requiredParam('view'),
+        first_msg = null} ={}) {
 
         let defaults = {
             parent: parent,
@@ -80,7 +81,9 @@ class Logger extends ContribLog {
         this.log_count = 0;
 
         // initial message // TODO: this belongs someplace else
-        this.log("{center}Welcome to Timetrap TUI! [C-c to exit, ? for help]{/center}");
+        if(first_msg !== null){
+            this.log(first_msg);
+        }
     }
 }
 
@@ -161,6 +164,15 @@ Logger.prototype.msg = function(message, loglevel){
     let bg = this.loglevel.meta.bg;
     let fg = this.loglevel.meta.fg;
     let prefix = this.loglevel.meta.message_prefix;
+    let domain = '';
+
+    // TODO: hack -needs better organization
+    if ( loglevel >= 20){
+        domain = '[devel]'
+    }
+    else if ( loglevel >= 10){
+        domain = '[debug]'
+    }
 
     if (
         ( loglevel == this.loglevel.production.warning )
@@ -192,6 +204,7 @@ Logger.prototype.msg = function(message, loglevel){
         '{center}'
         //+ '['+this.log_count+'|'+date+'] '
         + '['+this.log_count+']'
+        + domain
         //+ (typeof fg === 'undefined') ? '{blue-fg}' : "{"+fg+"-fg}"
         + "{"+fg+"-fg}"
         + prefix

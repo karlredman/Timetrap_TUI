@@ -151,7 +151,6 @@ SummaryTable.prototype.registerActions = function() {
     let _this = this;
 
     this.on('syncSelect', function(idx,name) {
-        //let nidx = this.view.widgets.sheettree.rows.getItemIndex(this.view.widgets.sheettree.rows.selected);
         this.rows.select(idx);
         this.screen.render();
     });
@@ -193,6 +192,7 @@ SummaryTable.prototype.fakeTimer = function(command){
     }
 
     if(command === 'on'){
+        this.log.msg("Started Fake timer", this.log.loglevel.devel.message);
         _this.fake_timer_time = Date.now();
         if (typeof _this.fake_timer === 'undefined' ) {
             _this.fake_timer = setInterval(function(){
@@ -290,13 +290,14 @@ SummaryTable.prototype.updateSummaryData = function(){
         note = ""
     }
 
+    //update the data
     this.setData(items);
+
+    //force the tree to refresh -so the selections sync properly (although choppy)
     this.view.widgets.sheettree.setData(this.view.widgets.sheettree.tree_data);
 
     let idx = this.view.widgets.sheettree.rows.getItemIndex(this.view.widgets.sheettree.rows.selected);
     this.rows.select(idx);
-    this.screen.render();
-
     this.view.screen.render();
 }
 
