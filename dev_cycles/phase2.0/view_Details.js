@@ -10,10 +10,10 @@ var {ViewBox} = require('./widget_ViewBox'),
     {Logger} = require('./widget_Logger'),
     {LoggerConfig} = require('./widget_LoggerConfig'),
     {DetailsMenubar} = require('./widget_DetailsMenubar'),
-    {DetailsMenubarConfig} = require('./widget_DetailsMenubarConfig');
-var {DetailsTable} = require('./widget_DetailsTable'),
-    {DetailsTableConfig} = require('./widget_DetailsTableConfig');
-var {DetailsStatus} = require('./widget_DetailsStatus'),
+    {DetailsMenubarConfig} = require('./widget_DetailsMenubarConfig'),
+    {DetailsTable} = require('./widget_DetailsTable'),
+    {DetailsTableConfig} = require('./widget_DetailsTableConfig'),
+    {DetailsStatus} = require('./widget_DetailsStatus'),
     {DetailsStatusConfig} = require('./widget_DetailsStatusConfig');
 
 
@@ -210,15 +210,33 @@ ViewDetails.prototype.registerActions = function(){
 ViewDetails.prototype.destroyAllWidgets = function() {
     // TODO: copy logs to main view's logs
 
+    let kill_list = [
+    'menubar',
+    'details_table',
+    'details_status',
+    'logger',
+    'viewbox',
+    ];
 
-    // destroy all widgets
-    for (let key in this.widgets) {
-        if ( ! this.widgets.hasOwnProperty(key)) continue;
-        this.widgets[key].destroy()
-        this.widgets[key].free()
-        delete this.widgets[key].config;
-        delete this.widgets[key];
+    this.widgets.details_status.removeListener('update_status', this.widgets.details_status.setStatus);
+    for (let i in kill_list) {
+        //if ( ! this.widgets.hasOwnProperty(key)) continue;
+        this.widgets[kill_list[i]].destroy()
+        this.widgets[kill_list[i]].free()
+        delete this.widgets[kill_list[i]].config;
+        delete this.widgets[kill_list[i]];
     }
+
+    // // destroy all widgets
+    // //for (let key in this.widgets) {
+    // for (let key in kill_list) {
+    //     if ( ! this.widgets.hasOwnProperty(key)) continue;
+    //     this.widgets[key].destroy()
+    //     this.widgets[key].free()
+    //     delete this.widgets[key].config;
+    //     delete this.widgets[key];
+    // }
+
 }
 
 ViewDetails.prototype.createWidgets = function(){
@@ -276,42 +294,42 @@ ViewDetails.prototype.createWidgets = function(){
         focusable: true
     });
 
-    //manage focus
-    let logline = blessed.line({
-    // this.widgets.logline = blessed.line({
-        parent: this.widgets.viewbox,
-        orientation: 'horizontal',
-        bottom: 1,
-        left: 0,
-        right: 0,
-        fg: this.config.data.colors.focuslines.fg[this.theme],
-        bg: this.config.data.colors.focuslines.bg[this.theme],
-    });
-    //this.widgets.logline.prototype.registerActions = function(){};
+    // //manage focus
+    // let logline = blessed.line({
+    // // this.widgets.logline = blessed.line({
+    //     parent: this.widgets.viewbox,
+    //     orientation: 'horizontal',
+    //     bottom: 1,
+    //     left: 0,
+    //     right: 0,
+    //     fg: this.config.data.colors.focuslines.fg[this.theme],
+    //     bg: this.config.data.colors.focuslines.bg[this.theme],
+    // });
+    // //this.widgets.logline.prototype.registerActions = function(){};
 
-    let menuline = blessed.line({
-    // this.widgets.menuline = blessed.line({
-        parent: this.widgets.viewbox,
-        orientation: 'horizontal',
-        top: 1,
-        left: 0,
-        right: 0,
-        fg: this.config.data.colors.focuslines.fg[this.theme],
-        bg: this.config.data.colors.focuslines.bg[this.theme]
-    });
-    //this.widgets.menuline.prototype.registerActions = function(){};
+    // let menuline = blessed.line({
+    // // this.widgets.menuline = blessed.line({
+    //     parent: this.widgets.viewbox,
+    //     orientation: 'horizontal',
+    //     top: 1,
+    //     left: 0,
+    //     right: 0,
+    //     fg: this.config.data.colors.focuslines.fg[this.theme],
+    //     bg: this.config.data.colors.focuslines.bg[this.theme]
+    // });
+    // //this.widgets.menuline.prototype.registerActions = function(){};
 
-    // effects that highlight focus
-    this.screen.setEffects(menuline, this.widgets.logger, 'focus', 'blur',
-        {
-            fg: this.config.data.colors.focuslines.disabled.fg[this.theme],
-            bg: this.config.data.colors.focuslines.disabled.bg[this.theme]
-        }, Object);
-    this.screen.setEffects(logline, this.widgets.menubar, 'focus', 'blur',
-        {
-            fg: this.config.data.colors.focuslines.disabled.fg[this.theme],
-            bg: this.config.data.colors.focuslines.disabled.bg[this.theme]
-        }, Object);
+    // // effects that highlight focus
+    // this.screen.setEffects(menuline, this.widgets.logger, 'focus', 'blur',
+    //     {
+    //         fg: this.config.data.colors.focuslines.disabled.fg[this.theme],
+    //         bg: this.config.data.colors.focuslines.disabled.bg[this.theme]
+    //     }, Object);
+    // this.screen.setEffects(logline, this.widgets.menubar, 'focus', 'blur',
+    //     {
+    //         fg: this.config.data.colors.focuslines.disabled.fg[this.theme],
+    //         bg: this.config.data.colors.focuslines.disabled.bg[this.theme]
+    //     }, Object);
 }
 
 module.exports = {ViewDetails};

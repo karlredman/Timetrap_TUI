@@ -27,14 +27,14 @@ class DetailsStatus extends BlessedBox {
             align: 'center',
             bg: config.data.colors.bg[theme],
             fg: config.data.colors.fg[theme],
-            content: "some content",
+            //content: "some content",
         };
         options = Object.assign({}, defaults, options);
 
         super(options);
 
         this.view = view;
-        this.log = logger;
+        //this.log = logger;
         this.theme = theme;
         this.config = config;
         this.timetrap = this.view.controller.timetrap;
@@ -44,9 +44,10 @@ class DetailsStatus extends BlessedBox {
 }
 
 DetailsStatus.prototype.registerActions = function(){
-    this.on('update_status', (sheet, type, running, total_time) => {
-        this.setStatus(sheet, type, running, total_time);
-    });
+    // this.on('update_status', (sheet, type, running, total_time) => {
+    //     this.setStatus(sheet, type, running, total_time);
+    // });
+    this.on('update_status', this.setStatus);
 }
 
 DetailsStatus.prototype.setStatus = function(sheet, type, running, total_time_str){

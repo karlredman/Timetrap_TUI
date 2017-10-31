@@ -173,9 +173,16 @@ DetailsTable.prototype.init = function() {
 DetailsTable.prototype.registerActions = function() {
     let _this = this;
 
+    //somehow this thing loses it's scope soo....
+    let statusbox = _this.view.widgets.details_status;
+
     this.view.controller.timetrap.on(
         _this.view.controller.timetrap.emit_types.command_complete.name,
         (emit_obj) => {
+
+        // statusbox.setContent("XXXXXXXXXXXLoading...");
+        // _this.view.screen.render();
+
             if(emit_obj.owner === 'detailstable'){
                 if(
                     (emit_obj.type = 'today')
@@ -197,8 +204,6 @@ DetailsTable.prototype.registerActions = function() {
                         _this.log.msg('DetailsView: display stderr === \'undefined\'', _this.log.loglevel.devel.warning);
                     }
 
-        _this.view.widgets.details_status.setContent("XXXXXXXXXXXLoading...");
-        _this.view.screen.render();
                     if(typeof emit_obj.data.stdoutData !== 'undefined') {
 
                         // we expect json
@@ -211,6 +216,7 @@ DetailsTable.prototype.registerActions = function() {
                         if(content.length === 0) {
                             _this.log.msg('DetailsView: No data for '+emit_obj.data.type, _this.log.loglevel.production.warning);
                             //_this.view.widgets.details_status.emit('update_status', emit_obj.data.sheet, emit_obj.data.type, _this.view.running, '0:00:00')
+                            statusbox.emit('update_status', emit_obj.data.sheet, emit_obj.data.type, _this.view.running, '0:00:00')
                             return;
                         }
 
@@ -292,6 +298,8 @@ DetailsTable.prototype.registerActions = function() {
                         // _this.view.widgets.details_status.emit('update_status',
                         //     emit_obj.data.sheet, emit_obj.data.type, _this.view.running,
                         //     _this.total_time.toString().toHMMSS());
+                        statusbox.emit('update_status', emit_obj.data.sheet, emit_obj.data.type,
+                            _this.view.running, _this.total_time.toString().toHMMSS());
 
 
                         _this.log.msg('DetailsTable: Display '+emit_obj.data.sheet+'|'+emit_obj.data.type, _this.log.loglevel.devel.message);
