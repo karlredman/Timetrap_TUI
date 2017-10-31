@@ -70,11 +70,16 @@ ViewController.prototype.registerActions = function() {
     this.on('create_view', (info) => {
         if (info.view_name === 'details'){
             if(typeof _this.views.details === 'undefined'){
+
+                //TODO: validate info
+
                 // hide main view / show loading
                 _this.widgets.loading.load("loading...")
                 _this.views.main.emit('hide_view');
 
-                // // kill the view.menubar
+                // kill the view.menubar:
+				// it's easier to do this than manage the event
+				// queue in blessed.screen.
                 this.views.main.emit('destroy_widget', 'menubar');
 
                 // create the view
@@ -84,32 +89,12 @@ ViewController.prototype.registerActions = function() {
                     process_config: _this.process_config,
                     controller: _this,
                     config: details_config,
+                    sheet: info.sheet,
+                    running: info.running
                 });
 
-                // log it
-                _this.views.main.widgets.logger.msg("Created view: Details", _this.views.main.widgets.logger.loglevel.devel.message);
-            }
-        }
-    });
-    this.on('Xcreate_view', (info) => {
-        if (info.view_name === 'details'){
-            if(typeof _this.views.details === 'undefined'){
-                console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx Xcreate: got here")
-                // hide main view / show loading
-                _this.widgets.loading.load("loading...")
-                _this.views.main.emit('hide_view');
-
-                // // kill the view.menubar
-                this.views.main.emit('destroy_widget', 'menubar');
-
-                // create the view
-                let details_config = new ViewMainConfig();          //recycling main config
-                _this.views.details = new ViewDetails({
-                    screen: _this.screen,
-                    process_config: _this.process_config,
-                    controller: _this,
-                    config: details_config,
-                });
+                // pass on control
+                _this.views.details.run();
 
                 // log it
                 _this.views.main.widgets.logger.msg("Created view: Details", _this.views.main.widgets.logger.loglevel.devel.message);

@@ -207,24 +207,6 @@ Menubar.prototype.init = function() {
         },
         // 0
         Test2: () => {
-            let selected = _this.view.widgets.sheettree.rows.selected;
-            let idx = _this.view.widgets.sheettree.rows.getItemIndex(_this.selected);
-            let node_lines = _this.view.widgets.sheettree.nodeLines;
-
-            let sheet = node_lines[selected].sheet;
-            let id = node_lines[selected].info.id;
-            let note = node_lines[selected].info.note;
-
-            if(_this.view.widgets.sheettree.nodeLines[selected].info.running === '-:--:--') {
-                _this.log.msg("not a valid time sheet", _this.log.loglevel.production.warning);
-                return;
-            }
-            let running = false;
-            if(_this.view.widgets.sheettree.nodeLines[selected].info.running !== '0:00:00') {
-                running = true
-            }
-            console.log("calling xcreate_view")
-            _this.view.controller.emit('Xcreate_view', { view_name: 'details', sheet: sheet, running: running });
         },
     }
     this.setItems(items);

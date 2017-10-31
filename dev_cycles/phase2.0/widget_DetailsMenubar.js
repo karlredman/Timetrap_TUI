@@ -5,14 +5,14 @@ var blessed = require('blessed'),
     Listbar = blessed.listbar;
 
 // project includes
-//var {MenubarConfig} = require('./widget_MenubarConfig');
+//var {DetailsMenubarConfig} = require('./widget_DetailsMenubarConfig');
 var {TimetrapTUI_Error} = require('./Errors');
 var helpers = require('./helpers');
 
 // debugging
 var util = require('util');
 
-class Menubar extends Listbar {
+class DetailsMenubar extends Listbar {
     constructor({parent = helpers.requiredParam('parent'), options ={},
         theme = 'opaque', config = helpers.requiredParam('config'),
         logger = helpers.requiredParam('logger'),
@@ -77,7 +77,7 @@ class Menubar extends Listbar {
     }
 }
 
-Menubar.prototype.registerActions = function() {
+DetailsMenubar.prototype.registerActions = function() {
     let _this = this;
 
     this.on('blur', function() {
@@ -138,14 +138,6 @@ Menubar.prototype.registerActions = function() {
             let item = _this.items[_this.selected];
             if (item._.cmd.callback) {
                 item._.cmd.callback();
-
-                // //TODO: timer to set 'unselected'
-                // setTimeout(function(){
-                //     // item.style.bg = null;
-                //     // item.style.fg = "white";
-                //     _this.select(0);
-                //     _this.screen.render();
-                // }, 1000);
             }
             _this.screen.render();
             return;
@@ -153,7 +145,7 @@ Menubar.prototype.registerActions = function() {
     });
 }
 
-Menubar.prototype.init = function() {
+DetailsMenubar.prototype.init = function() {
     let _this = this;
 
     let items = {
@@ -191,4 +183,4 @@ Menubar.prototype.init = function() {
     }
     this.setItems(items);
 }
-module.exports = {Menubar};
+module.exports = {DetailsMenubar};

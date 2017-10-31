@@ -9,10 +9,13 @@ var {ViewBox} = require('./widget_ViewBox'),
     {ViewBoxConfig} = require('./widget_ViewBoxConfig'),
     {Logger} = require('./widget_Logger'),
     {LoggerConfig} = require('./widget_LoggerConfig'),
-    {Menubar} = require('./widget_DetailsMenubar'),
-    {MenubarConfig} = require('./widget_MenubarConfig');
+    {DetailsMenubar} = require('./widget_DetailsMenubar'),
+    {DetailsMenubarConfig} = require('./widget_DetailsMenubarConfig');
 var {DetailsTable} = require('./widget_DetailsTable'),
-    {SummaryTableConfig} = require('./widget_SummaryTableConfig');
+    {DetailsTableConfig} = require('./widget_DetailsTableConfig');
+var {DetailsStatus} = require('./widget_DetailsStatus'),
+    {DetailsStatusConfig} = require('./widget_DetailsStatusConfig');
+
 
 var helpers = require('./helpers');
 
@@ -32,6 +35,8 @@ class ViewDetails extends EventEmitter {
         process_config = helpers.requiredParam('process_config'),
         controller = helpers.requiredParam('controller'),
         config = helpers.requiredParam('ViewDetails'),
+        sheet = helpers.requiredParam('sheet'),
+        running = helpers.requiredParam('running'),
         } ={})
     {
 
@@ -71,9 +76,20 @@ class ViewDetails extends EventEmitter {
         //initial focus
         this.setWinFocus(this.pwin.table);
 
-        //hide loading // TODO: should be an event
+        //class variables
+        this.sheet = sheet;
+        this.running = running;
+
+        // TODO: remove
         this.controller.widgets.loading.stop();
     }
+}
+
+ViewDetails.prototype.run = function() {
+
+    //get data from timetrap -defaults to today
+    // TODO: -add to config?
+    this.controller.timetrap.callCommand({type:'today', owner: 'detailstable', sheet: this.sheet, sync: false});
 }
 
 ViewDetails.prototype.setWinFocus = function(win){
@@ -81,15 +97,15 @@ ViewDetails.prototype.setWinFocus = function(win){
     // false positives.
     switch(win){
         case this.pwin.table:
-            this.widgets.detailstable.options.style.border.fg = this.widgets.detailstable.config.data.colors.style.border.fg[this.theme];
-            this.widgets.detailstable.focus();
+            this.widgets.details_table.options.style.border.fg = this.widgets.details_table.config.data.colors.style.border.fg[this.theme];
+            this.widgets.details_table.focus();
             break;
         case this.pwin.menubar:
-            this.widgets.detailstable.options.style.border.fg = this.config.data.colors.focuslines.disabled.fg[this.theme];
+            this.widgets.details_table.options.style.border.fg = this.config.data.colors.focuslines.disabled.fg[this.theme];
              this.widgets.menubar.focus();
             break;
         case this.pwin.logger:
-            this.widgets.detailstable.options.style.border.fg = this.config.data.colors.focuslines.disabled.fg[this.theme];
+            this.widgets.details_table.options.style.border.fg = this.config.data.colors.focuslines.disabled.fg[this.theme];
             this.widgets.logger.focus();
             break;
         default:
@@ -166,7 +182,6 @@ ViewDetails.prototype.setWinFocusPrev = function(){
     }
 }
 
-
 ViewDetails.prototype.registerActions = function(){
     let _this=this;
 
@@ -175,6 +190,12 @@ ViewDetails.prototype.registerActions = function(){
     //     _this.view.controller.timetrap.callCommand({type:'list', owner: 'sheettree', sync: false});
     //     this.log.msg("database changed externally", this.log.loglevel.production.message);
     // });
+
+    this.on('details_loaded', () => {
+        let _this = this;
+        //hide loading
+        _this.controller.widgets.loading.stop();
+    });
 
     this.on('hide_view', () => {
         _this.log.msg("hiding details view", _this.log.loglevel.devel.message);
@@ -189,11 +210,13 @@ ViewDetails.prototype.registerActions = function(){
 ViewDetails.prototype.destroyAllWidgets = function() {
     // TODO: copy logs to main view's logs
 
+
     // destroy all widgets
     for (let key in this.widgets) {
         if ( ! this.widgets.hasOwnProperty(key)) continue;
         this.widgets[key].destroy()
         this.widgets[key].free()
+        delete this.widgets[key].config;
         delete this.widgets[key];
     }
 }
@@ -219,9 +242,19 @@ ViewDetails.prototype.createWidgets = function(){
     });
     this.log = this.widgets.logger;
 
+    // status box
+    let details_status_config = new DetailsStatusConfig();
+    this.widgets.details_status = new DetailsStatus({
+        parent: this.widgets.viewbox,
+        config: details_status_config,
+        theme: this.theme,
+        logger: this.widgets.logger,
+        view: this
+    });
+
     // menubar
-    let menubar_config = new MenubarConfig();
-    this.widgets.menubar = new Menubar({
+    let menubar_config = new DetailsMenubarConfig();
+    this.widgets.menubar = new DetailsMenubar({
         parent: this.widgets.viewbox,
         config: menubar_config,
         theme: this.theme,
@@ -230,10 +263,13 @@ ViewDetails.prototype.createWidgets = function(){
     });
 
     // details table
-    let summarytable_config = new SummaryTableConfig();
-    this.widgets.detailstable = new DetailsTable({
+    let details_table_config = new DetailsTableConfig();
+    this.widgets.details_table = new DetailsTable({
+        options: { top: 3,
+            //border: {type: "line"},
+        },
         parent: this.widgets.viewbox,
-        config: summarytable_config,
+        config: details_table_config,
         theme: this.theme,
         logger: this.widgets.logger,
         view: this,
@@ -242,6 +278,7 @@ ViewDetails.prototype.createWidgets = function(){
 
     //manage focus
     let logline = blessed.line({
+    // this.widgets.logline = blessed.line({
         parent: this.widgets.viewbox,
         orientation: 'horizontal',
         bottom: 1,
@@ -250,7 +287,10 @@ ViewDetails.prototype.createWidgets = function(){
         fg: this.config.data.colors.focuslines.fg[this.theme],
         bg: this.config.data.colors.focuslines.bg[this.theme],
     });
+    //this.widgets.logline.prototype.registerActions = function(){};
+
     let menuline = blessed.line({
+    // this.widgets.menuline = blessed.line({
         parent: this.widgets.viewbox,
         orientation: 'horizontal',
         top: 1,
@@ -259,6 +299,7 @@ ViewDetails.prototype.createWidgets = function(){
         fg: this.config.data.colors.focuslines.fg[this.theme],
         bg: this.config.data.colors.focuslines.bg[this.theme]
     });
+    //this.widgets.menuline.prototype.registerActions = function(){};
 
     // effects that highlight focus
     this.screen.setEffects(menuline, this.widgets.logger, 'focus', 'blur',

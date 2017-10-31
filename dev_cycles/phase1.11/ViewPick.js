@@ -233,6 +233,7 @@ ViewPick.prototype.register_actions = function()
                     _this.widgets.logger.msg('PickVew: Not data for '+response.type, _this.widgets.logger.loglevel.production.warning);
                     return;
                 }
+
                 let items = {
                     headers: ["  Id"  , "      Day"       , "  Start", "   End"   ," Duration", " Notes"],
                     data:[
