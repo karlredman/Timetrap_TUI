@@ -294,42 +294,42 @@ ViewDetails.prototype.createWidgets = function(){
         focusable: true
     });
 
-    // //manage focus
-    // let logline = blessed.line({
-    // // this.widgets.logline = blessed.line({
-    //     parent: this.widgets.viewbox,
-    //     orientation: 'horizontal',
-    //     bottom: 1,
-    //     left: 0,
-    //     right: 0,
-    //     fg: this.config.data.colors.focuslines.fg[this.theme],
-    //     bg: this.config.data.colors.focuslines.bg[this.theme],
-    // });
-    // //this.widgets.logline.prototype.registerActions = function(){};
+    //manage focus
+    let logline = blessed.line({
+    // this.widgets.logline = blessed.line({
+        parent: this.widgets.viewbox,
+        orientation: 'horizontal',
+        bottom: 1,
+        left: 0,
+        right: 0,
+        fg: this.config.data.colors.focuslines.fg[this.theme],
+        bg: this.config.data.colors.focuslines.bg[this.theme],
+    });
+    //this.widgets.logline.prototype.registerActions = function(){};
 
-    // let menuline = blessed.line({
-    // // this.widgets.menuline = blessed.line({
-    //     parent: this.widgets.viewbox,
-    //     orientation: 'horizontal',
-    //     top: 1,
-    //     left: 0,
-    //     right: 0,
-    //     fg: this.config.data.colors.focuslines.fg[this.theme],
-    //     bg: this.config.data.colors.focuslines.bg[this.theme]
-    // });
-    // //this.widgets.menuline.prototype.registerActions = function(){};
+    let menuline = blessed.line({
+    // this.widgets.menuline = blessed.line({
+        parent: this.widgets.viewbox,
+        orientation: 'horizontal',
+        top: 1,
+        left: 0,
+        right: 0,
+        fg: this.config.data.colors.focuslines.fg[this.theme],
+        bg: this.config.data.colors.focuslines.bg[this.theme]
+    });
+    //this.widgets.menuline.prototype.registerActions = function(){};
 
-    // // effects that highlight focus
-    // this.screen.setEffects(menuline, this.widgets.logger, 'focus', 'blur',
-    //     {
-    //         fg: this.config.data.colors.focuslines.disabled.fg[this.theme],
-    //         bg: this.config.data.colors.focuslines.disabled.bg[this.theme]
-    //     }, Object);
-    // this.screen.setEffects(logline, this.widgets.menubar, 'focus', 'blur',
-    //     {
-    //         fg: this.config.data.colors.focuslines.disabled.fg[this.theme],
-    //         bg: this.config.data.colors.focuslines.disabled.bg[this.theme]
-    //     }, Object);
+    // effects that highlight focus
+    this.screen.setEffects(menuline, this.widgets.logger, 'focus', 'blur',
+        {
+            fg: this.config.data.colors.focuslines.disabled.fg[this.theme],
+            bg: this.config.data.colors.focuslines.disabled.bg[this.theme]
+        }, Object);
+    this.screen.setEffects(logline, this.widgets.menubar, 'focus', 'blur',
+        {
+            fg: this.config.data.colors.focuslines.disabled.fg[this.theme],
+            bg: this.config.data.colors.focuslines.disabled.bg[this.theme]
+        }, Object);
 }
 
 module.exports = {ViewDetails};
