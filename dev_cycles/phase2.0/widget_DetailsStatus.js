@@ -57,8 +57,12 @@ DetailsStatus.prototype.setStatus = function(sheet, type, running, total_time_st
         let selected = this.view.controller.views.main.widgets.sheettree.rows.selected
         let idx = this.view.controller.views.main.widgets.sheettree.rows.getItemIndex(selected);
 
-        // grab only today
-        total_time_str = this.view.controller.views.main.widgets.summarytable.list[idx].info.today;
+        switch(type){
+            case 'today':
+                // grab only today
+                total_time_str = this.view.controller.views.main.widgets.summarytable.list[idx].info.today;
+                break;
+        }
     }
 
     //let message = sheet + ' ['+type+']/'+total_time.toString().toHMMSS();

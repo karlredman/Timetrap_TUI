@@ -138,10 +138,16 @@ DetailsTable.prototype.registerActions = function() {
     this.view.timetrap.on('command_complete', (emit_obj) => {
 
         if(emit_obj.owner === 'details_table_now'){
+            // we're here to figure out running clock info
+
             // find sheet
             let arr = emit_obj.data.stdoutData.split("\n");
+            let duration = '0:00:00';
 
-            // obtain note
+            //record looks like this:
+            // Projects.Timetrap_TUI: 2:28:14 (cleanup dispaly starting dialogs)
+
+            // obtain note / find duration
             //let note = '';
             if(arr.length > 1) {
                 for ( let i=0; i < arr.length-1; i++ ) {
@@ -149,6 +155,11 @@ DetailsTable.prototype.registerActions = function() {
                     let chunk = arr[i].slice(1,arr[i].length);
                     let sheet = chunk.split(':')[0];
 
+                    //figure out the current durration
+                    let d1 = arr[1].split(' ')
+                    duration = d1[2];
+
+                    //grab the note if it exists
                     if(sheet === _this.view.sheet){
                         //note portion
                         let idx = chunk.indexOf('(');
@@ -158,11 +169,34 @@ DetailsTable.prototype.registerActions = function() {
                     }
                 }
             }
-            // append to table
+            // calculate the start time
+            let n = new Date();
+            let a = duration.split(':');
+            let seconds = (+a[0]) * 60 * 60 + (+a[1]) * 60 + (+a[2]);
+            n.setSeconds(n.getSeconds()-seconds);
+            let start_time = helpers.zeropad(n.getHours())
+                +":" +helpers.zeropad(n.getMinutes())
+                +":" +helpers.zeropad(n.getSeconds());
 
-            let rec = [id,'date', 'st_time', '~~~~~~~', 'dur', note];
+            let days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+            let months = ['Jan','Feb','Mar','Apr','May','Jun',
+                'Jul','Aug','Sep','Oct','Nov','Dec'];
+            let start_date = days[n.getDay()]+" "
+                +helpers.zeropad(months[n.getMonth()])+" "
+                +helpers.zeropad(n.getDate())
+                +", "+n.getFullYear();
+
+
+
+            // append to table
+            let rec = [id, start_date, start_time, '~~~~~~~~', duration, note];
             _this.items.data.push(rec);
             _this.setData(_this.items);
+
+            _this.view.widgets.details_status.emit('update_status',
+                emit_obj.data.sheet, emit_obj.data.type, _this.view.running,
+                _this.total_time.toString().toHMMSS());
+            return;
         }
 
         if(emit_obj.owner === 'details_table_ids'){
@@ -208,6 +242,9 @@ DetailsTable.prototype.registerActions = function() {
                     let content = JSON.parse(String(emit_obj.data.stdoutData));
 
                     if(content.length === 0) {
+                        if(_this.view.running){
+                            _this.view.timetrap.callCommand({type:'ids', sheet: _this.view.sheet, owner: 'details_table_ids', sync: true});
+                        }
                         _this.log.msg('DetailsView: No data for '+emit_obj.data.type, _this.log.loglevel.production.warning);
                         this.view.widgets.details_status.emit('update_status', emit_obj.data.sheet, emit_obj.data.type, this.view.running, '0:00:00')
                         //statusbox.emit('update_status', emit_obj.data.sheet, emit_obj.data.type, _this.view.running, '0:00:00')
@@ -240,7 +277,7 @@ DetailsTable.prototype.registerActions = function() {
                         let ds = String(da[0]+'T'+da[1]+'.000'+da[2]);
                         let start = new Date(ds);
 
-                        //format for table
+                        //format day for table
                         da = start.toString().split(" ");
                         tmp.push(String(da[0]+" "+da[1]+" "+da[2]+", "+da[3]));
 

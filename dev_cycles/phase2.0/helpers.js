@@ -9,6 +9,13 @@ function requiredParam(param) {
   throw new TimetrapTUI_Error(`Error: Required parameter ${param} is missing`);
 }
 
+function zeropad(n){
+    if (n < 10) {
+        n = "0" + n;
+    }
+    return n;
+}
+
 
 //ganked from:
 //[date - Convert seconds to HH-MM-SS with JavaScript? - Stack Overflow]
@@ -47,3 +54,4 @@ String.prototype.toHMMSS = function () {
 
 //module.exports = requiredParam;
 module.exports.requiredParam = requiredParam;
+module.exports.zeropad = zeropad;

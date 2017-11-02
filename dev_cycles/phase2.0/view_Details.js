@@ -214,7 +214,7 @@ ViewDetails.prototype.registerActions = function(){
         _this.log.msg("showing details view", _this.log.loglevel.devel.message);
         _this.widgets.viewbox.show();
     });
-    this.view.timetrap.on('db_change', function(){
+    this.timetrap.on('db_change', function(){
         //update the sheet tree and summary table when the db changes
         //_this.view.timetrap.callCommand({type:'list', owner: 'sheettree', sync: false});
         _this.log.msg("database changed externally", _this.log.loglevel.production.message);
