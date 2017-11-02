@@ -242,6 +242,16 @@ Timetrap.prototype.registerCommandTypes = function(){
             override: false,
             get command(){return this._command[0]}
         },
+        ids:{
+            description: "return a list of all ids",
+            _command: ["display", "d"],
+            args: [["-fids"]],
+            required: ['-fids'],
+            allow_sheet: true,
+            special: true,
+            override: false,
+            get command(){return this._command[0]}
+        },
         kill:{
             description: "kill command",
             _command: ["kill", "k"],
@@ -250,6 +260,16 @@ Timetrap.prototype.registerCommandTypes = function(){
             required: [],
             allow_sheet: false,     //could be true but we'll make a special exception in code
             special: true,
+            override: false,
+            get command(){return this._command[0]}
+        },
+        custom:{
+            description: "custom command -not implemented",
+            _command: [],
+            args: [],
+            required: [],
+            allow_sheet: false,
+            special: false,
             override: false,
             get command(){return this._command[0]}
         },
@@ -649,3 +669,12 @@ Timetrap.prototype.checkoutAllSheets = function({target = {}, data = {}} ={}){
 // Timetrap.prototype.fetch_tree = function(list){
 
 module.exports = {Timetrap, Timetrap_Error};
+
+// let timetrap = new Timetrap({});
+// timetrap.on('command_complete', (emit_obj) => {
+//     if(emit_obj.data.type === 'ids'){
+//         console.log("got here")
+//         console.log(emit_obj.data.stdoutData);
+//     }
+// });
+// timetrap.callCommand({type:'ids', sheet: 'Projects', owner: 'detailstable', sync: true});

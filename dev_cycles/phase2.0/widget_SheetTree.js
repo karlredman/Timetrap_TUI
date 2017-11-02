@@ -185,7 +185,7 @@ SheetTree.prototype.processList = function(result) {
                 running++;
 
                 //add j.name for grabbing the running ID and Note
-                //TODO: this will have to be asynch at some point
+                //TODO: use this data
                 running_list.push({name: j.name});
             }
         }

@@ -218,24 +218,26 @@ ViewDetails.prototype.destroyAllWidgets = function() {
     'viewbox',
     ];
 
-    this.widgets.details_status.removeListener('update_status', this.widgets.details_status.setStatus);
-    for (let i in kill_list) {
-        //if ( ! this.widgets.hasOwnProperty(key)) continue;
-        this.widgets[kill_list[i]].destroy()
-        this.widgets[kill_list[i]].free()
-        delete this.widgets[kill_list[i]].config;
-        delete this.widgets[kill_list[i]];
-    }
-
-    // // destroy all widgets
-    // //for (let key in this.widgets) {
-    // for (let key in kill_list) {
-    //     if ( ! this.widgets.hasOwnProperty(key)) continue;
-    //     this.widgets[key].destroy()
-    //     this.widgets[key].free()
-    //     delete this.widgets[key].config;
-    //     delete this.widgets[key];
+    //this.widgets.details_status.removeListener('update_status', this.widgets.details_status.setStatus);
+    // for (let i in kill_list) {
+    //     //if ( ! this.widgets.hasOwnProperty(key)) continue;
+    //     this.widgets[kill_list[i]].destroy()
+    //     this.widgets[kill_list[i]].removeAllListeners();
+    //     this.widgets[kill_list[i]].free()
+    //     delete this.widgets[kill_list[i]].config;
+    //     delete this.widgets[kill_list[i]];
     // }
+
+    // destroy all widgets
+    //for (let key in this.widgets) {
+    for (let key in kill_list) {
+        if ( ! this.widgets.hasOwnProperty(key)) continue;
+        this.widgets[key].destroy()
+        this.widgets[key].removeAllListeners();
+        this.widgets[key].free()
+        delete this.widgets[key].config;
+        delete this.widgets[key];
+    }
 
 }
 

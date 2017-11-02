@@ -53,13 +53,13 @@ DetailsStatus.prototype.registerActions = function(){
 DetailsStatus.prototype.setStatus = function(sheet, type, running, total_time_str){
     // TODO: replace with real solution
     // //grab the ticking total time from the main view (TODO: fix. this is hack-ish)
-    // if(running){
-    //     let selected = this.view.controller.views.main.widgets.sheettree.rows.selected
-    //     let idx = this.view.controller.views.main.widgets.sheettree.rows.getItemIndex(selected);
+    if(running){
+        let selected = this.view.controller.views.main.widgets.sheettree.rows.selected
+        let idx = this.view.controller.views.main.widgets.sheettree.rows.getItemIndex(selected);
 
-    //     // grab only today
-    //     total_time_str = this.view.controller.views.main.widgets.summarytable.list[idx].info.today;
-    // }
+        // grab only today
+        total_time_str = this.view.controller.views.main.widgets.summarytable.list[idx].info.today;
+    }
 
     //let message = sheet + ' ['+type+']/'+total_time.toString().toHMMSS();
     let message = sheet + ' ['+type+']/'+total_time_str;
