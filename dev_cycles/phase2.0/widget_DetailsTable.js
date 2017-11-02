@@ -131,17 +131,11 @@ DetailsTable.prototype.process_commands = function(emit_obj) {
 DetailsTable.prototype.registerActions = function() {
     let _this = this;
 
-    // TODO: fix memory leaks for destroyed objects .... ???
-    // I believe the memory leaks from the eventemitters is causing an
-    // object depth limit.
-    // statusbox local is required for whatever reason
-    //let statusbox = _this.view.widgets.details_status;
-
     // for fetch and display of running items
     let id = '------';
     let note = 'N/A';
 
-    this.view.controller.timetrap.on('command_complete', (emit_obj) => {
+    this.view.timetrap.on('command_complete', (emit_obj) => {
 
         if(emit_obj.owner === 'details_table_now'){
             // find sheet
@@ -165,6 +159,7 @@ DetailsTable.prototype.registerActions = function() {
                 }
             }
             // append to table
+
             let rec = [id,'date', 'st_time', '~~~~~~~', 'dur', note];
             _this.items.data.push(rec);
             _this.setData(_this.items);
@@ -176,7 +171,7 @@ DetailsTable.prototype.registerActions = function() {
                  let id_ar = emit_obj.data.stdoutData.split(' ');
                  id = id_ar[id_ar.length-1].split('\n')[0];
                 // get list of sheets via 'now'
-                 _this.view.controller.timetrap.callCommand({type: 'now',
+                 _this.view.timetrap.callCommand({type: 'now',
                      sheet: this.view.sheet, owner: 'details_table_now',
                      sync: true});
             }
@@ -294,8 +289,7 @@ DetailsTable.prototype.registerActions = function() {
                     // if running
                     if(_this.view.running){
                         //// obtain running id
-                console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxx")
-                        _this.view.controller.timetrap.callCommand({type:'ids', sheet: _this.view.sheet, owner: 'details_table_ids', sync: true});
+                        _this.view.timetrap.callCommand({type:'ids', sheet: _this.view.sheet, owner: 'details_table_ids', sync: true});
                         ////// running_id = <t d -fids>[length-1]
                         //// obtain note
                         ////// note = <t now> ... (see, timetrap.stopAllTimers

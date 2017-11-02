@@ -15,6 +15,7 @@ var {ViewBox} = require('./widget_ViewBox'),
     {DetailsTableConfig} = require('./widget_DetailsTableConfig'),
     {DetailsStatus} = require('./widget_DetailsStatus'),
     {DetailsStatusConfig} = require('./widget_DetailsStatusConfig');
+var {Timetrap} = require('./Timetrap');
 
 
 var helpers = require('./helpers');
@@ -46,6 +47,13 @@ class ViewDetails extends EventEmitter {
         this.theme = this.process_config.data.color_theme.value
         this.controller = controller;
         this.config = config;
+
+        // new timetrap
+        // TODO: fix check that this value is coming from the timetrap config file
+        this.timetrap = new Timetrap({watched_db_file: '/home/karl/Documents/Heorot/timetrap/timetrap.db'});
+
+        // monitor db for changes
+        this.timetrap.monitorDBStart();
 
         // widgets
         this.widgets = {};
@@ -82,6 +90,7 @@ class ViewDetails extends EventEmitter {
 
         // TODO: remove
         this.controller.widgets.loading.stop();
+
     }
 }
 
@@ -89,7 +98,7 @@ ViewDetails.prototype.run = function() {
 
     //get data from timetrap -defaults to today
     // TODO: -add to config?
-    this.controller.timetrap.callCommand({type:'today', owner: 'detailstable', sheet: this.sheet, sync: false});
+    this.timetrap.callCommand({type:'today', owner: 'detailstable', sheet: this.sheet, sync: false});
 }
 
 ViewDetails.prototype.setWinFocus = function(win){
@@ -205,6 +214,11 @@ ViewDetails.prototype.registerActions = function(){
         _this.log.msg("showing details view", _this.log.loglevel.devel.message);
         _this.widgets.viewbox.show();
     });
+    this.view.timetrap.on('db_change', function(){
+        //update the sheet tree and summary table when the db changes
+        //_this.view.timetrap.callCommand({type:'list', owner: 'sheettree', sync: false});
+        _this.log.msg("database changed externally", _this.log.loglevel.production.message);
+    });
 }
 
 ViewDetails.prototype.destroyAllWidgets = function() {
@@ -237,8 +251,10 @@ ViewDetails.prototype.destroyAllWidgets = function() {
         this.widgets[key].free()
         delete this.widgets[key].config;
         delete this.widgets[key];
+        this.widgets[key] = undefined;
     }
-
+    this.timetrap.removeAllListeners();
+    delete this.timetrap;
 }
 
 ViewDetails.prototype.createWidgets = function(){

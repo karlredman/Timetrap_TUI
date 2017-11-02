@@ -6,8 +6,7 @@ var blessed = require('blessed');
 // project dependencies
 var {ViewMain} = require('./view_Main'),
     {ViewDetails} = require('./view_Details'),
-    {ViewMainConfig} = require('./view_MainConfig'),
-    {Timetrap} = require('./Timetrap');
+    {ViewMainConfig} = require('./view_MainConfig');
 require('./Errors');
 
 // parent
@@ -31,13 +30,6 @@ class ViewController extends EventEmitter {
 
         // sometimes we have widgets at this level
         this.widgets = {};
-
-        // new timetrap
-        // TODO: fix check that this value is coming from the timetrap config file
-        this.timetrap = new Timetrap({watched_db_file: '/home/karl/Documents/Heorot/timetrap/timetrap.db'});
-
-        // monitor db for changes
-        this.timetrap.monitorDBStart();
 
     }
 
@@ -126,6 +118,7 @@ ViewController.prototype.registerActions = function() {
                 _this.views.details.destroyAllWidgets();
 
                 // destroy the view
+                _this.views.details.removeAllListeners();
                 delete _this.views.details;
                 _this.views.details = undefined;
 

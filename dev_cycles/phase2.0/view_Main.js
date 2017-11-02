@@ -19,6 +19,7 @@ var {ViewBox} = require('./widget_ViewBox'),
     {RunningBox} = require('./widget_RunningBox'),
     {RunningBoxConfig} = require('./widget_RunningBoxConfig');
 var helpers = require('./helpers');
+var {Timetrap} = require('./Timetrap');
 
 // debugging
 var util = require('util');
@@ -45,6 +46,13 @@ class ViewMain extends EventEmitter {
         this.theme = this.process_config.data.color_theme.value
         this.controller = controller;
         this.config = config;
+
+        // new timetrap
+        // TODO: fix check that this value is coming from the timetrap config file
+        this.timetrap = new Timetrap({watched_db_file: '/home/karl/Documents/Heorot/timetrap/timetrap.db'});
+
+        // monitor db for changes
+        this.timetrap.monitorDBStart();
 
         // widgets
         this.widgets = {};

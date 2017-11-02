@@ -86,7 +86,7 @@ class SheetTree extends ContribTree {
         this.log = logger;
         this.theme = theme;
         this.config = config;
-        this.timetrap = this.view.controller.timetrap;
+        this.timetrap = this.view.timetrap;
 
         //internal stats
         this.num_running = 0;
@@ -134,7 +134,7 @@ SheetTree.prototype.init = function() {
     /////////////////////////////////////
     // request data
 
-    this.view.controller.timetrap.callCommand({type:'list', owner: 'sheettree', sync: false});
+    this.view.timetrap.callCommand({type:'list', owner: 'sheettree', sync: false});
 }
 SheetTree.prototype.processList = function(result) {
     let _this = this;
@@ -281,15 +281,15 @@ SheetTree.prototype.buildTree = function(list){
 SheetTree.prototype.registerActions = function() {
     let _this = this;
 
-    this.view.controller.timetrap.on('db_change', function(){
+    this.view.timetrap.on('db_change', function(){
         //update the sheet tree and summary table when the db changes
-        _this.view.controller.timetrap.callCommand({type:'list', owner: 'sheettree', sync: false});
+        _this.view.timetrap.callCommand({type:'list', owner: 'sheettree', sync: false});
         _this.log.msg("database changed externally", _this.log.loglevel.production.message);
     });
 
     //update the list for the tree
-    this.view.controller.timetrap.on(
-        _this.view.controller.timetrap.emit_types.command_complete.name,
+    this.view.timetrap.on(
+        _this.view.timetrap.emit_types.command_complete.name,
         (emit_obj) => {
             if(emit_obj.owner === 'sheettree'){
                 if(emit_obj.type = 'list'){

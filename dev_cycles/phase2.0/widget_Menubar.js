@@ -159,19 +159,19 @@ Menubar.prototype.init = function() {
     let items = {
         // 1
         In: () => {
-            console.log("In")
+            //console.log("In")
         },
         // 2
         Out: () => {
-            console.log("Out")
+            //console.log("Out")
         },
         // 3
         Edit: () => {
-            console.log("Edit")
+            //console.log("Edit")
         },
         // 4
         Task: () => {
-            console.log("Task")
+            //console.log("Task")
         },
         // 5
         Details: () => {

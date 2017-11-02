@@ -325,6 +325,12 @@ Timetrap.prototype.callCommand = function({type = '', owner = '',
         throw new Timetrap_Error("[CallCommand] no type argument");
     }
 
+    // console.log("got here|"
+    //     + type
+    //     + "|"
+    //     + owner
+    // );
+
     //  manage the target for internal commands
     let emit_target = this.emit_types.command_complete.name;
     if(timetrap_internal){
