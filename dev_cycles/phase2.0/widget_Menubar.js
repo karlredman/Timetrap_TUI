@@ -9,6 +9,9 @@ var {MenubarConfig} = require('./widget_MenubarConfig');
 var {TimetrapTUI_Error} = require('./Errors');
 var helpers = require('./helpers');
 
+// dialogs
+var {Message} = require('./dialog_Message.js')
+
 // debugging
 var util = require('util');
 
@@ -151,6 +154,10 @@ Menubar.prototype.registerActions = function() {
             return;
         }
     });
+
+    this.on('message_ack', (data, error)=> {
+        console.log("got here");
+    });
 }
 
 Menubar.prototype.init = function() {
@@ -206,7 +213,13 @@ Menubar.prototype.init = function() {
         Theme: () => {
         },
         // 0
-        Test2: () => {
+        Test: () => {
+            /////////////////////// dialog examples
+            let dlg = new Message({widget: _this}).message("new test message");
+            //let dlg = new Message({widget: _this}).error("new test message");
+            //let dlg = new Message({widget: _this}).alert("new test message");
+            //
+
         },
     }
     this.setItems(items);

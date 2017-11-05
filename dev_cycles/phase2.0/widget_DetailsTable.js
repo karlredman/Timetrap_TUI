@@ -155,13 +155,12 @@ DetailsTable.prototype.registerActions = function() {
                     let chunk = arr[i].slice(1,arr[i].length);
                     let sheet = chunk.split(':')[0];
 
-                    //figure out the current durration
-                    let d1 = arr[1].split(' ')
-                    duration = d1[2];
-
-                    //grab the note if it exists
                     if(sheet === _this.view.sheet){
-                        //note portion
+                        //figure out the current durration
+                        let d1 = arr[i].split(' ')
+                        duration = d1[2];
+
+                        //grab the note if it exists
                         let idx = chunk.indexOf('(');
                         if(idx > -1){
                             note = chunk.slice(idx+1, chunk.length-1);
@@ -189,7 +188,7 @@ DetailsTable.prototype.registerActions = function() {
 
 
             // append to table
-            let rec = [id, start_date, start_time, '~~~~~~~~', duration, note];
+            let rec = [id, start_date, start_time, '--------', duration, note];
             _this.items.data.push(rec);
             _this.setData(_this.items);
 

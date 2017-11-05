@@ -258,6 +258,7 @@ ViewMain.prototype.createWidgets = function(){
         view: this,
         first_msg: "{center}Welcome to Timetrap TUI! [C-c to exit, ? for help]{/center}"
     });
+    //convenience
     this.log = this.widgets.logger;
 
     // TODO: debug -kill
