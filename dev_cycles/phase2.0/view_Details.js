@@ -274,6 +274,7 @@ ViewDetails.prototype.createWidgets = function(){
         config: logger_config,
         theme: this.theme,
         view: this,
+        devel: this.process_config.data.developer_mode.value,
         first_msg: "{center}Details View [1 to close, C-c to exit, ? for help]{/center}"
     });
     this.log = this.widgets.logger;

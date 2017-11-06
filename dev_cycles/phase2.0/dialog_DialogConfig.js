@@ -9,6 +9,16 @@ class DialogConfig extends ConfigurationBase {
 
 DialogConfig.prototype.loadDefaults = function() {
     this.data = {
+        traits: {
+            lockKeys: true,
+            keys: true,
+            tags: true,
+            align: 'center',
+            left: 'center',
+            top: 'center',
+            width: '50%',
+            height: 10,
+        },
         colors: {
             bg: {
                 none: null,

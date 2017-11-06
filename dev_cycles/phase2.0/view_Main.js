@@ -43,7 +43,7 @@ class ViewMain extends EventEmitter {
         super();
         this.screen = screen;
         this.process_config = process_config;
-        this.theme = this.process_config.data.color_theme.value
+        this.theme = this.process_config.data.color_theme.value;
         this.controller = controller;
         this.config = config;
 
@@ -256,6 +256,7 @@ ViewMain.prototype.createWidgets = function(){
         config: logger_config,
         theme: this.theme,
         view: this,
+        devel: this.process_config.data.developer_mode.value,
         first_msg: "{center}Welcome to Timetrap TUI! [C-c to exit, ? for help]{/center}"
     });
     //convenience

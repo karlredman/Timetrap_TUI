@@ -17,6 +17,9 @@ class Logger extends ContribLog {
     constructor({parent = helpers.requiredParam('parent'), options ={},
         theme = 'opaque', config = helpers.requiredParam('config'),
         view = helpers.requiredParam('view'),
+        production = true,
+        debug = false,
+        devel = false,
         first_msg = null} ={}) {
 
         let defaults = {
@@ -72,6 +75,10 @@ class Logger extends ContribLog {
         this.theme = theme;
         this.config = config;
         this.view = view;
+        this.devel = devel;
+        this.production = production;
+        this.debug = debug;
+        this.devel = devel;
 
         // log is interactive (for parent contrib.log)
         this.interactive = true
@@ -168,10 +175,16 @@ Logger.prototype.msg = function(message, loglevel){
 
     // TODO: hack -needs better organization
     if ( loglevel >= 20){
-        domain = '[devel]'
+        domain = '[devel]';
+        if( this.devel !== true ){return};
     }
     else if ( loglevel >= 10){
-        domain = '[debug]'
+        domain = '[debug]';
+        if( this.debug !== true ){return};
+    }
+    else if ( loglevel >= 0){
+        domain = '';
+        if( this.production !== true ){return};
     }
 
     if (

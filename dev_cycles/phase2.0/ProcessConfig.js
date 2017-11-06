@@ -44,7 +44,7 @@ ProcessConfig.prototype.loadDefaults = function() {
 		},
 		question_prompts: {
 			value: true,
-			desc: "whether to use \'Are you sure?\' dialog prompts",
+			desc: "don\'t use \'Are you sure?\' dialog prompts",
 			options: 'true|false'
 		},
 		color_theme: {

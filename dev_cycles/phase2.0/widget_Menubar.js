@@ -11,6 +11,8 @@ var helpers = require('./helpers');
 
 // dialogs
 var {Message} = require('./dialog_Message.js')
+var {Prompt} = require('./dialog_Prompt.js')
+var {Question} = require('./dialog_Question.js')
 
 // debugging
 var util = require('util');
@@ -158,6 +160,48 @@ Menubar.prototype.registerActions = function() {
     this.on('message_ack', (data, error)=> {
         console.log("got here");
     });
+
+    this.on('prompt', function(data){
+        if (
+            ( data.type === 'checkIn' )
+            || ( data.type === 'checkOut' )
+            || ( data.type === 'edit' )
+        )
+        {
+            _this.log.msg("Prompt|type:"+data.type+"|data:"+data.data, _this.log.loglevel.devel.message);
+            // if( data.data !== null) {
+            //     let sheet = _this.view.widgets.sidebar.nodeLines[_this.view.widgets.sidebar.rows.selected].sheet;
+            //     _this.view.timetrap.callCommand({type: data.type, target: _this, content: data.data, sheet: sheet});
+            // }
+        }
+    });
+
+    this.view.timetrap.on('checkout_all_sheets', (emit_obj) => {
+        _this.log.msg("stopped all timesheets", _this.log.loglevel.production.message);
+    });
+
+    this.on('question', function(data){
+        if ( data.type === 'exit' ) {
+            if(data.data) {
+                //emit the exit key sequence
+                let nkey = {
+                    sequence: "\u0003",
+                    name: "c",
+                    ctrl: true,
+                    meta: false,
+                    shift: false,
+                    full: "C-c"
+                }
+                _this.view.screen.emit('key '+nkey.full, 'C-c', nkey);
+            }
+        }
+        if (data.type === 'stopAll'){
+            if(data.data){
+                _this.log.msg("Question|type:"+data.type+"|data:"+data.data, _this.log.loglevel.devel.message);
+                _this.view.timetrap.checkoutAllSheets();
+            }
+        }
+    });
 }
 
 Menubar.prototype.init = function() {
@@ -202,6 +246,17 @@ Menubar.prototype.init = function() {
         },
         // 6
         'Stop all': () => {
+            if(_this.view.widgets.sheettree.num_running > 0){
+                if( _this.view.process_config.data.question_prompts.value === true ){
+                    let dlg = new Question({widget: _this}).cannedInput('stopAll');
+                }
+                else {
+                    _this.emit('question', {type: 'stopAll', data: true});
+                }
+            }
+            else {
+                _this.log.msg("no timesheets running", _this.log.loglevel.production.warning);
+            }
         },
         // 7
         New: () => {
@@ -214,12 +269,16 @@ Menubar.prototype.init = function() {
         },
         // 0
         Test: () => {
-            /////////////////////// dialog examples
-            let dlg = new Message({widget: _this}).message("new test message");
+            /////////////////////// Message examples
+            //let dlg = new Message({widget: _this}).message("new test message");
             //let dlg = new Message({widget: _this}).error("new test message");
             //let dlg = new Message({widget: _this}).alert("new test message");
             //
-
+            /////////////////////// Prompt examples
+            //let dlg = new Prompt({widget: _this}).cannedInput('checkIn');
+            //
+            /////////////////////// Question examples
+            let dlg = new Question({widget: _this}).cannedInput('exit');
         },
     }
     this.setItems(items);
