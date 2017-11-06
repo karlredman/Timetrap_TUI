@@ -168,16 +168,60 @@ Menubar.prototype.registerActions = function() {
             || ( data.type === 'edit' )
         )
         {
-            _this.log.msg("Prompt|type:"+data.type+"|data:"+data.data, _this.log.loglevel.devel.message);
-            // if( data.data !== null) {
-            //     let sheet = _this.view.widgets.sidebar.nodeLines[_this.view.widgets.sidebar.rows.selected].sheet;
-            //     _this.view.timetrap.callCommand({type: data.type, target: _this, content: data.data, sheet: sheet});
-            // }
+            if( data.data !== null) {
+                let selected = _this.view.widgets.sheettree.rows.selected;
+                let node_lines = _this.view.widgets.sheettree.nodeLines;
+                let sheet = node_lines[selected].sheet;
+
+                _this.log.msg("Prompt|type:"+data.type+"|sheet:"+sheet+"|data:"+data.data, _this.log.loglevel.devel.message);
+
+                _this.view.timetrap.callCommand({type: data.type, owner: 'menubar', content: data.data, sheet: sheet});
+            }
+        }
+    });
+
+    this.view.timetrap.on('command_complete', (emit_obj) => {
+        if(emit_obj.owner === 'menubar'){
+
+            // devel
+            _this.log.msg(
+                "command_complete|type:"+emit_obj.data.type
+                +"|sheet:"+emit_obj.data.sheet
+                //+"|stdout:"+emit_obj.data.stdoutData
+                +"|stderr:"+emit_obj.data.stderrData
+                , _this.log.loglevel.devel.message);
+
+            // log info for user
+            if (
+                ( emit_obj.data.type === 'checkIn' )
+                || ( emit_obj.data.type === 'checkOut' )
+                || ( emit_obj.data.type === 'edit' )
+            )
+            {
+                if(typeof emit_obj.data.stderrData !== 'undefined'){
+                    if(emit_obj.data.stderrData.toString().
+                        match(/.*Timetrap is already running.*/) )
+                    {
+                        _this.log.msg(emit_obj.data.sheet+" is already running", _this.log.loglevel.production.warning);
+                    }
+                    else if ( emit_obj.data.stderrData.toString().match(/.*Editing running entry.*/) ){
+                        let msg = "Edited runnig entry for \'"+production.sheet+'\'';
+                        _this.log.msg(
+                            "Edited runnig entry for \'"+production.sheet+'\'',
+                            _this.log.loglevel.production.message);
+                    }
+                    else {
+                        _this.log.msg(emit_obj.data.stderrData.toString(),
+                            _this.log.loglevel.production.message);
+                    }
+                }
+
+            }
         }
     });
 
     this.view.timetrap.on('checkout_all_sheets', (emit_obj) => {
-        _this.log.msg("stopped all timesheets", _this.log.loglevel.production.message);
+        _this.log.msg("stopped all time sheets", _this.log.loglevel.production.message);
     });
 
     this.on('question', function(data){
@@ -208,17 +252,49 @@ Menubar.prototype.init = function() {
     let _this = this;
 
     let items = {
-        // 1
-        In: () => {
-            //console.log("In")
-        },
-        // 2
-        Out: () => {
-            //console.log("Out")
-        },
+		// 1
+		In: () => {
+			let selected = _this.view.widgets.sheettree.rows.selected;
+			if(_this.view.widgets.sheettree.nodeLines[selected].info.running === '-:--:--') {
+				_this.log.msg("not a valid time sheet", _this.log.loglevel.production.warning);
+				return;
+			}
+			if( _this.view.process_config.data.question_prompts.value === true ){
+				let dlg = new Prompt({widget: _this}).cannedInput('checkIn');
+			}
+			else {
+				_this.emit('promt', {type: 'checkIn', data: true});
+			}
+		},
+		// 2
+		Out: () => {
+			let selected = _this.view.widgets.sheettree.rows.selected;
+
+			if(_this.view.widgets.sheettree.nodeLines[selected].info.running === '-:--:--') {
+				_this.log.msg("not a valid time sheet", _this.log.loglevel.production.warning);
+				return;
+			}
+			if( _this.view.process_config.data.question_prompts.value === true ){
+				let dlg = new Prompt({widget: _this}).cannedInput('checkOut');
+			}
+			else {
+				_this.emit('promt', {type: 'checkOut', data: true});
+			}
+		},
         // 3
         Edit: () => {
-            //console.log("Edit")
+			let selected = _this.view.widgets.sheettree.rows.selected;
+
+			if(_this.view.widgets.sheettree.nodeLines[selected].info.running === '-:--:--') {
+				_this.log.msg("not a valid time sheet", _this.log.loglevel.production.warning);
+				return;
+			}
+			if( _this.view.process_config.data.question_prompts.value === true ){
+				let dlg = new Prompt({widget: _this}).cannedInput('checkOut');
+			}
+			else {
+				_this.emit('promt', {type: 'checkOut', data: true});
+			}
         },
         // 4
         Task: () => {
@@ -255,7 +331,7 @@ Menubar.prototype.init = function() {
                 }
             }
             else {
-                _this.log.msg("no timesheets running", _this.log.loglevel.production.warning);
+                _this.log.msg("no time sheets running", _this.log.loglevel.production.warning);
             }
         },
         // 7

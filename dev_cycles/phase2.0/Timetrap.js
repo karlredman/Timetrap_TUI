@@ -42,7 +42,7 @@ class Timetrap extends EventEmitter {
             db_monitor: {
                 IN_MODIFY_count: 0,			//aggregate file mod counter
                 watched_db_file: `${watched_db_file}`,
-                agg_time: 500,
+                agg_time: 1000,
                 agg_timer: 0
             },
         };
