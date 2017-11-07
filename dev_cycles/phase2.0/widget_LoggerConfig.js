@@ -96,7 +96,7 @@ LoggerConfig.prototype.loadDefaults = function() {
                     fg: {
                         none: "none",
                         opaque: "white",
-                        dark: "white",
+                        dark: "gray",
                         light: "black",
                         frosty: "lightblue",
                         desc: "the style selected fg color of the logger"
@@ -115,7 +115,7 @@ LoggerConfig.prototype.loadDefaults = function() {
                 fg: {
                     none: "none",
                     opaque: "white",
-                    dark: "white",
+                    dark: "gray",
                     light: "black",
                     frosty: "black",
                     desc: "the fg color of a message"

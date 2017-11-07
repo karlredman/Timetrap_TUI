@@ -175,21 +175,22 @@ DetailsTable.prototype.registerActions = function() {
                             +":" +helpers.zeropad(n.getMinutes())
                             +":" +helpers.zeropad(n.getSeconds());
 
+                        // our abreviations
                         let days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
                         let months = ['Jan','Feb','Mar','Apr','May','Jun',
                             'Jul','Aug','Sep','Oct','Nov','Dec'];
+
                         let start_date = days[n.getDay()]+" "
                             +helpers.zeropad(months[n.getMonth()])+" "
                             +helpers.zeropad(n.getDate())
                             +", "+n.getFullYear();
-
-
 
                         // append to table
                         let rec = [id, start_date, start_time, '--------', duration, note];
                         _this.items.data.push(rec);
                         _this.setData(_this.items);
 
+                        // update the status widget
                         _this.view.widgets.details_status.emit('update_status',
                             emit_obj.data.sheet, emit_obj.data.type, _this.view.running,
                             _this.total_time.toString().toHMMSS());
@@ -258,8 +259,10 @@ DetailsTable.prototype.registerActions = function() {
                         data:[
                         ]};
 
-                    //build table content
-                    _this.total_time = 0;           //class variable TODO
+                    /////////////////////////// build table content
+
+                    // reset total time
+                    _this.total_time = 0;
 
                     for( let i in content ){
                         let tmp = [];
@@ -287,25 +290,17 @@ DetailsTable.prototype.registerActions = function() {
                         //end
                         tmp.push(content[i].end.split(" ")[1]);
 
-                        // calculate the duration
-                        //tmp.push("999:99:99");
-                        // let da = content[i].start.split(" ");
-                        // let ds = String(da[0]+'T'+da[1]+'.000'+da[2]);
-                        // let start = new Date(ds);
-
+                        //calculating
                         da = content[i].end.split(" ");
                         ds = String(da[0]+'T'+da[1]+'.000'+da[2]);
                         let end = new Date(ds);
 
+                        // add elapsed time to tmp array
                         let delta = (end - start)/1000;
                         tmp.push(delta.toString().toHMMSS());
 
                         //keep running total
                         _this.total_time += delta;
-
-                        // let DialogBigBox = require('./DialogBigBox')
-                        // let bb = DialogBigBox({ parent: _this.screen, });
-                        // bb.setContent(JSON.stringify(_this.total_time, null, 2));
 
                         //notes
                         tmp.push(content[i].note);
@@ -321,19 +316,20 @@ DetailsTable.prototype.registerActions = function() {
 
                     // accomidate for running clocks -to get the id and the faketimer going
                     // Note: this is where we breakdown in efficiency -grabbing full text output
+                    // it is probably better to just switch to a single call someday??
 
 
                     // if running
                     if(_this.view.running){
                         //// obtain running id
                         _this.view.timetrap.callCommand({type:'ids', sheet: _this.view.sheet, owner: 'details_table_ids', sync: true});
+
+                        // this is part of this sequence
                         ////// running_id = <t d -fids>[length-1]
                         //// obtain note
                         ////// note = <t now> ... (see, timetrap.stopAllTimers
                         //// append to table
                     }
-                    //// manage runtime....??
-
 
                     // update the satusbar -- TODO: subject to timer for running
                     _this.view.widgets.details_status.emit('update_status',

@@ -102,40 +102,32 @@ DetailsMenubar.prototype.registerActions = function() {
         }
         if (key.name === 'left'
             || (_this.options['vi'] && key.name === 'h')
-            //|| (key.shift && key.name === 'tab')
         ) {
-            // let item = _this.items[_this.selected];
-            // item.style.bg = null;
-            // item.style.fg = "white";
+            if(_this.selected === 0 ) {
+                _this.select(_this.items.length-1);
+                return;
+            }
             _this.moveLeft();
-            //item = _this.items[_this.selected];
-            // item.style.bg = "black";
-            // item.style.fg = "lightblue";
             _this.screen.render();
-            // Stop propagation if we're in a form.
-            //if (key.name === 'tab') return false;
             return;
         }
         if (key.name === 'right'
             || (_this.options['vi'] && key.name === 'l')
-            //|| key.name === 'tab'
         ) {
-            // let item = _this.items[_this.selected];
-            // item.style.bg = null;
-            // item.style.fg = "white";
+            if(_this.selected === (_this.items.length-1)) {
+                _this.select(0);
+                return;
+            }
             _this.moveRight();
-            // item = _this.items[_this.selected];
-            // item.style.bg = "black";
-            // item.style.fg = "lightblue";
             _this.screen.render();
-            // Stop propagation if we're in a form.
-            //if (key.name === 'tab') return false;
             return;
         }
         if (key.name === 'enter'
-            || (_this.options['vi'] && key.name === 'k' && !key.shift)) {
+            || (_this.options['vi'] && key.name === 'k' && !key.shift))
+        {
             _this.emit('action', _this.items[_this.selected], _this.selected);
             _this.emit('select', _this.items[_this.selected], _this.selected);
+
             let item = _this.items[_this.selected];
             if (item._.cmd.callback) {
                 item._.cmd.callback();

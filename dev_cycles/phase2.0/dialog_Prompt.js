@@ -81,6 +81,10 @@ Prompt.prototype.cannedInput = function(type){
             message: "Enter {bold}clock out{/bold} arguments",
             value: ""
         },
+        task:{
+            message: "Enter {bold}task{/bold} arguments",
+            value: ""
+        },
         edit:{
             message: "Enter {bold}edit{/bold} arguments",
             value: ""

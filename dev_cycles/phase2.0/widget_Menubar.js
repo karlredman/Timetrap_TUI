@@ -106,51 +106,35 @@ Menubar.prototype.registerActions = function() {
         }
         if (key.name === 'left'
             || (_this.options['vi'] && key.name === 'h')
-            //|| (key.shift && key.name === 'tab')
         ) {
-            // let item = _this.items[_this.selected];
-            // item.style.bg = null;
-            // item.style.fg = "white";
+            if(_this.selected === 0 ) {
+                _this.select(_this.items.length-1);
+                return;
+            }
             _this.moveLeft();
-            //item = _this.items[_this.selected];
-            // item.style.bg = "black";
-            // item.style.fg = "lightblue";
             _this.screen.render();
-            // Stop propagation if we're in a form.
-            //if (key.name === 'tab') return false;
             return;
         }
         if (key.name === 'right'
             || (_this.options['vi'] && key.name === 'l')
-            //|| key.name === 'tab'
         ) {
-            // let item = _this.items[_this.selected];
-            // item.style.bg = null;
-            // item.style.fg = "white";
+            if(_this.selected === (_this.items.length-1)) {
+                _this.select(0);
+                return;
+            }
             _this.moveRight();
-            // item = _this.items[_this.selected];
-            // item.style.bg = "black";
-            // item.style.fg = "lightblue";
             _this.screen.render();
-            // Stop propagation if we're in a form.
-            //if (key.name === 'tab') return false;
             return;
         }
         if (key.name === 'enter'
-            || (_this.options['vi'] && key.name === 'k' && !key.shift)) {
+            || (_this.options['vi'] && key.name === 'k' && !key.shift))
+        {
             _this.emit('action', _this.items[_this.selected], _this.selected);
             _this.emit('select', _this.items[_this.selected], _this.selected);
+
             let item = _this.items[_this.selected];
             if (item._.cmd.callback) {
                 item._.cmd.callback();
-
-                // //TODO: timer to set 'unselected'
-                // setTimeout(function(){
-                //     // item.style.bg = null;
-                //     // item.style.fg = "white";
-                //     _this.select(0);
-                //     _this.screen.render();
-                // }, 1000);
             }
             _this.screen.render();
             return;
@@ -166,15 +150,25 @@ Menubar.prototype.registerActions = function() {
             ( data.type === 'checkIn' )
             || ( data.type === 'checkOut' )
             || ( data.type === 'edit' )
+            || ( data.type === 'task' )
         )
         {
+            // example
+            // this.emit('prompt', {type: 'checkOut', data: ''});
+
+            let selected = _this.view.widgets.sheettree.rows.selected;
+            let node_lines = _this.view.widgets.sheettree.nodeLines;
+            let sheet = node_lines[selected].sheet;
+
             if( data.data !== null) {
-                let selected = _this.view.widgets.sheettree.rows.selected;
-                let node_lines = _this.view.widgets.sheettree.nodeLines;
-                let sheet = node_lines[selected].sheet;
-
+                if(data.type === 'task'){
+                    //checkIn (sync)
+                    _this.view.timetrap.callCommand({type: 'checkIn', owner: 'menubar', content: data.data, sheet: sheet, sync: true});
+                    //checkOut
+                    _this.view.timetrap.callCommand({type: 'checkOut', owner: 'menubar', content: '', sheet: sheet, sync: true});
+                    return;
+                }
                 _this.log.msg("Prompt|type:"+data.type+"|sheet:"+sheet+"|data:"+data.data, _this.log.loglevel.devel.message);
-
                 _this.view.timetrap.callCommand({type: data.type, owner: 'menubar', content: data.data, sheet: sheet});
             }
         }
@@ -251,53 +245,60 @@ Menubar.prototype.init = function() {
     let _this = this;
 
     let items = {
-		// 1
-		In: () => {
-			let selected = _this.view.widgets.sheettree.rows.selected;
-			if(_this.view.widgets.sheettree.nodeLines[selected].info.running === '-:--:--') {
-				_this.log.msg("not a valid time sheet", _this.log.loglevel.production.warning);
-				return;
-			}
-            // if( _this.view.process_config.data.question_prompts.value === true ){
-				let dlg = new Prompt({widget: _this}).cannedInput('checkIn');
-			// }
-			// else {
-			// 	_this.emit('promt', {type: 'checkIn', data: true});
-			// }
-		},
-		// 2
-		Out: () => {
-			let selected = _this.view.widgets.sheettree.rows.selected;
+        // 1
+        In: () => {
+            let selected = _this.view.widgets.sheettree.rows.selected;
+            if(_this.view.widgets.sheettree.nodeLines[selected].info.running === '-:--:--') {
+                _this.log.msg("not a valid time sheet", _this.log.loglevel.production.warning);
+                return;
+            }
+            let dlg = new Prompt({widget: _this}).cannedInput('checkIn');
+        },
+        // 2
+        Out: () => {
+            let selected = _this.view.widgets.sheettree.rows.selected;
 
-			if(_this.view.widgets.sheettree.nodeLines[selected].info.running === '-:--:--') {
-				_this.log.msg("not a valid time sheet", _this.log.loglevel.production.warning);
-				return;
-			}
-			// if( _this.view.process_config.data.question_prompts.value === true ){
-				let dlg = new Prompt({widget: _this}).cannedInput('checkOut');
-			// }
-			// else {
-			// 	_this.emit('promt', {type: 'checkOut', data: true});
-			// }
-		},
+            if(_this.view.widgets.sheettree.nodeLines[selected].info.running === '-:--:--') {
+                _this.log.msg("not a valid time sheet", _this.log.loglevel.production.warning);
+                return;
+            }
+            let dlg = new Prompt({widget: _this}).cannedInput('checkOut');
+        },
         // 3
         Edit: () => {
-			let selected = _this.view.widgets.sheettree.rows.selected;
+            let selected = _this.view.widgets.sheettree.rows.selected;
 
-			if(_this.view.widgets.sheettree.nodeLines[selected].info.running === '-:--:--') {
-				_this.log.msg("not a valid time sheet", _this.log.loglevel.production.warning);
-				return;
-			}
-			// if( _this.view.process_config.data.question_prompts.value === true ){
-				let dlg = new Prompt({widget: _this}).cannedInput('edit');
-			// }
-			// else {
-			// 	_this.emit('promt', {type: 'checkOut', data: true});
-			// }
+            if(_this.view.widgets.sheettree.nodeLines[selected].info.running === '-:--:--') {
+                _this.log.msg("not a valid time sheet", _this.log.loglevel.production.warning);
+                return;
+            }
+            let dlg = new Prompt({widget: _this}).cannedInput('edit');
         },
         // 4
         Task: () => {
-            //console.log("Task")
+            let selected = _this.view.widgets.sheettree.rows.selected;
+            let idx = _this.view.widgets.sheettree.rows.getItemIndex(_this.selected);
+            let node_lines = _this.view.widgets.sheettree.nodeLines;
+            let sheet = node_lines[selected].sheet;
+
+            if(_this.view.widgets.sheettree.nodeLines[selected].info.running === '-:--:--') {
+                _this.log.msg("not a valid time sheet", _this.log.loglevel.production.warning);
+                return;
+            }
+
+            // if it's running
+            if(_this.view.widgets.sheettree.nodeLines[selected].info.running !== '0:00:00') {
+                //// checkout
+                _this.view.timetrap.callCommand({type: 'checkOut', owner: 'menubar_task', content: '', sheet: sheet, sync: true});
+                //// checkin
+                let dlg = new Prompt({widget: _this}).cannedInput('checkIn');
+            }
+            else {
+                // it's not running
+                //// checkin
+                let dlg = new Prompt({widget: _this}).cannedInput('task');
+                //// checkout occurs with the prompt event...
+            }
         },
         // 5
         Details: () => {
@@ -353,7 +354,9 @@ Menubar.prototype.init = function() {
             //let dlg = new Prompt({widget: _this}).cannedInput('checkIn');
             //
             /////////////////////// Question examples
-            let dlg = new Question({widget: _this}).cannedInput('exit');
+            //let dlg = new Question({widget: _this}).cannedInput('exit');
+
+            // submenu
         },
     }
     this.setItems(items);
