@@ -65,6 +65,8 @@ class Prompt extends BlessedPrompt {
         this.view = widget.view;
         this.theme = widget.view.theme;
         this.log = widget.view.log;
+
+        this.focus();
     }
 }
 Prompt.prototype.cannedInput = function(type){

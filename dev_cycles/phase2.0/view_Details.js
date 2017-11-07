@@ -248,6 +248,7 @@ ViewDetails.prototype.destroyAllWidgets = function() {
         if ( ! this.widgets.hasOwnProperty(key)) continue;
         this.widgets[key].destroy()
         this.widgets[key].removeAllListeners();
+        this.widgets.menubar.removeScreenEvent('keypress');
         this.widgets[key].free()
         delete this.widgets[key].config;
         delete this.widgets[key];
@@ -293,6 +294,7 @@ ViewDetails.prototype.createWidgets = function(){
     let menubar_config = new DetailsMenubarConfig();
     this.widgets.menubar = new DetailsMenubar({
         parent: this.widgets.viewbox,
+        //parent: this.widgets.viewbox,
         config: menubar_config,
         theme: this.theme,
         logger: this.widgets.logger,

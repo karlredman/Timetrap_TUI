@@ -61,7 +61,7 @@ ViewController.prototype.registerActions = function() {
     //view creators
     this.on('create_view', (info) => {
         if (info.view_name === 'details'){
-            if(typeof _this.views.details === 'undefined'){
+            //if(typeof _this.views.details === 'undefined'){
 
                 //TODO: validate info
 
@@ -72,7 +72,8 @@ ViewController.prototype.registerActions = function() {
                 // kill the view.menubar:
 				// it's easier to do this than manage the event
 				// queue in blessed.screen.
-                this.views.main.emit('destroy_widget', 'menubar');
+            //this.views.main.emit('destroy_widget', 'menubar');
+            this.views.main.destroyMenubar();
 
                 // create the view
                 let details_config = new ViewMainConfig();          //recycling main config
@@ -90,7 +91,7 @@ ViewController.prototype.registerActions = function() {
 
                 // log it
                 _this.views.main.widgets.logger.msg("Created view: Details", _this.views.main.widgets.logger.loglevel.devel.message);
-            }
+            //}
         }
     });
 
@@ -102,15 +103,8 @@ ViewController.prototype.registerActions = function() {
                 // hide the details view
                 _this.views.details.emit('hide_view');
 
-                // recreate the menubar
-                this.views.main.emit('create_widget', 'menubar');
-
                 // show main view
                 _this.views.main.emit('show_view');
-
-                //focus the main view
-                _this.views.main.emit('focus_default');
-
 
                 // TODO: get a copy of the loggs from the outgoing view
 
@@ -122,6 +116,11 @@ ViewController.prototype.registerActions = function() {
                 delete _this.views.details;
                 _this.views.details = undefined;
 
+                // recreate the menubar
+                this.views.main.emit('create_widget', 'menubar');
+
+                //focus the main view
+                _this.views.main.emit('focus_default');
 
                 // copy logs over to main view logger
 

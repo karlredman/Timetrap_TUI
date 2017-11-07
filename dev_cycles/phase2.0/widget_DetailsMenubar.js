@@ -28,8 +28,9 @@ class DetailsMenubar extends Listbar {
             left: 0,
             width: '100%',
             //
-            keys: null,            //we're overriding keys
-            xkeys: true,
+            keys: false,            //we're overriding keys
+            //xkeys: true,
+            //lockKeys: true,
             mouse: true,
             vi: true,
             //

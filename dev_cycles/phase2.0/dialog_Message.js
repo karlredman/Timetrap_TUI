@@ -65,6 +65,8 @@ class Message extends BlessedMessage {
         this.view = widget.view;
         this.theme = widget.view.theme;
         this.log = widget.view.log;
+
+        //this.focus();
     }
 }
 Message.prototype.alert = function(message){

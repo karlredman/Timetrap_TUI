@@ -33,8 +33,8 @@ class Menubar extends Listbar {
             left: 0,
             width: '100%',
             //
-            keys: null,            //we're overriding keys
-            xkeys: true,
+            keys: false,            //we're overriding keys
+            //xkeys: true,
             mouse: true,
             vi: true,
             //
@@ -205,9 +205,8 @@ Menubar.prototype.registerActions = function() {
                         _this.log.msg(emit_obj.data.sheet+" is already running", _this.log.loglevel.production.warning);
                     }
                     else if ( emit_obj.data.stderrData.toString().match(/.*Editing running entry.*/) ){
-                        let msg = "Edited runnig entry for \'"+production.sheet+'\'';
                         _this.log.msg(
-                            "Edited runnig entry for \'"+production.sheet+'\'',
+                            "Edited runnig entry for \'"+emit_obj.data.sheet+'\'',
                             _this.log.loglevel.production.message);
                     }
                     else {
@@ -259,12 +258,12 @@ Menubar.prototype.init = function() {
 				_this.log.msg("not a valid time sheet", _this.log.loglevel.production.warning);
 				return;
 			}
-			if( _this.view.process_config.data.question_prompts.value === true ){
+            // if( _this.view.process_config.data.question_prompts.value === true ){
 				let dlg = new Prompt({widget: _this}).cannedInput('checkIn');
-			}
-			else {
-				_this.emit('promt', {type: 'checkIn', data: true});
-			}
+			// }
+			// else {
+			// 	_this.emit('promt', {type: 'checkIn', data: true});
+			// }
 		},
 		// 2
 		Out: () => {
@@ -274,12 +273,12 @@ Menubar.prototype.init = function() {
 				_this.log.msg("not a valid time sheet", _this.log.loglevel.production.warning);
 				return;
 			}
-			if( _this.view.process_config.data.question_prompts.value === true ){
+			// if( _this.view.process_config.data.question_prompts.value === true ){
 				let dlg = new Prompt({widget: _this}).cannedInput('checkOut');
-			}
-			else {
-				_this.emit('promt', {type: 'checkOut', data: true});
-			}
+			// }
+			// else {
+			// 	_this.emit('promt', {type: 'checkOut', data: true});
+			// }
 		},
         // 3
         Edit: () => {
@@ -289,12 +288,12 @@ Menubar.prototype.init = function() {
 				_this.log.msg("not a valid time sheet", _this.log.loglevel.production.warning);
 				return;
 			}
-			if( _this.view.process_config.data.question_prompts.value === true ){
-				let dlg = new Prompt({widget: _this}).cannedInput('checkOut');
-			}
-			else {
-				_this.emit('promt', {type: 'checkOut', data: true});
-			}
+			// if( _this.view.process_config.data.question_prompts.value === true ){
+				let dlg = new Prompt({widget: _this}).cannedInput('edit');
+			// }
+			// else {
+			// 	_this.emit('promt', {type: 'checkOut', data: true});
+			// }
         },
         // 4
         Task: () => {

@@ -80,6 +80,8 @@ class Question extends BlessedQuestion {
         this.view = widget.view;
         this.theme = widget.view.theme;
         this.log = widget.view.log;
+
+        //this.focus();
     }
 }
 Question.prototype.cannedInput = function(type){

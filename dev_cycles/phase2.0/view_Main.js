@@ -195,9 +195,28 @@ ViewMain.prototype.setWinFocusPrev = function(){
     }
 }
 
+ViewMain.prototype.destroyMenubar = function(){
+    this.widgets.menubar.removeAllListeners();
+    this.widgets.menubar.removeScreenEvent('keypress');
+    this.widgets.menubar.destroy();
+    this.widgets.menubar.free();
+    delete this.widgets.menubar.config;
+    delete this.widgets.menubar;
+    this.log.msg("destroyed menubar while creating view details", this.log.loglevel.devel.message);
+}
 
 ViewMain.prototype.registerActions = function(){
     let _this = this;
+
+    //this.widgets.sheettree.rows.on('keypress', (ch, key) => {
+    // this.screen.on('keypress', (ch, key) => {
+    //     if (key.ch === '1') {
+    //         var {Message} = require('./dialog_Message.js')
+    //         let dlg = new Message({widget: _this.widgets.sheettree}).alert("val:"+util.inspect(key, null, 2));
+    //         this.widgets.menubar.selectTab(0)
+    //     }
+    // });
+
 
     this.on('hide_view', () => {
         _this.log.msg("hiding main view", _this.log.loglevel.devel.message);
@@ -207,15 +226,15 @@ ViewMain.prototype.registerActions = function(){
         _this.log.msg("showing main view", _this.log.loglevel.devel.message);
         _this.widgets.viewbox.show();
     });
-    this.on('destroy_widget', (widget) => {
-        if(widget === 'menubar'){
-            _this.widgets.menubar.destroy();
-            _this.widgets.menubar.free();
-            delete _this.widgets.menubar.config;
-            delete _this.widgets.menubar;
-            _this.log.msg("destroyed menubar while creating view details", _this.log.loglevel.devel.message);
-        }
-    });
+    // this.on('destroy_widget', (widget) => {
+    //     if(widget === 'menubar'){
+    //         _this.widgets.menubar.destroy();
+    //         _this.widgets.menubar.free();
+    //         delete _this.widgets.menubar.config;
+    //         delete _this.widgets.menubar;
+    //         _this.log.msg("destroyed menubar while creating view details", _this.log.loglevel.devel.message);
+    //     }
+    // });
     this.on('create_widget', (widget) => {
         if(widget === 'menubar'){
             // menubar
@@ -270,6 +289,7 @@ ViewMain.prototype.createWidgets = function(){
     // menubar
     let menubar_config = new MenubarConfig();
     this.widgets.menubar = new Menubar({
+        //parent: this.widgets.viewbox,
         parent: this.widgets.viewbox,
         config: menubar_config,
         theme: this.theme,

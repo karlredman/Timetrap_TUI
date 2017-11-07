@@ -133,7 +133,7 @@ DetailsTable.prototype.registerActions = function() {
 
     // for fetch and display of running items
     let id = '------';
-    let note = 'N/A';
+    let note = '';
 
     this.view.timetrap.on('command_complete', (emit_obj) => {
 
@@ -145,56 +145,57 @@ DetailsTable.prototype.registerActions = function() {
             let duration = '0:00:00';
 
             //record looks like this:
-            // Projects.Timetrap_TUI: 2:28:14 (cleanup dispaly starting dialogs)
+            //*Projects.Timetrap_TUI: 2:28:14 (cleanup dispaly starting dialogs)
 
             // obtain note / find duration
             //let note = '';
-            if(arr.length > 1) {
-                for ( let i=0; i < arr.length-1; i++ ) {
+            if(arr.length > 0) {
+                for ( let i=0; i < arr.length; i++ ) {
                     //sheet portion
                     let chunk = arr[i].slice(1,arr[i].length);
                     let sheet = chunk.split(':')[0];
 
                     if(sheet === _this.view.sheet){
                         //figure out the current durration
-                        let d1 = arr[i].split(' ')
-                        duration = d1[2];
+                        //let d1 = arr[i].split(' ')
+                        let d1 = chunk.split(' ')
+                        duration = d1[1];
 
                         //grab the note if it exists
                         let idx = chunk.indexOf('(');
                         if(idx > -1){
                             note = chunk.slice(idx+1, chunk.length-1);
                         }
+                        // calculate the start time
+                        let n = new Date();
+                        let a = duration.split(':');
+                        let seconds = (+a[0]) * 60 * 60 + (+a[1]) * 60 + (+a[2]);
+                        n.setSeconds(n.getSeconds()-seconds);
+                        let start_time = helpers.zeropad(n.getHours())
+                            +":" +helpers.zeropad(n.getMinutes())
+                            +":" +helpers.zeropad(n.getSeconds());
+
+                        let days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+                        let months = ['Jan','Feb','Mar','Apr','May','Jun',
+                            'Jul','Aug','Sep','Oct','Nov','Dec'];
+                        let start_date = days[n.getDay()]+" "
+                            +helpers.zeropad(months[n.getMonth()])+" "
+                            +helpers.zeropad(n.getDate())
+                            +", "+n.getFullYear();
+
+
+
+                        // append to table
+                        let rec = [id, start_date, start_time, '--------', duration, note];
+                        _this.items.data.push(rec);
+                        _this.setData(_this.items);
+
+                        _this.view.widgets.details_status.emit('update_status',
+                            emit_obj.data.sheet, emit_obj.data.type, _this.view.running,
+                            _this.total_time.toString().toHMMSS());
                     }
                 }
             }
-            // calculate the start time
-            let n = new Date();
-            let a = duration.split(':');
-            let seconds = (+a[0]) * 60 * 60 + (+a[1]) * 60 + (+a[2]);
-            n.setSeconds(n.getSeconds()-seconds);
-            let start_time = helpers.zeropad(n.getHours())
-                +":" +helpers.zeropad(n.getMinutes())
-                +":" +helpers.zeropad(n.getSeconds());
-
-            let days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-            let months = ['Jan','Feb','Mar','Apr','May','Jun',
-                'Jul','Aug','Sep','Oct','Nov','Dec'];
-            let start_date = days[n.getDay()]+" "
-                +helpers.zeropad(months[n.getMonth()])+" "
-                +helpers.zeropad(n.getDate())
-                +", "+n.getFullYear();
-
-
-
-            // append to table
-            let rec = [id, start_date, start_time, '--------', duration, note];
-            _this.items.data.push(rec);
-            _this.setData(_this.items);
-
-            _this.view.widgets.details_status.emit('update_status',
-                emit_obj.data.sheet, emit_obj.data.type, _this.view.running,
-                _this.total_time.toString().toHMMSS());
             return;
         }
 
