@@ -44,7 +44,7 @@ DetailsStatusConfig.prototype.loadDefaults = function() {
                 },
                 fg: {
                     none: "none",
-                    opaque: "blue",
+                    opaque: "white",
                     dark: "white",
                     light: "black",
                     frosty: "blue",

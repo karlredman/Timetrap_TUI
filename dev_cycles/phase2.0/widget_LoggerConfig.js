@@ -134,7 +134,7 @@ LoggerConfig.prototype.loadDefaults = function() {
                     none: "yellow",
                     opaque: "yellow",
                     dark: "yellow",
-                    light: "yellow",
+                    light: "blue",
                     frosty: "yellow",
                     desc: "the fg color of a warning"
                 },

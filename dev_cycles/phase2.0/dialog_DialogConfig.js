@@ -18,35 +18,58 @@ DialogConfig.prototype.loadDefaults = function() {
             top: 'center',
             width: '50%',
             height: 10,
+            //
+            mouse: true,
+            vi: true,
+            input: true,
+            keyable: true,
+            interactive: true,
+
         },
         colors: {
             bg: {
-                none: null,
-                opaque: "white",
-                dark: "white",
-                light: "black",
-                frosty: "black",
+                none: "none",
+                opaque: "gray",
+                dark: "none",
+                light: "none",
+                frosty: "gray",
                 desc: "the bg color of the menu item"
             },
             fg: {
-                none: null,
+                none: "none",
                 opaque: "white",
-                dark: "white",
+                dark: "blue",
                 light: "black",
-                frosty: "black",
+                frosty: "white",
                 desc: "the fg color of the menu item"
+            },
+            selectedBg: {
+                none: "none",
+                opaque: "white",
+                dark: "none",
+                light: "none",
+                frosty: "white",
+                desc: "the bg color of the selected menu item"
+            },
+            selectedFg: {
+                none: "none",
+                opaque: "blue",
+                dark: "white",
+                light: "blue",
+                frosty: "blue",
+                desc: "the fg color of the selected menu item"
             },
             border: {
                 bg: {
-                    none: null,
+                    none: "none",
                     opaque: "gray",
-                    dark: null,
-                    light: null,
+                    dark: "none",
+                    light: "none",
                     frosty: "blue",
                     desc: "the bg color of the menu item"
                 },
                 fg: {
-                    none: null,
+                    none: "none",
                     opaque: "white",
                     dark: "white",
                     light: "black",
@@ -56,20 +79,96 @@ DialogConfig.prototype.loadDefaults = function() {
             },
             style: {
                 bg: {
-                    none: null,
+                    none: "none",
                     opaque: "gray",
-                    dark: null,
-                    light: null,
+                    dark: "none",
+                    light: "none",
                     frosty: "gray",
                     desc: "the bg color of the menu item"
                 },
                 fg: {
-                    none: null,
+                    none: "none",
                     opaque: "white",
                     dark: "white",
                     light: "black",
                     frosty: "white",
                     desc: "the fg color of the menu item"
+                },
+                border: {
+                    bg: {
+                        none: "none",
+                        opaque: "gray",
+                        dark: "none",
+                        light: "none",
+                        frosty: "blue",
+                        desc: "the bg color of the menu item"
+                    },
+                    fg: {
+                        none: "none",
+                        opaque: "white",
+                        dark: "white",
+                        light: "black",
+                        frosty: "white",
+                        desc: "the fg color of the menu item"
+                    },
+                },
+                selected: {
+                    // bg: "blue",
+                    // fg: "white",
+                    bg: {
+                        none: "none",
+                        opaque: "lightblack",
+                        dark: "none",
+                        light: "none",
+                        frosty: "lightblue",
+                        desc: "the bg color of the selected menu item"
+                    },
+                    fg: {
+                        none: "none",
+                        opaque: "lightblue",
+                        dark: "lightblue",
+                        light: "blue",
+                        frosty: "black",
+                        desc: "the fg color of the selected menu item"
+                    },
+                },
+                item: {
+                    bg: {
+                        none: "none",
+                        opaque: "black",
+                        dark: "none",
+                        light: "none",
+                        frosty: "white",
+                        desc: "the bg color of the menu item"
+                    },
+                    fg: {
+                        none: "none",
+                        opaque: "white",
+                        dark: "white",
+                        light: "black",
+                        frosty: "gray",
+                        desc: "the fg color of the menu item"
+                    },
+                    hover: {
+                        // bg: "green",
+                        // fg: "none",
+                        bg: {
+                            none: "none",
+                            opaque: "black",
+                            dark: "none",
+                            light: "none",
+                            frosty: "white",
+                            desc: "the bg color of the menu item"
+                        },
+                        fg: {
+                            none: "none",
+                            opaque: "white",
+                            dark: "white",
+                            light: "black",
+                            frosty: "gray",
+                            desc: "the fg color of the menu item"
+                        },
+                    },
                 },
             }
         }

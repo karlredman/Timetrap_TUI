@@ -97,7 +97,7 @@ class ViewDetails extends EventEmitter {
 ViewDetails.prototype.run = function() {
 
     //get data from timetrap -defaults to today
-    // TODO: -add to config?
+    // TODO: -add default option to config?
     this.timetrap.callCommand({type:'today', owner: 'detailstable', sheet: this.sheet, sync: false});
 }
 
@@ -218,6 +218,15 @@ ViewDetails.prototype.registerActions = function(){
         //update the sheet tree and summary table when the db changes
         //_this.view.timetrap.callCommand({type:'list', owner: 'sheettree', sync: false});
         _this.log.msg("database changed externally", _this.log.loglevel.production.message);
+    });
+
+    this.on('destroy_widget', (widget) => {
+        widget.destroy();
+        widget.free();
+        delete widget.config;
+        widget = undefined;
+        _this.log.msg("destroyed widget", _this.log.loglevel.devel.message);
+        _this.widgets.details_table.focus();
     });
 }
 

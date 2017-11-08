@@ -10,9 +10,9 @@ var {TimetrapTUI_Error} = require('./Errors');
 var helpers = require('./helpers');
 
 // dialogs
-var {Message} = require('./dialog_Message.js')
-var {Prompt} = require('./dialog_Prompt.js')
-var {Question} = require('./dialog_Question.js')
+var {Message} = require('./dialog_Message.js'),
+    {Prompt} = require('./dialog_Prompt.js'),
+    {Question} = require('./dialog_Question.js');
 
 // debugging
 var util = require('util');
@@ -244,6 +244,7 @@ Menubar.prototype.registerActions = function() {
 Menubar.prototype.init = function() {
     let _this = this;
 
+    //TODO: I'm not exactly sure how this object garantees order...
     let items = {
         // 1
         In: () => {
@@ -357,6 +358,9 @@ Menubar.prototype.init = function() {
             //let dlg = new Question({widget: _this}).cannedInput('exit');
 
             // submenu
+            // {Menu} = require('./dialog_Menu.js');
+            // let submenu = new Menu({widget: _this});
+            // submenu.rows.focus();
         },
     }
     this.setItems(items);

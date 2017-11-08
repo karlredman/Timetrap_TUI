@@ -8,6 +8,10 @@ var blessed = require('blessed'),
 //var {DetailsMenubarConfig} = require('./widget_DetailsMenubarConfig');
 var {TimetrapTUI_Error} = require('./Errors');
 var helpers = require('./helpers');
+var {Message} = require('./dialog_Message.js'),
+    {Prompt} = require('./dialog_Prompt.js'),
+    {Question} = require('./dialog_Question.js'),
+    {Menu} = require('./dialog_Menu.js');
 
 // debugging
 var util = require('util');
@@ -144,6 +148,9 @@ DetailsMenubar.prototype.init = function() {
     let items = {
         // 1
         Close: () => {
+            //cleanup any dialogs
+            _this.view.widgets.details_table.focus();
+            //destroy the view
             _this.view.controller.emit('destroy_view', {view_name: 'details'})
         },
         // 2
@@ -154,6 +161,8 @@ DetailsMenubar.prototype.init = function() {
         },
         // 4
         Display: () => {
+            let submenu = new Menu({widget: _this});
+            submenu.rows.focus();
         },
         // 5
         Sheet: () => {

@@ -3,8 +3,8 @@
 // dependencies
 var blessed = require('blessed'),
     Contrib = require('blessed-contrib'),
-    ContribTable = Contrib.table,
-    BlessedBox = blessed.Box;
+    ContribTable = Contrib.table;
+//BlessedBox = blessed.Box;
 
 // project includes
 //var {SummaryTableConfig} = require('./widget_SummaryListTable');
@@ -40,6 +40,7 @@ class SummaryTable extends ContribTable {
             // ignoreKeys: true,
             // scrollable: true,
             //
+            fixed: true,
             mouse: true,
             keys: true,
             vi: true,
@@ -150,6 +151,9 @@ SummaryTable.prototype.init = function() {
 SummaryTable.prototype.registerActions = function() {
     let _this = this;
 
+    this.on('focus', function(){
+        _this.view.sheettree.focus();
+    });
     this.on('syncSelect', function(idx,name) {
         this.rows.select(idx);
         this.screen.render();

@@ -226,15 +226,14 @@ ViewMain.prototype.registerActions = function(){
         _this.log.msg("showing main view", _this.log.loglevel.devel.message);
         _this.widgets.viewbox.show();
     });
-    // this.on('destroy_widget', (widget) => {
-    //     if(widget === 'menubar'){
-    //         _this.widgets.menubar.destroy();
-    //         _this.widgets.menubar.free();
-    //         delete _this.widgets.menubar.config;
-    //         delete _this.widgets.menubar;
-    //         _this.log.msg("destroyed menubar while creating view details", _this.log.loglevel.devel.message);
-    //     }
-    // });
+    this.on('destroy_widget', (widget) => {
+        widget.destroy();
+        widget.free();
+        delete widget.config;
+        widget = undefined;
+        _this.log.msg("destroyed widget", _this.log.loglevel.devel.message);
+        _this.widgets.sheettree.focus();
+    });
     this.on('create_widget', (widget) => {
         if(widget === 'menubar'){
             // menubar
@@ -251,8 +250,42 @@ ViewMain.prototype.registerActions = function(){
         }
     });
     this.on('focus_default', () => {
-        //_this.widgets.sheettree.rows.select(0);
         _this.setWinFocus(_this.pwin.sheettree);
+
+
+        // TODO: (fix) I think this is a memory leak
+
+        //manage focus
+        let logline = blessed.line({
+            parent: this.widgets.viewbox,
+            orientation: 'horizontal',
+            bottom: 1,
+            left: 0,
+            right: 0,
+            fg: this.config.data.colors.focuslines.fg[this.theme],
+            bg: this.config.data.colors.focuslines.bg[this.theme],
+        });
+        let menuline = blessed.line({
+            parent: this.widgets.viewbox,
+            orientation: 'horizontal',
+            top: 1,
+            left: 0,
+            right: 0,
+            fg: this.config.data.colors.focuslines.fg[this.theme],
+            bg: this.config.data.colors.focuslines.bg[this.theme]
+        });
+
+        // effects that highlight focus
+        this.screen.setEffects(menuline, this.widgets.logger, 'focus', 'blur',
+            {
+                fg: this.config.data.colors.focuslines.disabled.fg[this.theme],
+                bg: this.config.data.colors.focuslines.disabled.bg[this.theme]
+            }, Object);
+        this.screen.setEffects(logline, this.widgets.menubar, 'focus', 'blur',
+            {
+                fg: this.config.data.colors.focuslines.disabled.fg[this.theme],
+                bg: this.config.data.colors.focuslines.disabled.bg[this.theme]
+            }, Object);
     });
 
 }
