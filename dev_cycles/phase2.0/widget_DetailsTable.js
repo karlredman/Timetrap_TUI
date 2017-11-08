@@ -192,7 +192,8 @@ DetailsTable.prototype.registerActions = function() {
 
                         // update the status widget
                         _this.view.widgets.details_status.emit('update_status',
-                            emit_obj.data.sheet, emit_obj.data.type, _this.view.running,
+                            //emit_obj.data.sheet, emit_obj.data.type, _this.view.running,
+                            this.view.sheet, emit_obj.data.type, _this.view.running,
                             _this.total_time.toString().toHMMSS());
                     }
                 }
@@ -248,6 +249,7 @@ DetailsTable.prototype.registerActions = function() {
                         }
                         _this.log.msg('DetailsView: No data for '+emit_obj.data.type, _this.log.loglevel.production.warning);
                         this.view.widgets.details_status.emit('update_status', emit_obj.data.sheet, emit_obj.data.type, this.view.running, '0:00:00')
+                        //this.view.widgets.details_status.emit('update_status', _this.view.sheet, emit_obj.data.type, this.view.running, '0:00:00')
                         //statusbox.emit('update_status', emit_obj.data.sheet, emit_obj.data.type, _this.view.running, '0:00:00')
                         return;
                     }
@@ -331,9 +333,10 @@ DetailsTable.prototype.registerActions = function() {
                         //// append to table
                     }
 
-                    // update the satusbar -- TODO: subject to timer for running
+                    // update the satusbar -- TODO: (bug) emit_obj.data.sheet is getting lost somewhere
                     _this.view.widgets.details_status.emit('update_status',
-                        emit_obj.data.sheet, emit_obj.data.type, _this.view.running,
+                        // emit_obj.data.sheet, emit_obj.data.type, _this.view.running,
+                        _this.view.sheet, emit_obj.data.type, _this.view.running,
                         _this.total_time.toString().toHMMSS());
                     //
                     // statusbox.emit('update_status', emit_obj.data.sheet, emit_obj.data.type,

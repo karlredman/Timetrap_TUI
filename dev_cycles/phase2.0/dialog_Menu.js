@@ -155,7 +155,8 @@ Menu.prototype.registerActions = function() {
         }
         if (key.name === 'enter')
         {
-            _this.view.emit('destroy_widget', _this);
+            //_this.view.emit('destroy_widget', _this);
+            //
             //emulate listbar behavior
             // _this.emit('action', _this.items[_this.selected], _this.selected);
             // _this.emit('select', _this.items[_this.selected], _this.selected);
@@ -165,6 +166,18 @@ Menu.prototype.registerActions = function() {
             //     item._.cmd.callback();
             // }
             // _this.screen.render();
+
+            let key = this.items[this.selected].content.replace(/ /g, '');
+            switch(key) {
+                case 'forever':
+                    key = 'display';
+                    break;
+                default:
+                    break;
+            }
+            //TODO: switch to selected statement
+            _this.view.timetrap.callCommand({type: key, owner: 'detailstable', sheet: this.sheet, sync: false});
+            _this.view.emit('destroy_widget', _this);
             return;
         }
     });

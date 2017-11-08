@@ -216,7 +216,7 @@ Timetrap.prototype.registerCommandTypes = function(){
                 ["--end", "-e"],
                 ["--grep", "-g"]
             ],
-            required: ['--ids'],
+            required: ['--ids', '-fjson'],
             allow_sheet: true,
             special: false,
             override: false,
