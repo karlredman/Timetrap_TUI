@@ -314,7 +314,7 @@ DetailsTable.prototype.registerActions = function() {
                     _this.items = items;
 
                     // update the list so far
-                    _this.setData(items);
+                    _this.setData(_this.items);
 
                     // accomidate for running clocks -to get the id and the faketimer going
                     // Note: this is where we breakdown in efficiency -grabbing full text output
