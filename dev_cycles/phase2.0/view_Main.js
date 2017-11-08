@@ -227,6 +227,7 @@ ViewMain.prototype.registerActions = function(){
         _this.widgets.viewbox.show();
     });
     this.on('destroy_widget', (widget) => {
+        //widget.removeScreenEvent('keypress');
         widget.destroy();
         widget.free();
         delete widget.config;

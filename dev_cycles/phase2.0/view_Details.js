@@ -221,6 +221,7 @@ ViewDetails.prototype.registerActions = function(){
     });
 
     this.on('destroy_widget', (widget) => {
+        //widget.removeScreenEvent('keypress');
         widget.destroy();
         widget.free();
         delete widget.config;
@@ -253,11 +254,16 @@ ViewDetails.prototype.destroyAllWidgets = function() {
 
     // destroy all widgets
     //for (let key in this.widgets) {
+
+    this.widgets.menubar.removeScreenEvent('keypress');
+    this.widgets.details_table.removeScreenEvent('keypress');
+    // this.widgets.details_table.rows.removeScreenEvent('keypress');
+    // this.widgets.details_table.rows.removeScreenEvent('blur');
     for (let key in kill_list) {
         if ( ! this.widgets.hasOwnProperty(key)) continue;
+        //this.widgets[key].removeScreenEvent('keypress');
         this.widgets[key].destroy()
         this.widgets[key].removeAllListeners();
-        this.widgets.menubar.removeScreenEvent('keypress');
         this.widgets[key].free()
         delete this.widgets[key].config;
         delete this.widgets[key];

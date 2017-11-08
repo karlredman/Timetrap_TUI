@@ -147,9 +147,12 @@ Menu.prototype.registerActions = function() {
         _this.view.emit('destroy_widget', _this);
     });
 
-    this.rows.on('keypress', function(ch, key) {
+    this.rows.on('keypress', function displayMenu(ch, key) {
         if ( (key.name === 'escape') )
         {
+            //this.removeScreenEvent('keypress');
+            //this.removeScreenEvent('blur');
+            //this.removeScreenEvent('keypress', displayMenu);
             _this.view.emit('destroy_widget', _this);
             return;
         }
@@ -169,6 +172,9 @@ Menu.prototype.registerActions = function() {
             _this.view.timetrap.callCommand({type: key, owner: 'detailstable', sheet: _this.view.sheet, sync: false});
 
             //destroy
+            //  this.removeScreenEvent('keypress');
+            //this.removeScreenEvent('blur');
+            //this.removeScreenEvent('keypress', displayMenu);
             _this.view.emit('destroy_widget', _this);
             return;
         }
