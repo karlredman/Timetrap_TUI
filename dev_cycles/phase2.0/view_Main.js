@@ -85,7 +85,7 @@ class ViewMain extends EventEmitter {
         this.setWinFocus(this.pwin.sheettree);
 
         //hide loading // TODO: should be an event
-        this.controller.widgets.loading.stop();
+        //this.controller.widgets.loading.stop();
     }
 }
 

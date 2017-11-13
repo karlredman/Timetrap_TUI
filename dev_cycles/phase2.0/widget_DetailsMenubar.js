@@ -81,19 +81,13 @@ class DetailsMenubar extends Listbar {
         this.init();
     }
 }
+
 DetailsMenubar.prototype.unRegisterActions = function() {
-    this.removeListener('blur', blur);
-    this.removeListener('focus', focus);
-    this.removeListener('keypress', keypress);
+    // intended for timetrap object cleanup
 }
 
 DetailsMenubar.prototype.destroy = function() {
     this.unRegisterActions();
-    // let homeObject = this.prototype;
-    // let superObject = Object.getPrototypeOf(homeObject);
-    // let superMethod = superObject.destory;
-    // return superMethod(this);
-
     return Object.getPrototypeOf(this.prototype).destory(this);
 }
 

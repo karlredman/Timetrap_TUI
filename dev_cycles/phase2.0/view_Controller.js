@@ -31,16 +31,17 @@ class ViewController extends EventEmitter {
         // sometimes we have widgets at this level
         this.widgets = {};
 
+        this.registerActions();
     }
 
     run(){
-        this.widgets.loading = blessed.loading({
-            parent: this.screen,
-            top: '50%',
-            left: '50%'
-        });
+        // this.widgets.loading = blessed.loading({
+        //     parent: this.screen,
+        //     top: '50%',
+        //     left: '50%'
+        // });
 
-        this.widgets.loading.load("loading program...")
+        // this.widgets.loading.load("loading program...")
 
         let main_config = new ViewMainConfig();
         this.views.main = new ViewMain({
@@ -49,9 +50,6 @@ class ViewController extends EventEmitter {
             controller: this,
             config: main_config,
         });
-
-        this.registerActions();
-
     }
 }
 
@@ -66,8 +64,9 @@ ViewController.prototype.registerActions = function() {
             //TODO: validate info
 
             // hide main view / show loading
-            _this.widgets.loading.load("loading...")
+            //_this.widgets.loading.load("loading...")
             _this.views.main.emit('hide_view');
+            //_this.views.main.destroyAllWidgets();
 
             // kill the view.menubar:
             // it's easier to do this than manage the event

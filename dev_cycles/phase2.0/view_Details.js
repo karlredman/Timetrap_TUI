@@ -89,7 +89,7 @@ class ViewDetails extends EventEmitter {
         this.running = running;
 
         // TODO: remove
-        this.controller.widgets.loading.stop();
+        //this.controller.widgets.loading.stop();
 
     }
 }
