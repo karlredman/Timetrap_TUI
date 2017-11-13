@@ -291,6 +291,49 @@ ViewMain.prototype.registerActions = function(){
             }, Object);
     });
 
+    this.timetrap.on('checkout_all_sheets', (emit_obj) => {
+        _this.log.msg("stopped all time sheets", _this.log.loglevel.production.message);
+    });
+
+    this.timetrap.on('command_complete', (emit_obj) => {
+        if(emit_obj.owner === 'menubar'){
+
+            // devel
+            _this.log.msg(
+                "command_complete|type:"+emit_obj.data.type
+                +"|sheet:"+emit_obj.data.sheet
+                //+"|stdout:"+emit_obj.data.stdoutData
+                +"|stderr:"+emit_obj.data.stderrData
+                , _this.log.loglevel.devel.message);
+
+            // log info for user
+            if (
+                ( emit_obj.data.type === 'checkIn' )
+                || ( emit_obj.data.type === 'checkOut' )
+                || ( emit_obj.data.type === 'edit' )
+            )
+            {
+                if(typeof emit_obj.data.stderrData !== 'undefined'){
+                    if(emit_obj.data.stderrData.toString().
+                        match(/.*Timetrap is already running.*/) )
+                    {
+                        _this.log.msg(emit_obj.data.sheet+" is already running", _this.log.loglevel.production.warning);
+                    }
+                    else if ( emit_obj.data.stderrData.toString().match(/.*Editing running entry.*/) ){
+                        _this.log.msg(
+                            "Edited runnig entry for \'"+emit_obj.data.sheet+'\'',
+                            _this.log.loglevel.production.message);
+                    }
+                    else {
+                        _this.log.msg(emit_obj.data.stderrData.toString(),
+                            _this.log.loglevel.production.message);
+                    }
+                }
+
+            }
+        }
+    });
+
 }
 
 ViewMain.prototype.createWidgets = function(){
