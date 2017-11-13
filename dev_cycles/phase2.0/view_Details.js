@@ -222,6 +222,7 @@ ViewDetails.prototype.registerActions = function(){
 
     this.on('destroy_widget', (widget) => {
         //widget.removeScreenEvent('keypress');
+        widget.removeAllListeners();
         widget.destroy();
         widget.free();
         delete widget.config;

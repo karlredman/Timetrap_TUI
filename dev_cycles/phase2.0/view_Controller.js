@@ -63,34 +63,34 @@ ViewController.prototype.registerActions = function() {
         if (info.view_name === 'details'){
             //if(typeof _this.views.details === 'undefined'){
 
-                //TODO: validate info
+            //TODO: validate info
 
-                // hide main view / show loading
-                _this.widgets.loading.load("loading...")
-                _this.views.main.emit('hide_view');
+            // hide main view / show loading
+            _this.widgets.loading.load("loading...")
+            _this.views.main.emit('hide_view');
 
-                // kill the view.menubar:
-				// it's easier to do this than manage the event
-				// queue in blessed.screen.
+            // kill the view.menubar:
+            // it's easier to do this than manage the event
+            // queue in blessed.screen.
             //this.views.main.emit('destroy_widget', 'menubar');
             this.views.main.destroyMenubar();
 
-                // create the view
-                let details_config = new ViewMainConfig();          //recycling main config
-                _this.views.details = new ViewDetails({
-                    screen: _this.screen,
-                    process_config: _this.process_config,
-                    controller: _this,
-                    config: details_config,
-                    sheet: info.sheet,
-                    running: info.running
-                });
+            // create the view
+            let details_config = new ViewMainConfig();          //recycling main config
+            _this.views.details = new ViewDetails({
+                screen: _this.screen,
+                process_config: _this.process_config,
+                controller: _this,
+                config: details_config,
+                sheet: info.sheet,
+                running: info.running
+            });
 
-                // pass on control
-                _this.views.details.run();
+            // pass on control
+            _this.views.details.run();
 
-                // log it
-                _this.views.main.widgets.logger.msg("Created view: Details", _this.views.main.widgets.logger.loglevel.devel.message);
+            // log it
+            _this.views.main.widgets.logger.msg("Created view: Details", _this.views.main.widgets.logger.loglevel.devel.message);
             //}
         }
     });

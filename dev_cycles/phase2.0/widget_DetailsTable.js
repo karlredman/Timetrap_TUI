@@ -125,7 +125,12 @@ class DetailsTable extends ContribTable {
 DetailsTable.prototype.init = function() {
 }
 
-DetailsTable.prototype.process_commands = function(emit_obj) {
+DetailsTable.prototype.unRegisterActions = function() {
+}
+
+DetailsTable.prototype.destroy = function() {
+    this.unRegisterActions();
+    return Object.getPrototypeOf(this.prototype).destory(this);
 }
 
 DetailsTable.prototype.registerActions = function() {
@@ -134,6 +139,9 @@ DetailsTable.prototype.registerActions = function() {
     // for fetch and display of running items
     let id = '------';
     let note = '';
+
+    // this.view.timetrap.on('command_complete', function thing(emit_obj) {
+    // }
 
     this.view.timetrap.on('command_complete', (emit_obj) => {
 
@@ -352,7 +360,7 @@ DetailsTable.prototype.registerActions = function() {
         }
     });
 
-    this.rows.on('keypress', function(ch, key) {
+    this.rows.on('keypress', function keypress(ch, key) {
         if (key.name === 'tab') {
             if (!key.shift) {
                 _this.view.setWinFocusNext();

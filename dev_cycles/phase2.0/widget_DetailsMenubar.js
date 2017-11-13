@@ -81,20 +81,35 @@ class DetailsMenubar extends Listbar {
         this.init();
     }
 }
+DetailsMenubar.prototype.unRegisterActions = function() {
+    this.removeListener('blur', blur);
+    this.removeListener('focus', focus);
+    this.removeListener('keypress', keypress);
+}
+
+DetailsMenubar.prototype.destroy = function() {
+    this.unRegisterActions();
+    // let homeObject = this.prototype;
+    // let superObject = Object.getPrototypeOf(homeObject);
+    // let superMethod = superObject.destory;
+    // return superMethod(this);
+
+    return Object.getPrototypeOf(this.prototype).destory(this);
+}
 
 DetailsMenubar.prototype.registerActions = function() {
     let _this = this;
 
-    this.on('blur', function() {
+    this.on('blur', function blur() {
         //always reset the menu to first option
         _this.select(0);
     });
-    this.on('focus', function() {
+    this.on('focus', function focus() {
         //always reset the menu to first option
         _this.select(0);
     });
 
-    this.on('keypress', function(ch, key) {
+    this.on('keypress', function keypress(ch, key) {
         // custom key bindings
         if (key.name === 'tab') {
             if (!key.shift) {

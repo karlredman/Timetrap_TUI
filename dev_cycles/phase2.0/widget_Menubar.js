@@ -82,6 +82,16 @@ class Menubar extends Listbar {
     }
 }
 
+Menubar.prototype.unRegisterActions = function() {
+    //this.removeListener('update_status', this.setStatus);
+    this.view.timetrap.removeListener('command_complete', this.menu_command_complete);
+}
+
+// Menubar.prototype.destroy = function() {
+//     this.unRegisterActions();
+//     return Object.getPrototypeOf(this.prototype).destory(this);
+// }
+
 Menubar.prototype.registerActions = function() {
     let _this = this;
 
@@ -174,44 +184,45 @@ Menubar.prototype.registerActions = function() {
         }
     });
 
-    this.view.timetrap.on('command_complete', (emit_obj) => {
-        if(emit_obj.owner === 'menubar'){
+    this.view.timetrap.on('command_complete', this.menu_command_complete);
+    // this.view.timetrap.on('xcommand_complete', (emit_obj) => {
+    //     if(emit_obj.owner === 'menubar'){
 
-            // devel
-            _this.log.msg(
-                "command_complete|type:"+emit_obj.data.type
-                +"|sheet:"+emit_obj.data.sheet
-                //+"|stdout:"+emit_obj.data.stdoutData
-                +"|stderr:"+emit_obj.data.stderrData
-                , _this.log.loglevel.devel.message);
+    //         // devel
+    //         _this.log.msg(
+    //             "command_complete|type:"+emit_obj.data.type
+    //             +"|sheet:"+emit_obj.data.sheet
+    //             //+"|stdout:"+emit_obj.data.stdoutData
+    //             +"|stderr:"+emit_obj.data.stderrData
+    //             , _this.log.loglevel.devel.message);
 
-            // log info for user
-            if (
-                ( emit_obj.data.type === 'checkIn' )
-                || ( emit_obj.data.type === 'checkOut' )
-                || ( emit_obj.data.type === 'edit' )
-            )
-            {
-                if(typeof emit_obj.data.stderrData !== 'undefined'){
-                    if(emit_obj.data.stderrData.toString().
-                        match(/.*Timetrap is already running.*/) )
-                    {
-                        _this.log.msg(emit_obj.data.sheet+" is already running", _this.log.loglevel.production.warning);
-                    }
-                    else if ( emit_obj.data.stderrData.toString().match(/.*Editing running entry.*/) ){
-                        _this.log.msg(
-                            "Edited runnig entry for \'"+emit_obj.data.sheet+'\'',
-                            _this.log.loglevel.production.message);
-                    }
-                    else {
-                        _this.log.msg(emit_obj.data.stderrData.toString(),
-                            _this.log.loglevel.production.message);
-                    }
-                }
+    //         // log info for user
+    //         if (
+    //             ( emit_obj.data.type === 'checkIn' )
+    //             || ( emit_obj.data.type === 'checkOut' )
+    //             || ( emit_obj.data.type === 'edit' )
+    //         )
+    //         {
+    //             if(typeof emit_obj.data.stderrData !== 'undefined'){
+    //                 if(emit_obj.data.stderrData.toString().
+    //                     match(/.*Timetrap is already running.*/) )
+    //                 {
+    //                     _this.log.msg(emit_obj.data.sheet+" is already running", _this.log.loglevel.production.warning);
+    //                 }
+    //                 else if ( emit_obj.data.stderrData.toString().match(/.*Editing running entry.*/) ){
+    //                     _this.log.msg(
+    //                         "Edited runnig entry for \'"+emit_obj.data.sheet+'\'',
+    //                         _this.log.loglevel.production.message);
+    //                 }
+    //                 else {
+    //                     _this.log.msg(emit_obj.data.stderrData.toString(),
+    //                         _this.log.loglevel.production.message);
+    //                 }
+    //             }
 
-            }
-        }
-    });
+    //         }
+    //     }
+    // });
 
     this.view.timetrap.on('checkout_all_sheets', (emit_obj) => {
         _this.log.msg("stopped all time sheets", _this.log.loglevel.production.message);
@@ -240,6 +251,47 @@ Menubar.prototype.registerActions = function() {
         }
     });
 }
+
+Menubar.prototype.menu_command_complete =function (emit_obj){
+    let _this = this;
+
+    if(emit_obj.owner === 'menubar'){
+
+        // devel
+        _this.log.msg(
+            "command_complete|type:"+emit_obj.data.type
+            +"|sheet:"+emit_obj.data.sheet
+            //+"|stdout:"+emit_obj.data.stdoutData
+            +"|stderr:"+emit_obj.data.stderrData
+            , _this.log.loglevel.devel.message);
+
+        // log info for user
+        if (
+            ( emit_obj.data.type === 'checkIn' )
+            || ( emit_obj.data.type === 'checkOut' )
+            || ( emit_obj.data.type === 'edit' )
+        )
+        {
+            if(typeof emit_obj.data.stderrData !== 'undefined'){
+                if(emit_obj.data.stderrData.toString().
+                    match(/.*Timetrap is already running.*/) )
+                {
+                    _this.log.msg(emit_obj.data.sheet+" is already running", _this.log.loglevel.production.warning);
+                }
+                else if ( emit_obj.data.stderrData.toString().match(/.*Editing running entry.*/) ){
+                    _this.log.msg(
+                        "Edited runnig entry for \'"+emit_obj.data.sheet+'\'',
+                        _this.log.loglevel.production.message);
+                }
+                else {
+                    _this.log.msg(emit_obj.data.stderrData.toString(),
+                        _this.log.loglevel.production.message);
+                }
+            }
+
+        }
+    }
+};
 
 Menubar.prototype.init = function() {
     let _this = this;
@@ -361,6 +413,18 @@ Menubar.prototype.init = function() {
             // {Menu} = require('./dialog_Menu.js');
             // let submenu = new Menu({widget: _this});
             // submenu.rows.focus();
+            let dlg = new Message({widget: _this}).alert(
+                //_this.eventNames()
+                //+ _this.view.eventNames()
+                "controller:"+_this.view.controller.eventNames()
+                +"\n"
+                +"view:"+_this.view.eventNames()
+                +"\n"
+                +"timetrap:"+_this.view.timetrap.eventNames()
+                +"\n"+"command_complete:"+_this.view.timetrap.listenerCount('command_complete')
+                +"\n"+"checkout_All_sheets:"+_this.view.timetrap.listenerCount('checkout_All_sheets')
+                +"\n"+"db_change:"+_this.view.timetrap.listenerCount('db_change')
+            );
         },
     }
     this.setItems(items);

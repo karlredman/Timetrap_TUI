@@ -43,10 +43,16 @@ class DetailsStatus extends BlessedBox {
     }
 }
 
+DetailsStatus.prototype.unRegisterActions = function() {
+    this.removeListener('update_status', this.setStatus);
+}
+
+DetailsStatus.prototype.destroy = function() {
+    this.unRegisterActions();
+    return Object.getPrototypeOf(this.prototype).destory(this);
+}
+
 DetailsStatus.prototype.registerActions = function(){
-    // this.on('update_status', (sheet, type, running, total_time) => {
-    //     this.setStatus(sheet, type, running, total_time);
-    // });
     this.on('update_status', this.setStatus);
 }
 

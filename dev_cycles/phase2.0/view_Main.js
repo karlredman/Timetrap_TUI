@@ -196,6 +196,7 @@ ViewMain.prototype.setWinFocusPrev = function(){
 }
 
 ViewMain.prototype.destroyMenubar = function(){
+    this.widgets.menubar.unRegisterActions();
     this.widgets.menubar.removeAllListeners();
     this.widgets.menubar.removeScreenEvent('keypress');
     this.widgets.menubar.destroy();
@@ -228,6 +229,7 @@ ViewMain.prototype.registerActions = function(){
     });
     this.on('destroy_widget', (widget) => {
         //widget.removeScreenEvent('keypress');
+        widget.removeAllListeners();
         widget.destroy();
         widget.free();
         delete widget.config;
