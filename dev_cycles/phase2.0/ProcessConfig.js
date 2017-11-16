@@ -23,7 +23,7 @@ ProcessConfig.prototype.loadDefaults = function() {
 	this.data = {
 		config_file: {
 			//value: './config_file.yml',
-			value: './config_file.yml',
+			value: process.env.HOME+'config_file.yml',
 			desc: 'the timetrap config file path',
 			options: ''
 		},

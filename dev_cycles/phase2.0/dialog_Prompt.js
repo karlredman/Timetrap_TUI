@@ -19,6 +19,7 @@ class Prompt extends BlessedPrompt {
         widget = helpers.requiredParam('widget'),
         config = new DialogConfig(),
         target = null,
+        id = null,
         options = {}
     } ={})
     {
@@ -65,6 +66,7 @@ class Prompt extends BlessedPrompt {
         this.view = widget.view;
         this.theme = widget.view.theme;
         this.log = widget.view.log;
+        this.id = id;
 
         this.focus();
     }
@@ -88,6 +90,10 @@ Prompt.prototype.cannedInput = function(type){
         edit:{
             message: "Enter {bold}edit{/bold} arguments",
             value: ""
+        },
+        editId:{
+            message: "Enter {bold}edit ID{/bold} arguments",
+            value: "--id "+this.id+" ",
         },
         resume:{
             message: "Enter {bold}resume{/bold} arguments",

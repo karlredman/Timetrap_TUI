@@ -106,6 +106,7 @@ class DetailsTable extends ContribTable {
         this.list = undefined;
         this.total_time = 0;
 
+
         //seed items for table
         this.items = {
             headers: ["  Id"  , "      Day"       , "  Start", "   End"   ," Duration", " Notes"],
@@ -195,6 +196,11 @@ DetailsTable.prototype.registerActions = function() {
 
                         // append to table
                         let rec = [id, start_date, start_time, '--------', duration, note];
+
+                        if(_this.items.data.length == 1){
+                            // correct single entry scenario
+                            _this.items.data = [];
+                        }
                         _this.items.data.push(rec);
                         _this.setData(_this.items);
 
@@ -257,8 +263,6 @@ DetailsTable.prototype.registerActions = function() {
                         }
                         _this.log.msg('DetailsView: No data for '+emit_obj.data.type, _this.log.loglevel.production.warning);
                         this.view.widgets.details_status.emit('update_status', emit_obj.data.sheet, emit_obj.data.type, this.view.running, '0:00:00')
-                        //this.view.widgets.details_status.emit('update_status', _this.view.sheet, emit_obj.data.type, this.view.running, '0:00:00')
-                        //statusbox.emit('update_status', emit_obj.data.sheet, emit_obj.data.type, _this.view.running, '0:00:00')
                         return;
                     }
 

@@ -88,6 +88,10 @@ class ViewDetails extends EventEmitter {
         this.sheet = sheet;
         this.running = running;
 
+        // what we're displaying upong refresh
+        this.prev_display_context = '';
+        this.display_context = 'today';
+
         // TODO: remove
         //this.controller.widgets.loading.stop();
 
@@ -98,7 +102,7 @@ ViewDetails.prototype.run = function() {
 
     //get data from timetrap -defaults to today
     // TODO: -add default option to config?
-    this.timetrap.callCommand({type:'today', owner: 'detailstable', sheet: this.sheet, sync: false});
+    this.timetrap.callCommand({type: this.display_context, owner: 'detailstable', sheet: this.sheet, sync: false});
 }
 
 ViewDetails.prototype.setWinFocus = function(win){
@@ -196,7 +200,7 @@ ViewDetails.prototype.registerActions = function(){
 
     // this.view.controller.timetrap.on('db_change', function(){
     //     //update the sheet tree and summary table when the db changes
-    //     _this.view.controller.timetrap.callCommand({type:'list', owner: 'sheettree', sync: false});
+    //     _this.view.timetrap.callCommand({type:'list', owner: 'sheettree', sync: false});
     //     this.log.msg("database changed externally", this.log.loglevel.production.message);
     // });
 
@@ -217,7 +221,8 @@ ViewDetails.prototype.registerActions = function(){
     this.timetrap.on('db_change', function(){
         //update the sheet tree and summary table when the db changes
         //_this.view.timetrap.callCommand({type:'list', owner: 'sheettree', sync: false});
-        _this.log.msg("database changed externally", _this.log.loglevel.production.message);
+        _this.log.msg("the database has changed -updating dispaly", _this.log.loglevel.production.message);
+        _this.timetrap.callCommand({type: _this.display_context, owner: 'detailstable', sheet: _this.sheet, sync: false});
     });
 
     this.on('destroy_widget', (widget) => {

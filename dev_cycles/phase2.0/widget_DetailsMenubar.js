@@ -149,6 +149,23 @@ DetailsMenubar.prototype.registerActions = function() {
             return;
         }
     });
+
+    this.on('prompt', function(data){
+        if (
+            ( data.type === 'edit' )
+            || ( data.type === 'editId' )
+        )
+        {
+            if( data.data !== null) {
+                //purposful kludge -editId is a parameter of edit
+                if(data.type === 'editId'){
+                    data.type = 'edit';
+                }
+                _this.log.msg("Prompt|type:"+data.type+"|sheet:"+_this.view.sheet+"|data:"+data.data, _this.log.loglevel.devel.message);
+                _this.view.timetrap.callCommand({type: data.type, owner: 'detailstable', content: data.data, sheet: _this.view.sheet, sync: true});
+            }
+        }
+    });
 }
 
 DetailsMenubar.prototype.init = function() {
@@ -167,6 +184,11 @@ DetailsMenubar.prototype.init = function() {
         },
         // 3
         Edit: () => {
+            // TODO: MAGIC NUMBERS!!!!!
+            let selected = _this.view.widgets.details_table.rows.selected;
+            let id = _this.view.widgets.details_table.items.data[selected][0]; //MAGIC!!!
+
+            let dlg = new Prompt({widget: _this, id: id}).cannedInput('editId');
         },
         // 4
         Display: () => {

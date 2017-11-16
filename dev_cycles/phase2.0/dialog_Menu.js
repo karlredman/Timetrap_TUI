@@ -150,9 +150,6 @@ Menu.prototype.registerActions = function() {
     this.rows.on('keypress', function displayMenu(ch, key) {
         if ( (key.name === 'escape') )
         {
-            //this.removeScreenEvent('keypress');
-            //this.removeScreenEvent('blur');
-            //this.removeScreenEvent('keypress', displayMenu);
             _this.view.emit('destroy_widget', _this);
             return;
         }
@@ -166,15 +163,16 @@ Menu.prototype.registerActions = function() {
                 default:
                     break;
             }
+            // set the display context
+            _this.view.display_context = key;
+            _this.log.msg("switching to "+key+" display", _this.log.loglevel.production.message);
+
             //TODO: switch to selected emit type call
             _this.view.widgets.details_status.setContent("Loading...");
             _this.view.widgets.details_table.rows.clearItems();
             _this.view.timetrap.callCommand({type: key, owner: 'detailstable', sheet: _this.view.sheet, sync: false});
 
             //destroy
-            //  this.removeScreenEvent('keypress');
-            //this.removeScreenEvent('blur');
-            //this.removeScreenEvent('keypress', displayMenu);
             _this.view.emit('destroy_widget', _this);
             return;
         }

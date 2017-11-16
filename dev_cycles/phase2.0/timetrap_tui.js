@@ -76,28 +76,28 @@ function process_opts({app = null, env_config_file = null} ={}){
             +"  -----------------------------------------"
             // +"\n"
             // +"  * Default Values are shown in CAPS."
-            +"\n"
-            +"  * $TIMETRAP_TUI_CONFIG overrides default config file path."
-            +"\n"
-            +"  * Commandline option \'-c\' will override $TIMETRAP_TUI_CONFIG."
-            +"\n"
-            +"  * Configuration file entries override defaults."
-            +"\n"
-            +"  * Commandline options override configuration file:"
-            +"\n"
-            +"    (Current config: "+config_file+")."
+            // +"\n"
+            // +"  * $TIMETRAP_TUI_CONFIG overrides default config file path."
+            // +"\n"
+            // +"  * Commandline option \'-c\' will override $TIMETRAP_TUI_CONFIG."
+            // +"\n"
+            // +"  * Configuration file entries override defaults."
+            // +"\n"
+            // +"  * Commandline options override configuration file:"
+            // +"\n"
+            // +"    (Current config: "+config_file+")."
         )
-        .option('-c, --config_file <file path>',
-            app.process_config.data.config_file.desc+' ['
-            +config_file+']',
-            /^.+$/i,
-            config_file)
+        // .option('-c, --config_file <file path>',
+        //     app.process_config.data.config_file.desc+' ['
+        //     +config_file+']',
+        //     /^.+$/i,
+        //     config_file)
         .option('-d, --developer_mode',
             app.process_config.data.developer_mode.desc,
             app.process_config.data.developer_mode.value)
-        .option('-p, --print_config',
-            "print the configuration in JSON and exit",  // TODO
-            false)
+        // .option('-p, --print_config',
+        //     "print the configuration in JSON and exit",  // TODO
+        //     false)
         .option('-q, --no-question_prompts',
             app.process_config.data.question_prompts.desc,
             app.process_config.data.question_prompts.value)
@@ -106,13 +106,13 @@ function process_opts({app = null, env_config_file = null} ={}){
             +app.process_config.data.color_theme.value+']',
             /^.+$/i,
             app.process_config.data.color_theme.value)
-        .option('-w, --working_directory <$HOME>',
-            app.process_config.data.working_directory.desc+' ['
-            +app.process_config.data.working_directory.value+']',
-            /^.+$/i,
-            app.process_config.data.working_directory.value)
-        .option('-H, --HELP',
-            "print full documentation help and exit")    // TODO
+        // .option('-w, --working_directory <$HOME>',
+        //     app.process_config.data.working_directory.desc+' ['
+        //     +app.process_config.data.working_directory.value+']',
+        //     /^.+$/i,
+        //     app.process_config.data.working_directory.value)
+        // .option('-H, --HELP',
+        //     "print full documentation help and exit")    // TODO
     opt.parse(process.argv);
 
     // console.log(opt.developer_mode)
