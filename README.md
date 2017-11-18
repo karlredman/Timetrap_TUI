@@ -14,7 +14,7 @@ Please see the [timetrap project page](https://github.com/samg/timetrap) for mor
 
 ## Video / Gif Demo
 
-**a demo and images are pending**
+*a demo and images are pending*
 
 ## Features (i.e. working so far):
 ### original timetrap:
