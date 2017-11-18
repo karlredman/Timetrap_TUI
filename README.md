@@ -102,13 +102,7 @@ npm install
 ```
 
 ### for production:
-* local
-```
-npm install timetrap_tui
-
-```
-
-* global
+* it's a command line utility so install it globally
 ```
 npm install timetrap_tui -g
 ```
