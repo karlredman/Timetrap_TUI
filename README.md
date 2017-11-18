@@ -85,7 +85,7 @@ Please see the [timetrap project page](https://github.com/samg/timetrap) for mor
     * [blessed](https://www.npmjs.com/package/blessed)
     * [blessed-contrib](https://www.npmjs.com/package/blessed-contrib)
         * Note: this module pulls in a lot of other modules currently
-    * [timetrap_wraplib]
+    * [timetrap_wraplib](https://www.npmjs.com/package/timetrap_wraplib)
     * [commander](https://www.npmjs.com/package/commander)
     * [js-yaml](https://www.npmjs.com/package/js-yaml)
 
