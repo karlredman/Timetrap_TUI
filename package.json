@@ -39,6 +39,7 @@
     "blessed": "^0.1.81",
     "blessed-contrib": "^4.8.5",
     "commander": "^2.11.0",
-    "js-yaml": "^3.10.0"
+    "js-yaml": "^3.10.0",
+    "timetrap_wraplib": "^0.2.0"
   }
 }
