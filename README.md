@@ -12,6 +12,10 @@ Timetrap TUI is an event driven terminal user interface front-end wrapper applic
 
 Please see the [timetrap project page](https://github.com/samg/timetrap) for more information on how to use this elegant application. Timetrap TUI intends to extend that elegance while honoring the original interface as closely as possible. Timetrap packs a lot of functionality into a fairly simple interface with a short learning curve. I believe that if you have mastered Timetrap then the Timetrap TUI interface 'should' feel natural overall.
 
+## Video / Gif Demo
+
+**a demo and images are pending**
+
 ## Features (i.e. working so far):
 ### original timetrap:
 * check-in / check-out of time sheets
