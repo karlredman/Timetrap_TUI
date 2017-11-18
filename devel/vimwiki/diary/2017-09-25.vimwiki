@@ -1,0 +1,14 @@
+# Options Pergatory:
+
+I've racked up a bunch of hours on this project lately without making a lot of tangible progress:
+
+* I'm taking heavy antibiotics for a tooth abscess and that has slowed me down a lot. A side effect of the antibiotics is that I'm suffering form focus issues and feeling pretty tired most of the time.
+* There have been a lot of distrations around me this past week or so.
+* I willingly got stuck on playing around with various components and design ideas for the project overall. phase 1.8 has turned out to be a huge mix of added features and refactoring.
+
+
+ One of the things I've been playing with is the idea of a modal dialog box. I went ahead and built a mockup in phase1.8 but have decided to just use the stock dialogs from blessed. I may write a custom version in the future but I'm not convinced that a modal dialog is realy needed -maybe(?) for severe warnings in the future? While i was able to get the modal dialog to work as intended I did spend a lot of time on it. The plus side is that I have refreshed a lot of my past experience so far and feel confident that the end result will be a fairly well engineered product.
+
+ I'm still toying with the idea of using layouts from blessed or a grid from blessed-contrib. The issue is that I want to provide the menubar as an option as well as be able to move it top or bottom -along with a logging widget for timetrap responses. Layout might also help me with setting the size of the dialob boxes. I'm not sure. The issue with the dialog boxes is that they end up being huge with a full screen. It's really not necessary for a dialog to expand to such sizes. I could use absolute dimensions but, obviously, relative dimenstions that dinamically perportion the size is better.
+
+ I'm going to move on to phase 1.9 and clean up the messes I've made in the code from 1.8. So the first part of phase 1.9 will end up being a cleanup process. Hopefully I'll have figured out how I want the UI to work by the time I have things cleaned up.

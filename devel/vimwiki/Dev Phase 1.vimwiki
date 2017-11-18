@@ -1,0 +1,535 @@
+# Contents
+    - [[#Timetrap TUI: Development Phase 1|Timetrap TUI: Development Phase 1]]
+        - [[#Timetrap TUI: Development Phase 1#Phase 1.1: Directory tree panel POC `fs.js`|Phase 1.1: Directory tree panel POC `fs.js`]]
+        - [[#Timetrap TUI: Development Phase 1#Phase 1.2: Program Start|Phase 1.2: Program Start]]
+            - [[#Timetrap TUI: Development Phase 1#Phase 1.2: Program Start#sequence|sequence]]
+        - [[#Timetrap TUI: Development Phase 1#Phase 1.3: Dir Walker Integration|Phase 1.3: Dir Walker Integration]]
+        - [[#Timetrap TUI: Development Phase 1#Phase 1.4: Dir Walker Configuration|Phase 1.4: Dir Walker Configuration]]
+        - [[#Timetrap TUI: Development Phase 1#Phase 1.5: Integrate `explorer.js` + `dirtree.js`|Phase 1.5: Integrate `explorer.js` + `dirtree.js`]]
+        - [[#Timetrap TUI: Development Phase 1#Phase 1.6: POC Code Organization|Phase 1.6: POC Code Organization]]
+        - [[#Timetrap TUI: Development Phase 1#Phase 1.7: Integrate `phase1.6` into `phainein.js`|Phase 1.7: Integrate `phase1.6` into `phainein.js`]]
+        - [[#Timetrap TUI: Development Phase 1#Phase 1.8: Tree setup and colors|Phase 1.8: Tree setup and colors]]
+        - [[#Timetrap TUI: Development Phase 1#Phase 1.9: timetrap integration, sheet tree, basic timetrap class|Phase 1.9: timetrap integration, sheet tree, basic timetrap class]]
+        - [[#Timetrap TUI: Development Phase 1#Phase 1.10: timetrap integration|Phase 1.10: timetrap integration]]
+        - [[#Timetrap TUI: Development Phase 1#Phase 1.11: Pick view and widget sharing|Phase 1.11: Pick view and widget sharing]]
+        - [[#Timetrap TUI: Development Phase 1#Phase 1.13: configuration, and colors|Phase 1.13: configuration, and colors]]
+    - [[#pick menu options:|pick menu options:]]
+    - [[#main menu options:|main menu options:]]
+    - [[#refactor|refactor]]
+        - [[#refactor#common things of widget classes|common things of widget classes]]
+    - [[#future versions / eventual todo|future versions / eventual todo]]
+    - [[#Vimwiki integration|Vimwiki integration]]
+        - [[#Vimwiki integration#command line proof of concept|command line proof of concept]]
+        - [[#Vimwiki integration#concept:|concept:]]
+        - [[#Vimwiki integration#Use Cases:|Use Cases:]]
+            - [[#Vimwiki integration#Use Cases:#sheet is associated with diary|sheet is associated with diary]]
+        - [[#Vimwiki integration#using yaml for wiki configuration|using yaml for wiki configuration]]
+            - [[#Vimwiki integration#using yaml for wiki configuration#references|references]]
+
+# Timetrap TUI: Development Phase 1
+
+## Phase 1.1: Directory tree panel POC `fs.js`
+* dependencies
+    * blessed
+    * blessed.contrib
+
+1. list all directories in a tree
+2. display the tree via [blessed-contrib](https://github.com/yaronn/blessed-contrib)
+    * example: [blessed-contrib/explorer.js at master · yaronn/blessed-contrib](https://github.com/yaronn/blessed-contrib/blob/master/examples/explorer.js)
+
+## Phase 1.2: Program Start
+1. Read timetrap config file (sequence)
+    * uses: [nodeca/js-yaml: JavaScript YAML parser and dumper. Very fast.](https://github.com/nodeca/js-yaml)
+    * timetrap_config (obj)
+    1. `$TIMETRAP_CONFIG_FILE`
+    2. `$HOME/.timetrap.yml`
+    3. ERROR: failed to find timetrap config file.
+        * exit
+* `tui_skip_dirs`
+    * a list of dirs to skip as projects
+    * regex format
+
+### sequence
+1. Find Timetrap TUI projects template path (sequence)
+    * projects_template_dir (obj)
+    1. `timetrap_config.tui_projects_template_path`
+    3. `$HOME/.timetrap/tui_projects_template`
+    4. ERROR: Failed to find Timetrap TUI projects template directory.
+        * exit
+2. Resursively find all directories and files in `projects_template_dir`
+    * uses [mihneadb/node-directory-tree: Convert a directory tree to a JS object](https://github.com/mihneadb/node-directory-tree)
+    * exclude dirs in `timetrap_config.tui_skip_dirs`
+    * exclude files not named `.timetrap-sheet`
+    1. if directory does not have a `.timetrap-sheet` file
+        1. create `.timetrap-sheet` containing the name of the directory path seperated by '.'
+            > Projects.Vimwiki-Gollum
+            * output results to info_pane
+
+        2. ERROR: Could not create file '.timetrap-sheet' in directory `<directory>`
+
+## Phase 1.3: Dir Walker Integration
+
+* Attempt to integrate current dir solution using `readdirp`
+    * this was attempted and didn't work.
+    * a temporary(?) solution was found and tested in the file `dirtree.js`
+
+* Verify `dirtree.js` output works with expected tree input
+    * this seems to work well
+
+## Phase 1.4: Dir Walker Configuration
+* referances: [node.js fs.readdir recursive directory search - Stack Overflow](https://stackoverflow.com/a/5827895/1725771)
+* Traverse a template tree and do the following:
+    * Reads `timetrap.yml` for configuration
+    * Adds config items to `timetrap.yml`:
+        * tui_projects_template_path: <string>
+            * the root of the template
+        * tui_create_missing_sheets: [true|false]
+            * add `.timetrap-sheet` files to valid directories
+            * default `false`
+            * content is the relative path from tui_projects_template_path seperated by '.'
+                ```
+                Projects.My_Project_Name
+                ```
+
+        * tui_recreate_sheets: [true|false]
+            * Regenerate all timesheets
+            * default `false`
+        * tui_skip_paths: <array>
+          * skip paths by pattern -uses [minimatch](https://github.com/isaacs/minimatch)
+            ```
+            tui_skip_paths:
+                - 'SKIP_THIS_DIR*'
+                - 'x'
+            ```
+
+## Phase 1.5: Integrate `explorer.js` + `dirtree.js`
+* [X] Replace pahinein.js `explorer` variable with code from `dirtree.js` functionality
+* [X] Add `dirtree.js` code to `phase1.5.js`
+	* [X] test
+* [X] Don't colapse/expand tree on 'enter'
+* [X] change color for selected sheet
+    * [X] todo: the changed color follows the position in the tree when it is collapsed
+    * [X] change the color of a selected node
+* [X] test what happens when the tree is wider than the window
+    * [X] the grid panel for the original explorer does not have a viewport
+
+## Phase 1.6: POC Code Organization
+* [X] Seperate the POC into a more sensible file structure
+* [X] test dependencies
+
+## Phase 1.7: Integrate `phase1.6` into `phainein.js`
+* [X] decide on grid vs non-grid
+    * the issue is that grid will force relative sizes for the panes. One possiblility is to combine methods. top and bottom panes are screen areas and the grid is uesd otherwise?
+* [X] evaluate phainein code for use
+* [X] gut phainein to get the shell UI working
+* [X] test mouse support
+    * it works will need to develop it though
+* [X] integrate 1.6 code into 1.7
+
+## Phase 1.8: Tree setup and colors
+* [X] the directory trees for tree object should be watched recursively
+    * [X] won't implement -watching the dir tree is OS specific
+* [X] convert config.js to a class
+* [X] rework dirtree
+```
+finddir(dir, info)
+    if dir has sheet
+        append info
+        append info.sheet
+        if dir haschildren
+            foreach child in children
+               finddir(child)
+    else
+        if dir haschildren
+            append info
+            foreach child in children
+               finddir(child)
+       else
+            return
+```
+* [X] impliment `depth` attribute in dirtree items
+* [X] add `.timetrap-sheet` file contents to dirtree data
+* [X] move all 'self' references to `_this`
+* [X] move dirtree to be owned by sidebar
+    * [X] won't fix -keeping data seperate
+* [O] test multiple views
+    * [X] create and destroy a view
+    * [X] hiding elements / and view
+    * [X] altering keyboard shortcuts
+* [X] fix/figure out escape key for windows
+    * [X] requires 2 key presses (because of escaping)
+* [X] create a modal dialog / alert
+    * [X] This seemed to work but isn't entirely necessary
+    * [X] removing in next phase in favor of stock blessed dialog boxes
+* disable menubar and trees for help view
+
+
+## Phase 1.9: timetrap integration, sheet tree, basic timetrap class
+* [X] fix dirtree so it doesn't collaps at root
+* [X] remove modal dialog stuff in favor of builtins
+* [X] wrap message boxes as needed with standard settins
+* [X] write a wrapper for timetrap commands and output
+    * [X] write as an API (for possible replacement later)
+    * [X] use [GitHub - tj/commander.js: node.js command-line interfaces made easy](https://github.com/tj/commander.js/)
+        * [X] not needed (yet)
+    * needed commands:
+      * [ ] list
+      * [ ] now
+      * [ ] display
+          * today
+          * yesterday
+          * week
+          * month
+      * [ ] in
+          * optional arguments
+      * [ ] out
+          * optional arguments
+* [X] impliment timetrap class in app
+* [X] basic info window dispaly log
+    * [X] make the widget
+* [X] integrate `timetrap list` to set state
+* [X] write notes why we are wrapping timetrap instead of editing it directly or writting our own
+    * creating output formats for the ruby based timetrap for list, etc. is too invasive
+
+## Phase 1.10: timetrap integration
+* [X] picklist + custom menubar prototype
+    * [X] possible to have another menubar?
+        * yes
+    * [X] box<--child
+        * [X] has menubar
+        * [X] has contrib table
+* [X] add pgup/pgdown to main window
+* [X] change workspace so it's in a grid (for centering, etc.)
+    * [X] wontfix this version
+* [X] change sidebar so it's in a grid (for centering, etc.)
+    * [X] wontfix this version
+* [X] replace spawn calls for better handling and logging
+    * [X] [javascript - node.js - Accessing the exit code and stderr of a system command - Stack Overflow](https://stackoverflow.com/questions/32874316/node-js-accessing-the-exit-code-and-stderr-of-a-system-command)
+    * [X] fixed with spawnsync for in out and edit
+* [X] figure out why dialogs are prompting when they shouldnt
+    * [X] issue with config ??
+          * help was borked
+* [X] manage tree data and updates to reflect state
+    * [X] monitor database for changes to trigger tree updates
+* [X] fix question dialog box buttons
+    * [X] cancel text is not aligned
+    * [X] buttons are in the worst spot ever
+    * [X] replace stop_all dialog -it's wonky
+* [X] add a line to show current / latest note
+    * [X] won't add -we can get the data from dispaly and edit/resume picks
+* [X] basic info window dispaly log
+    * [X] make the widget
+    * [X] use for stderr and stdout from timetrap logging
+          * possible other logging?
+* [X] extend logger
+* [X] redo command line help
+* [X] standardize classnames, filenames, etc.
+* [X] add artificial timers for the workspace
+    * [X] updates the runtimes on a configuratble interval
+* [X] fix dialog box names, etc.
+    * [X] DialogAlert should be moved or retired -it's the old modal test.
+* [X] overhaul timetrap fetches and update timers
+    * [X] centralize the operations
+    * [X] measure cpu performance
+    * [X] watch out for double entries
+    * [X] stop and start update timers when performing a timetrap operation
+      * [X] or block the timer from making a fetch request when one is in progress
+
+## Phase 1.11: Pick view and widget sharing
+* [X] get running clock id's and notes
+    * probably in the background asynch
+* add ability to copy fields into clipboard
+* [X] add note to front page
+* [ ] add zoom for workspace
+* [ ] create pick view
+    * [ ] managed by view controller
+        * [ ] create / destroy views
+    * [ ] has view
+        * [ ] create / destroy widgets
+    * [ ] view has objects
+        * [ ] menubars
+            * [ ] manager
+* [ ] set focus to 'okay'/'cancel' on dialogs before taking action
+* [ ] see if we can add a loading dialog as an effect
+* [ ] add dialog for stop all
+* [ ] move logger to viewcontroller
+    * indecator for synchronous waits
+* [ ] chage program exit to screen.destroy()
+* [.] **edit** needs behavior modification
+    * [ ] if non active clock then force pick list from ids (bottom choice first )
+    * [ ] if active clock ?
+    * [.] edit behavior
+        * [ ] pick list if sheet is not active
+        * [X] replace current entry if sheet is active
+            * [X] confirm/show latest entry first?
+        * [ ] add dropdown menu for this
+* [ ] add resume function
+* [ ] add task function
+* [ ] is there a way to make the lists less jumpy?
+* [o] add a cleanupMenues() function for menubar sub menus
+    * [ ] needs reworking on refactorig and cleanup
+    * [X] added starter code
+* [ ] don't allow dialog box for checkin of already running clocks
+* [ ] add "loading" dialog for long commands (i.e. edit, in, out)
+* [ ] dynamic rereading for config?
+* [ ] add keystrokes that always bypass dialogs -where appropriat
+    * [ ] probably shift versions of the number keys (??)
+* [ ] add task function
+    * [ ] provides the ability to just acknowledge a task was performed
+    * [ ] allows a note to be taken from dialog about task
+    * [ ] alternate version has no dialog
+    * [ ] checks in, starts timer and waits, and checks out
+    * [ ] has a default/configurable timespan
+* [.] fix sometimes command don't take
+    * [X] sometimes the program doesn't select the right sheet for edits, etc.
+        * [X] need to verify that a sheet is set to active before applying the edit command
+            * [X] this likely needs to be as atomic as possilbe -eep!
+    * [ ] fix failures to start sometimes
+    * [ ] need more user feedback
+    * [ ] need to verify commands?
+* [ ] add lots more user feedback
+* [ ] add editor capability to prompts?
+* [ ] add loading/working dialogs, notes
+* [ ] move / centralize fetch call code to view(?)
+* [ ] add a box for displaying the most recent note for a selected sheet
+* [ ] implement 'create missing sheets'
+* [ ] implement search in sidebar and [workspace](workspace)
+* [ ] redo the options in classes
+    * the options can get set to false -bad default considerations
+* [o] write a wrapper for timetrap commands and output
+    * [X] test stderr and exit codes for ouput
+        * it looks like timetrap has exit status we can count on for come commands
+            * also it seems that he's using stderr properly as well
+    * [ ] add JSON output where needed
+    * [X] use [GitHub - tj/commander.js: node.js command-line interfaces made easy](https://github.com/tj/commander.js/)
+    * needed commands:
+      * [X] list
+      * [X] now
+      * [ ] display
+          * [ ] today
+          * [ ] yesterday
+          * [ ] week
+          * [ ] month
+          * [ ] global versions of the above
+      * [X] in
+          * optional arguments
+      * [X] out
+          * optional arguments
+      * [X] edit
+          * optional arguments
+* [ ] setup keyboard and colors
+    * [ ] can be overridden from cofig file
+    * [ ] performed in config object
+* [ ] `workspace display` options:
+    * round
+    * all
+* [ ] make plantuml version of program structure
+
+## Phase 1.13: configuration, and colors
+* [ ] add new function
+* [o] implement color defaults from config
+    * [X] logger
+    * [ ] others
+* [ ] manage tree data and updates to reflect state
+    * [ ] make color stick with folded items
+        * [ ] have items in the tree change colors based on timetrap selection
+* [ ] tree item states (active means sheet is active):
+    * [ ] active, running
+        * astrisk
+        * tui_color_active_running
+        * tui_active_running
+    * [ ] active, **not** running
+        * astrisk
+        * tui_color_active_Nrunning
+        * tui_active_Nrunning
+    * [ ] **not** active running
+        * tui_color_Nactive_running
+        * tui_Nactive_running
+    * [ ] **not** active **not** running
+        * tui_color_Nactive_Nrunning
+        * tui_Nactive_Nrunning
+
+
+# pick menu options:
+* [ ] close
+* [ ] kill
+* [ ] move
+* [ ] edit
+* [ ] resume
+
+# main menu options:
+* sheet
+    * check in
+        * at
+            * time widget ?
+    * check out
+        * at
+            * time widget ?
+    * display <--ids>
+        * today
+        * yesterday
+        * week
+        * month
+        * 1st entry
+        * all today
+        * all yesterday
+        * all week
+        * all month
+        * all 1st entry
+        * ????? other (custom filters)
+    * resume
+        * id
+            * pick list ?
+        * at
+            * time widget ?
+    * edit [--id]
+        * these can be done via the dialog box
+        * replace
+        * append
+        * start time
+        * end time
+        * move (possibly dangerous... )
+    * new (creates new sheet as child of selected)
+        * child of root == root level
+        * can add sheet for hairchy placeholders too
+    * kill [--id]
+        * needs confirmation dialog
+        * confirmation dialog uses it's own config file entry
+        * can kill an id or an entire sheet
+    * move <--id> <sheet>
+        * this is an edit operation
+        * the id is from a pick list
+        * sheet is from a pick list
+    * task
+        * if clock is running
+            1. check out of clock
+            2. check in again (with required note)
+        * if clock is not running
+            1. check in (with required note)
+            2. check out
+            3. (use resume to continue the clock)
+* global
+    * manual update (debug only)
+    * stop all
+    * exit
+
+# refactor
+* [ ] add abstract widget class for common settings
+* [ ] change file names to reflect classes, etc.
+
+## common things of widget classes
+* register_actions
+* emit
+* show
+* hide
+
+# future versions / eventual todo
+* add an undo for stopall
+* add extended notes / links
+    * maybe through links
+    * maybe seperate db
+    * maybe a db addon
+* clickable/followable links?
+    * open's web page for http://
+    * opens editor for file://
+* [ ] add copy/paste stuffs
+    * [ ] copy dispaly descriptions
+    * [ ] paste into dialogs
+* [ ] change the dual tables in the main view to one table with the tree
+    * pro: easier to manage the tree elements
+    * pro: looks better
+    * pro: centralized data
+    * pro: elemental color management
+        * since we're building the class from scratch anyway
+    * best(?) use of realestate (smaller footprint)
+    * con: commits pick lists to alternate view
+    * con: requires customizatin of the parent tree method -class rewrite
+* [ ] use a viewport for the tree and workspacd ? (for horizontal scrolling)
+* [ ] the workflow should be documented
+    * [ ] vim macros
+    * [ ] directory setup
+    * [ ] project setup
+        * (i.e. having .timetrap-sheet in projects)
+* gollum/github integration
+    * script to copy vimwiki files to project
+    * copy vimwiki files to project
+    * build jekyl system for uploads
+    * do video to gif for screenshots
+
+# Vimwiki integration
+* specify a wiki from the command line and choose a link from that index page
+## command line proof of concept
+* open a link from an index
+```bash
+vim -c "let g:vimwiki_list = [{'path': '~/Documents/Heorot/Timetrap_frontend/', 'path_html': '~/public_html/vimwiki/Timetrap_frontend', 'syntax': 'markdown', 'ext': '.vimwiki'}]" -c VimwikiIndex -c "VimwikiGoto Dev\ Phase\ 1"
+```
+* open a diary note for today
+```bash
+vim -c "let g:vimwiki_list = [{'path': '~/Documents/Heorot/Timetrap_frontend/', 'path_html': '~/public_html/vimwiki/Timetrap_frontend', 'syntax': 'markdown', 'ext': '.vimwiki'}]" -c VimwikiMakeDiaryNote
+```
+* open a specific diary file from the diary index
+```bash
+vim -c "let g:vimwiki_list = [{'path': '~/Documents/Heorot/Timetrap_frontend/', 'path_html': '~/public_html/vimwiki/Timetrap_frontend', 'syntax': 'markdown', 'ext': '.vimwiki'}]" -c VimwikiDiaryIndex -c "VimwikiGoto diary/2017-08-31"
+```
+* Open a specific diary file and append to the bottom of the file
+```bash
+vim -c "let g:vimwiki_list = [{'path': '~/Documents/Heorot/Timetrap_frontend/', 'path_html': '~/public_html/vimwiki/Timetrap_frontend', 'syntax': 'markdown', 'ext': '.vimwiki'}]" -c VimwikiDiaryIndex -c "VimwikiGoto diary/2017-08-31" '+normal Go some text'
+```
+```bash
+vim -c "let g:vimwiki_list = [{'path': '~/Documents/Heorot/Timetrap_frontend/', 'path_html': '~/public_html/vimwiki/Timetrap_frontend', 'syntax': 'markdown', 'ext': '.vimwiki'}]" -c VimwikiDiaryIndex -c "VimwikiGoto diary/2017-08-31" '+normal Go -----------------------------------## TimeStamp: 2017-10-14 Sat 01:24 -0500, Timetrap_ID: 1245* this is the summary text from the Timetrap Note'
+```
+```bash
+vim -c "let g:vimwiki_list = [{'path': '~/Documents/Heorot/Timetrap_frontend/', 'path_html': '~/public_html/vimwiki/Timetrap_frontend', 'syntax': 'markdown', 'ext': '.vimwiki'}]" -c VimwikiDiaryIndex -c "VimwikiGoto diary/2017-08-31" '+normal Go-----------------------------------## TimeStamp: 2017-10-14 Sat 01:24 -0500, Timetrap_ID: 1245* this is the summary text from the Timetrap Note'
+```
+* Open a specific diary file and append to the bottom of the file and search for the ID
+* user must press n to find the entry once open
+```bash
+vim -c "let g:vimwiki_list = [{'path': '~/Documents/Heorot/Timetrap_frontend/', 'path_html': '~/public_html/vimwiki/Timetrap_frontend', 'syntax': 'markdown', 'ext': '.vimwiki'}]" -c VimwikiDiaryIndex -c "VimwikiGoto diary/2017-08-31" '+normal Go-----------------------------------## TimeStamp: 2017-10-14 Sat 01:24 -0500, Timetrap_ID: 1245* this is the summary text from the Timetrap Note' -c g/Timetrap_ID:\ 1245
+```
+* open diary, add text, find latest entry and set cursor there:
+```bash
+vim -c "let g:vimwiki_list = [{'path': '~/Documents/Heorot/Timetrap_frontend/', 'path_html': '~/public_html/vimwiki/Timetrap_frontend', 'syntax': 'markdown', 'ext': '.vimwiki'}]" -c VimwikiDiaryIndex -c "VimwikiGoto diary/2017-08-31" '+normal Go-----------------------------------## TimeStamp: 2017-10-14 Sat 01:24 -0500, Timetrap_ID: 1245* this is the summary text from the Timetrap Note' -c g/Timetrap_ID:\ 1245 '+normal GN'
+```
+* open diary, add text, find latest entry and set cursor there (alternate):
+```bash
+vim -c "let g:vimwiki_list = [{'path': '~/Documents/Heorot/Timetrap_frontend/', 'path_html': '~/public_html/vimwiki/Timetrap_frontend', 'syntax': 'markdown', 'ext': '.vimwiki'}]" -c VimwikiDiaryIndex -c "VimwikiGoto diary/2017-08-31" '+normal Go-----------------------------------TimeStamp: 2017-10-14 Sat 01:24 -0500, Timetrap_ID: 1245Note: this is the summary text from the Timetrap Note' -c g/Timetrap_ID:\ 1245 '+normal GN'
+```
+* open vim and append text at the bottom:
+    * [Vim: Open file with cursor at the end — edunham](http://edunham.net/2015/01/29/vim_open_file_with_cursor_at_the_end.html)
+    '''
+    vim '+normal Go' foo.txt
+    '''
+## concept:
+* individual sheets could be mapped to wiki paths and specific links/files under those paths
+* yaml could be used to specify this linkage
+## Use Cases:
+### sheet is associated with diary
+* selecting a sheet would open (in vim/gollum) the diary for that sheet/wiki
+    * a timestamp + id is appended to the vimwiki diary file
+    ```
+
+    -----------------------------------
+    ## TimeStamp: 2017-10-14 Sat 01:24 -0500, Timetrap_ID: 1245
+    * this is the summary text from the Timetrap Note
+
+    ```
+* configured in yaml file
+```yaml
+---
+sheets:
+  Projects.Timetrap_TUI:
+    vimwiki:
+      path: "~/Documents/Heorot/Timetrap_frontend/"
+      path_html: "~/public_html/vimwiki/Timetrap_frontend"
+      syntax: "markdown"
+      ext: ".vimwiki"
+      timestamp_template: "-----------------------------------TimeStamp: [ISO 8601 Date], Timetrap_ID: [Timetrap ID]Note: this is the summary text from the Timetrap Note"
+```
+
+## using yaml for wiki configuration
+### references
+* [YAML succinct tutorial](https://gist.github.com/ddlsmurf/1590434)
+    * very nice and simple text file reference
+* [Learn yaml in Y Minutes](https://learnxinyminutes.com/docs/yaml/)
+    * another good one-page example reference
+* [YAML Idiosyncrasies](https://docs.saltstack.com/en/latest/topics/troubleshooting/yaml_idiosyncrasies.html)

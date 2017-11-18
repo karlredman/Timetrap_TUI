@@ -1,0 +1,80 @@
+# Timetrap TUI -Features
+
+## brainstorm
+* Parses command output and not SQL
+* Simple UI
+    * Track multiple tasks if desired.
+        * should be a toggle
+    * panes
+        * side: projects list
+        * top: action list
+        * center: contextual input/output
+        * bottom:
+* Global action list
+    * now
+        * `t now`
+    * display
+        * `t display [options] all`
+        * see options under Project list
+    * restart
+        * restart most recent sheet (the active sheet)
+* Configurable keybindings
+    * default vim-like
+    * conflict detection?
+* Project list:
+    * lists projects physically found in the config directory
+    * updated by application restart or *project_list.refresh* action
+    * collapsable tree list?
+        * will explore adding this complexity
+        * could use [yaronn/blessed-contrib: Build terminal dashboards using ascii/ansi art and javascript](https://github.com/yaronn/blessed-contrib)
+    * actions:
+        * new
+            * adds a new project as a child of list location
+            * refreshes project list
+        * check in
+            * at
+        * check out
+            * at
+        * display
+            * ids
+            * round
+            * start
+            * end
+            * format
+            * grep
+            * display aliases
+                * today
+                    * ids
+                    * format
+                    * sheet|all
+                * yesterday
+                    * ids
+                    * format
+                    * sheet|all
+                * week
+                    * ids
+                    * end date
+                    * format
+                    * sheet | all
+                * month
+                    * ids
+                    * start month
+                    * format
+                    * sheet|all
+        * edit
+            * id
+            * start
+            * end
+            * append
+        * kill
+            * id
+            * sheet
+        * resume
+            * id
+            * at
+
+## Future features
+* allow for multiple sheets in `.timetrap-sheet`
+* allow for combined sheet lists and directories
+    * multiple directories
+    * multiple sheet lists

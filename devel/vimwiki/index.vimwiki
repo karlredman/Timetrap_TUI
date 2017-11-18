@@ -1,0 +1,35 @@
+# Timetrap frontend project index (Timetrap TUI)
+
+## Wiki pages
+* [[Features]]
+* [Dev Phase 1 (prototype)](Dev Phase 1)
+* [Dev Phase 2 (implementation)](Dev Phase 2)
+* [[Refactor Code]]
+* [[Pseudocode]]
+* [[Bugs]]
+* [[README.md]]
+
+### Notes
+* [[timetrap issues]]
+
+## References
+* Project:
+    * my blessed prototype app: [Karl N. Redman / phainein · GitLab](https://gitlab.com/karl.redman/phainein)
+        * **needs rework of README.md**
+    * Timetrap Project: [samg/timetrap: Simple command line timetracker](https://github.com/samg/timetrap)
+    * Blessed API: [chjj/blessed: A high-level terminal interface library for node.js.](https://github.com/chjj/blessed)
+    * Blessed Contrib: [yaronn/blessed-contrib: Build terminal dashboards using ascii/ansi art and javascript](https://github.com/yaronn/blessed-contrib)
+* Development:
+    * [The Beginner's Guide to Terminal for Node.js Development](https://blog.risingstack.com/terminal-guide-for-nodejs/)
+* Future versions:
+    * Converting the TUI to browser code:
+        * [Browserify](http://browserify.org/)
+        * [How to run node js script on the browser · Issue #69 · nodejs/help](https://github.com/nodejs/help/issues/69)
+        * [Browserify Blessed Example Please · Issue #168 · chjj/blessed](https://github.com/chjj/blessed/issues/168)
+        * [mattdesl/browserify-example: a bare-bones, no-bullshit example of using browserify to dev + build a static demo](https://github.com/mattdesl/browserify-example)
+        * working example [An example demonstrating what browserify does](https://gist.github.com/bsgbryan/1332082)
+
+## Limitations:
+* there are no decent js cli datepickers
+    * invent one?
+    * workaround with numerical dropdowns?

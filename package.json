@@ -9,6 +9,13 @@
   "scripts": {
     "test": "jest --verbose"
   },
+  "jest": {
+    "verbose": true,
+    "testPathIgnorePatterns": [
+      "<rootDir>/node_modules/",
+      "<rootDir>/dev_cycles/"
+    ]
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/karlredman/Timetrap_TUI.git"
@@ -27,5 +34,11 @@
   "bugs": {
     "url": "https://github.com/karlredman/Timetrap_TUI/issues"
   },
-  "homepage": "https://github.com/karlredman/Timetrap_TUI#readme"
+  "homepage": "https://github.com/karlredman/Timetrap_TUI#readme",
+  "dependencies": {
+    "blessed": "^0.1.81",
+    "blessed-contrib": "^4.8.5",
+    "commander": "^2.11.0",
+    "js-yaml": "^3.10.0"
+  }
 }

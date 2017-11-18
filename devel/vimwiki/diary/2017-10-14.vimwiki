@@ -1,0 +1,3 @@
+# Don't panic -It's a refactoring/rewrite!
+
+There comes a point where the app has enough featues and is working well enough that everything you do after that is just breaking things. Especially when the developer, me, was (re) learning a bunch of things all at once. I've surpassed my original goals by a great margin but the code is pretty sloppy. I'm going to take a break and start rewriting the whole thing from scratch (with a lot of cut and paste). I suspect the whole thing will take about 20 hours. I'll track it and see....

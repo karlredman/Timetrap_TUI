@@ -1,0 +1,47 @@
+# create screen demo for application
+
+## issues:
+* quality is a major issue. vlc, obs, and several others don't record high quality out of the box
+* one method of increasing quality is to change the desktop resolution to a standard size and record using settings for that resolution
+
+## recording tools
+* [simpleScreenRecorder](https://mintguide.org/video/202-simple-screen-recorder-ssr-qt-application-for-recording-linux-desktop.html)
+    * easy to use
+    * does audio
+    * excellent quality
+* linux mint v18.1+ built-in screen record
+    * really good quality
+    * webm output only
+    * no audio
+* ffmpeg
+    * complicated
+    * references:
+        * [High quality screen capture with Ffmpeg - MyLabWiki](http://wiki.oz9aec.net/index.php/High_quality_screen_capture_with_Ffmpeg)
+
+## editing tools
+
+
+## video sections
+### mian view
+* checkIn
+* checkOut
+    * specific time
+* edit
+    * running
+    * show timetrap cli
+* task
+    * running
+        * display
+    * not running
+        * display
+* themes
+    1. cli start
+    2. theme tour
+* stop all
+* tab
+    * menu
+    * log
+### details window
+* edit
+    * wait for update
+* display

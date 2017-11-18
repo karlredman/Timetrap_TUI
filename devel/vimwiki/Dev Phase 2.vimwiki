@@ -1,0 +1,49 @@
+# Timetrap TUI: Development Phase 2 (implementation)
+
+## Phase 2.00: rebuild Timetrap class
+* ES6 references
+    * [An Introduction To JavaScript ES6 Classes - Node.js @ IBM](https://developer.ibm.com/node/2015/08/12/an-introduction-to-javascript-es6-classes/)
+    * [Classes in ECMAScript 6 (final semantics)](http://2ality.com/2015/02/es6-classes-final.html)
+    * [25. Promises for asynchronous programming](25. Promises for asynchronous programming)
+    * [Exploring ES6](http://exploringjs.com/es6/)
+        * extremely thorough
+* promise references:
+    * [An incremental tutorial on promises in javascript 🐾](http://www.sohamkamani.com/blog/2016/08/28/incremenal-tutorial-to-promises/)
+* TDD references:
+    * [Getting Node.js Testing and TDD Right | @RisingStack](https://blog.risingstack.com/getting-node-js-testing-and-tdd-right-node-js-at-scale/)
+* jest references:
+    * [http://facebook.github.io/jest/docs/en/getting-started.html](http://facebook.github.io/jest/docs/en/getting-started.html)
+    * [How to test Express.js with Jest and Supertest | Through the binary](http://www.albertgao.xyz/2017/05/24/how-to-test-expressjs-with-jest-and-supertest/)
+* compile coding standards in one place
+    * [Don't use || to set default values in JavaScript](http://www.codereadability.com/javascript-default-parameters-with-or-operator/amp/)
+    * [Classes in ECMAScript 6 (final semantics)](http://2ality.com/2015/02/es6-classes-final.html)
+* [ ] minimal node v8.4
+    * [ ] test other versions
+* [X] structure as an API
+* [ ] implement jest unit testing
+    * [ ] backend only for starters
+    * [ ] as much of front end as possible
+* [X] switch to ES6 classes
+    * [ecma262 - What is the difference between JavaScript and ECMAScript? - Stack Overflow](https://stackoverflow.com/a/33748400/1725771)
+    * [ES6 vs ES2015 - What to call a JavaScript version?](https://bytearcher.com/articles/es6-vs-es2015-name/)
+* [ ] restructure the class
+* [ ] centralize data
+* [ ] rework sync vs asynch processes
+    * [ ] build synch and asynch versions of the message stack
+        * [ ] sync for when the sheet has to be selected before operation
+
+### TODO:
+* [ ] destory main view instead of preserving while in detail view
+    * memory leak in screen events causes event backlog / leak
+    * symptom is slowdown over time
+    * requires moving log to view_controller
+        * possible reinstantiation of logger with preserved data
+* [ ] copy details view logs back to main log when closing/deleting details view
+* [ ] fix status time in details view
+    * shows elapsed time from main view (makes the number look off)
+    * OR fix so it keeps running if a job is running (within context)
+        * this would be tricky in order to discover week, month, etc. boundries
+
+
+## Future Development stuffs
+* implement docker

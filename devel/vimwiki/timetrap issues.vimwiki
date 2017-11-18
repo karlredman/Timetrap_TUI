@@ -1,0 +1,15 @@
+# timetrap issues
+* ical export
+```
+karl@karl-samsung ~/Documents/Heorot/Personal $ t display --format ical > ~/timesheets.ics
+Sheet "Personal" selected by Timetrap::AutoSheets::Nested_dotfiles
+undefined method `dtstart' for #<Timetrap::Formatters::Ical:0x00000001c80fe0>
+```
+* multiline comments are useless for notes and cause problems with reporting
+* nested_dotfiles auto_sheets doesn't stop looking for .timetrap-sheet until it finds one
+
+* editor setting for notes should be a command line option
+    * config file is the exclusive settings authority
+* editing start and end times requires quotes
+      * space is a delimiter
+* note editor should also work for timestamps

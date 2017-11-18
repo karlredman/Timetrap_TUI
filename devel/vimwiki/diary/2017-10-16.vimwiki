@@ -1,0 +1,52 @@
+# Running Unit tests
+## possible issues
+* I need to test with a fresh install of node (via nvm)
+* I may have installed jest and babel locally
+
+## versions
+* node v8.4.0
+* jest v21.2.1
+* npm v5.5.1
+
+## loose notes for now
+1. init the directory for node
+> npm -y init
+2. edit package.json to look like this
+```
+{
+  "name": "ext3",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "test": "jest --verbose"
+  },
+  "author": "",
+  "license": "ISC",
+  "keywords": [],
+  "description": ""
+}
+
+```
+3. add jest
+    * global (my perefered)
+    ```
+    npm install -g jest
+    ```
+    * local
+    ```
+    npm install --save-dev jest
+    ```
+4. add transpile modules
+    ```
+    npm install --save-dev babel-cli babel-preset-env babel-jest
+    ```
+    * optional
+    ```
+    npm install --save-dev babel-cli regenerator-runtime
+    ```
+
+### Notes: 
+* if you get the following error then you are not in a git repo -derp.
+```
+This promise must be present when running with -o.
+```

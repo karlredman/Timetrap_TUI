@@ -75,39 +75,16 @@ Please see the [timetrap project page](https://github.com/samg/timetrap) for mor
 * separate Timetrap wrapper library (extracted from this project)
 * additional unit testing
 
-## Requirements
+## Installation:
+### Requirements
 * A running/working [Timetrap](https://github.com/samg/timetrap) installation
+
 * Top Level Node.js Dependencies:
     * [blessed](https://www.npmjs.com/package/blessed)
     * [blessed-contrib](https://www.npmjs.com/package/blessed-contrib)
-        * Note: this module pulls in a lot of other modules currently
-    * [timetrap_wraplib]
+    * [timetrap_wraplib]()
     * [commander](https://www.npmjs.com/package/commander)
     * [js-yaml](https://www.npmjs.com/package/js-yaml)
-
-
-## Installation:
-### for development:
-```
-# clone the project
-git clone https://github.com/karlredman/Timetrap_TUI.git
-
-# build it
-cd ./Timetrap_TUI
-npm install
-```
-
-### for production:
-* local
-```
-npm install timetrap_tui
-
-```
-
-* global
-```
-npm install timetrap_tui -g
-```
 
 ## Execution:
 
