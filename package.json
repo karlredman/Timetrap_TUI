@@ -1,6 +1,6 @@
 {
   "name": "timetrap_tui",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Timetrap TUI is an event driven terminal user interface front-end wrapper application for the 'Simple command line timetracker' Timetrap.",
   "main": "timetrap_tui.js",
   "bin":{
