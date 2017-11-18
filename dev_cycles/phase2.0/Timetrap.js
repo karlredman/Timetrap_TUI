@@ -265,7 +265,7 @@ Timetrap.prototype.registerCommandTypes = function(){
         },
         custom:{
             description: "custom command -not implemented",
-            _command: [],
+            _command: [''],
             args: [],
             required: [],
             allow_sheet: false,
