@@ -10,6 +10,8 @@ Timetrap TUI is a node.js based event driven terminal user interface application
 
 *a demo and images are pending*
 
+![Latest Screenshot](https://github.com/karlredman/Timetrap_TUI/blob/master/devel/demo/Screenshot_2017-11-19_00-31-38.png?raw=true "Timetrap TUI Screenshot")
+
 ## Features (i.e. working so far):
 ### original timetrap:
 * check-in / check-out of time sheets
