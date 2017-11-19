@@ -53,17 +53,17 @@ class app extends Object {
     }
 }
 
-function process_opts({app = null, env_config_file = null} ={}){
+function process_opts({app = null, timetrap_env_config_file = null} ={}){
 
     // update process_config config_file entry. (chicken, egg issue)
     //// initial value
     let config_file = app.process_config.data.config_file.value;
 
-    if ( ( typeof env_config_file === 'string' )
-        && (enve_config_file.length > 0))
+    if ( ( typeof timetrap_env_config_file === 'string' )
+        && (timetrap_env_config_file.length > 0))
     {
         //// environment variable overrides defaut
-        config_file = env_config_file;
+        config_file = timetrap_env_config_file;
     }
 
     opt
@@ -74,9 +74,9 @@ function process_opts({app = null, env_config_file = null} ={}){
 			+"  Copyright 2017 Karl N. Redman (MIT licenced)"
             +"\n"
             +"  -----------------------------------------"
-            // +"\n"
-            // +"  * Default Values are shown in CAPS."
-            // +"\n"
+            +"\n"
+            +"  * Default Values are shown in CAPS."
+            +"\n"
             // +"  * $TIMETRAP_TUI_CONFIG overrides default config file path."
             // +"\n"
             // +"  * Commandline option \'-c\' will override $TIMETRAP_TUI_CONFIG."
@@ -85,7 +85,7 @@ function process_opts({app = null, env_config_file = null} ={}){
             // +"\n"
             // +"  * Commandline options override configuration file:"
             // +"\n"
-            // +"    (Current config: "+config_file+")."
+            +"    (Current config: "+config_file+")."
         )
         // .option('-c, --config_file <file path>',
         //     app.process_config.data.config_file.desc+' ['
@@ -156,9 +156,11 @@ function main(argv, callback) {
     app = new app({version: '0.2.0'});
 
     //process getopt
-    process_opts({app:app,
-        process_config_file: process.env.TIMETRAP_TUI_CONFIG});
+    process_opts({app: app,
+        timetrap_env_config_file: process.env.TIMETRAP_CONFIG_FILE});
 
+        // console.log(app.process_config.data.config_file.value)
+        // process.exit(0);
     app.run();
 }
 

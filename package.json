@@ -3,8 +3,8 @@
   "version": "0.2.5",
   "description": "Timetrap TUI is an event driven terminal user interface front-end wrapper application for the 'Simple command line timetracker' Timetrap.",
   "main": "timetrap_tui.js",
-  "bin":{
-      "timetrap_tui": "timetrap_tui.js"
+  "bin": {
+    "timetrap_tui": "timetrap_tui.js"
   },
   "directories": {
     "lib": "lib"
@@ -38,11 +38,5 @@
     "url": "https://github.com/karlredman/Timetrap_TUI/issues"
   },
   "homepage": "https://github.com/karlredman/Timetrap_TUI#readme",
-  "dependencies": {
-    "blessed": "^0.1.81",
-    "blessed-contrib": "^4.8.5",
-    "commander": "^2.11.0",
-    "js-yaml": "^3.10.0",
-    "timetrap_wraplib": "^0.2.0"
-  }
+  "dependencies": {}
 }
