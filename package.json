@@ -16,7 +16,7 @@
     "verbose": true,
     "testPathIgnorePatterns": [
       "<rootDir>/node_modules/",
-      "<rootDir>/dev_cycles/"
+      "<rootDir>/devel/"
     ]
   },
   "repository": {
@@ -38,5 +38,12 @@
     "url": "https://github.com/karlredman/Timetrap_TUI/issues"
   },
   "homepage": "https://github.com/karlredman/Timetrap_TUI#readme",
-  "dependencies": {}
+  "dependencies": {
+    "blessed": "^0.1.81",
+    "commander": "^2.11.0",
+    "js-yaml": "^3.10.0",
+    "strip-ansi": "^4.0.0",
+    "timetrap_wraplib": "^0.2.0"
+  },
+  "devDependencies": {}
 }
