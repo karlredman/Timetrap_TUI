@@ -4,7 +4,7 @@ Author: [Karl N. Redman](https://karlredman.github.io/)
 
 ## Description:
 
-Timetrap TUI is a node.js based event driven terminal user interface application for the ruby based 'Simple command line timetracker' [timetrap](https://github.com/samg/timetrap).  Timetrap TUI intends to extend the elegance of Timetrap while honoring the original CLI interface as closely as possible. Timetrap packs a lot of functionality into a fairly simple interface with a short learning curve. I believe that if you have mastered Timetrap then the Timetrap TUI interface will feel natural.
+Timetrap TUI is a node.js based event driven terminal user interface application for the ruby based 'Simple command line timetracker' [Timetrap](https://github.com/samg/timetrap).  Timetrap TUI intends to extend the elegance of Timetrap while honoring the original CLI interface as closely as possible. Timetrap packs a lot of functionality into a fairly simple interface with a short learning curve. I believe that if you have mastered Timetrap then the Timetrap TUI interface will feel natural.
 
 ## Video / Gif Demo
 
@@ -53,11 +53,12 @@ Timetrap TUI is a node.js based event driven terminal user interface application
 * basic runtime logging (non saving currently)
 * 'are you sure?' dialog boxes can be disabled via command line
 * 'stop all sheets' menu item
-* ES6 compliant (as far as I know / within Node.js v8.4 limitations)
+* ES6 compliant (within Node.js v8.4 limitations)
 
 ## Requirements
 * Linux (maybe windows someday if there is interest)
 * A running/working [Timetrap](https://github.com/samg/timetrap) installation
+* Node.js v8.4+
 * Top Level Node.js Dependencies:
     * [blessed](https://www.npmjs.com/package/blessed)
     * [timetrap_wraplib](https://www.npmjs.com/package/timetrap_wraplib)
@@ -228,10 +229,6 @@ I wanted to keep my time sheets in a hierarchy. This is the solution that I came
 
 Basically I started out with a color scheme but it grew into "themes" as I experimented. The configuration classes were written to accommodate individual settings per widget so... we ended up with a theme setup with a lot of flexibility.
 
-* Why is the dependency list so huge?!
-
-[blessed-contrib](https://github.com/yaronn/blessed-contrib/) pulls in a lot of dependencies. I have a plan to replace the code that uses blessed contrib widgets in the future. I'm working on a custom grid system that may get released someday -so I'll probably drop table and tree widgets into that library if/when I get around to it. As things are now, I'm ok with the bit of bloat due to the payoff of not having to implement that functionality myself. Otherwise, blessed-contrib is a good library to work with for sure!
-
 * Why write javascript workarounds for a project (Timetrap) that allows customization and plugins?
 
 I wanted to write a pure javascript/node.js solution without the additional overhead or dependencies of an additional language. The project started with a plan to rewrite the functionality of timetrap entirely in javascript/node.js. This plan was scrapped for now due to time constraints and a natural resistance to reinvent the wheel.
@@ -239,6 +236,10 @@ I wanted to write a pure javascript/node.js solution without the additional over
 * Why are tab and shift-tab used as toggles and not round-robin focus keys?
 
 99% of the time you will be going between the menu and the main window in each view. Having to press tab an extra time is annoying (to me). I can easily add a configuration option for round-robin tabbing if someone actually requests it.
+
+* Why a terminal user interface?
+
+Every user interface has it's place. There are a lot of us vim using, mouse avoiding, rebels still out here. Also a TUI just fits my workflow.
 
 ## Thank You and Credit To:
 * The author and contributors of the [Timetrap](https://github.com/samg/timetrap) project for an elegant and useful time keeping solution.
