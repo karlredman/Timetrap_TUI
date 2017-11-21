@@ -57,7 +57,7 @@ Timetrap TUI is a node.js based event driven terminal user interface application
 
 ## Requirements
 * Linux (maybe windows someday if there is interest)
-* A running/working [Timetrap](https://github.com/samg/timetrap) installation
+* A running/working [Timetrap](https://github.com/samg/timetrap) installation. (ruby 2.4 is tested)
 * Node.js v8.4+
 * Top Level Node.js Dependencies:
     * [blessed](https://www.npmjs.com/package/blessed)
