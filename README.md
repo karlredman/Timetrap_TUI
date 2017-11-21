@@ -176,7 +176,7 @@ This is the same as using `timetrap` command directly.
 1. Close:
 2. Resume (N/A):
 	* Not yet implemented.
-	* Reserved for later use.
+	* This is actually a complex action. The actions are similar to 'task' on the main menu -it's being worked-on/thought-about relative to behavior. (suggestions welcome).
 3. Edit:
 4. Display (relative to `Sheet` toggle):
 	* Select the display context:
