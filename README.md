@@ -239,7 +239,7 @@ I wanted to write a pure javascript/node.js solution without the additional over
 
 * Why a terminal user interface?
 
-Every user interface has it's place. There are a lot of us vim using, mouse avoiding, rebels still out here. Also a TUI just fits my workflow.
+Every user interface has it's place. There are a lot of us vim using, mouse avoiding, rebels still out here. Also a TUI just fits my workflow. Also, in xterminals, the mouse is usable for this application. I haven't even tried to get gpm mouse functionality to work with this application to date.
 
 ## Thank You and Credit To:
 * The author and contributors of the [Timetrap](https://github.com/samg/timetrap) project for an elegant and useful time keeping solution.
