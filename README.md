@@ -239,7 +239,7 @@ I wanted to write a pure javascript/node.js solution without the additional over
 
 * Why a terminal user interface?
 
-Every user interface has it's place. There are a lot of us vim using, mouse avoiding, rebels still out here. Also a TUI just fits my workflow. In addition, in xterminals, the mouse is usable for this application. I haven't even tried to get gpm mouse functionality to work with this application to date.
+Every user interface has it's place. There are a lot of us vim using, mouse avoiding, rebels still out here. Also a TUI just fits my workflow. In addition, in xterminals, the mouse is usable for this application. I haven't even tried to get gpm mouse functionality (for consoles) to work with this application to date.
 
 ## Thank You and Credit To:
 * The author and contributors of the [Timetrap](https://github.com/samg/timetrap) project for an elegant and useful time keeping solution.
@@ -252,7 +252,7 @@ Every user interface has it's place. There are a lot of us vim using, mouse avoi
 
 ## Further Notes:
 
-Timetrap is an excellent command line application for basic time tracking. My goal with Timetrap TUI is to enhance the usefulness of the timetrap application by providing visually interactive components while maintaining the original program features. Hence, this project is a wrapper of the timetrap command. As such it suffers from the same limitations as most any command line wrapper interface: to be considered single user, limited interactivity, subject to breakage if the original command changes in any significant way. However, by wrapping timetrap we gain the advantages of a well tested back-end, established application workflow, and the ability to concentrate on use end functionality -thereby saving initial development time and effort. To be completely honest this project is meant as a prototype for a much larger, as yet unpublished, application/framework that I am working on in my spare time.
+Timetrap is an excellent command line application for basic time tracking. My goal with Timetrap TUI is to enhance the usefulness of the timetrap application by providing visually interactive components while maintaining the original program features. Hence, this project is a wrapper of the timetrap command. As such it suffers from the same limitations as most any command line wrapper interface: to be considered single user, limited interactivity, subject to breakage if the original command changes in any significant way. However, by wrapping timetrap we gain the advantages of a well tested back-end, established application workflow, and the ability to concentrate on user end functionality -thereby saving initial development time and effort. To be completely honest this project is meant as a prototype for a much larger, as yet unpublished, application/framework that I am working on in my spare time.
 
 ## Upcoming Features:
 ### original timetrap:
@@ -281,5 +281,5 @@ Timetrap is an excellent command line application for basic time tracking. My go
 * additional unit testing
 
 ## License:
-This Project is MIT licensed. Furthermore, Timetrap TUI reallocates [log.js](https://github.com/yaronn/blessed-contrib/blob/master/lib/widget/log.js), [tree.js](https://github.com/yaronn/blessed-contrib/blob/master/lib/widget/tree.js) and [table.js](https://github.com/yaronn/blessed-contrib/blob/master/lib/widget/table.js) from the [blessed-contrib](https://github.com/yaronn/blessed-contrib/) project in order to reduce dependencies.
+This Project is MIT licensed. Furthermore, Timetrap TUI reallocates [log.js](https://github.com/yaronn/blessed-contrib/blob/master/lib/widget/log.js), [tree.js](https://github.com/yaronn/blessed-contrib/blob/master/lib/widget/tree.js) and [table.js](https://github.com/yaronn/blessed-contrib/blob/master/lib/widget/table.js) from the [blessed-contrib](https://github.com/yaronn/blessed-contrib/) project in order to reduce dependencies. Relicensing information can be found [here](https://github.com/karlredman/Timetrap_TUI/blob/master/lib/blessed-contrib/README.md).
 
