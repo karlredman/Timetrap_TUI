@@ -2,8 +2,6 @@
 
 Author: [Karl N. Redman](https://karlredman.github.io/)
 
-## Description:
-
 Timetrap TUI is a node.js based event driven terminal user interface application for the ruby based 'Simple command line timetracker' [Timetrap](https://github.com/samg/timetrap).  Timetrap TUI intends to extend the elegance of Timetrap while honoring the original CLI interface as closely as possible. Timetrap packs a lot of functionality into a fairly simple interface with a short learning curve. I believe that if you have mastered Timetrap then the Timetrap TUI interface will feel natural.
 
 ## Video / Gif Demo
@@ -87,7 +85,7 @@ npm install
 * Please verify that Timetrap is working properly before testing Timetrap TUI.
 * Timetrap TUI currently uses the the Timetrap configuration file settings/configuration.
     * this file is used to figure out where `timetrap.yml` is located to determine where the `timetrap.db` file is located.
-    * as per, Timetrap configuration settings, set environment variable TIMETRAP_CONFIG_FILE to override timetrap default.
+    * as per Timetrap configuration settings, set environment variable TIMETRAP_CONFIG_FILE to override timetrap default.
     * the default location for `timetrap.yml` is `$HOME/.timetrap.yml`
 
 ## Execution:
@@ -112,7 +110,7 @@ The use of a configuration file is currently disabled. See `timetrap_tui --help`
 ## Quirks / Caveats:
 * Timetrap Commands are minimally sanitized:
 
-Timetrap TUI commands and dialog data are passed on to Timetrap as though you were entering them on the command line. Commands are sanitized relative to content after a system call to `timetrap`.
+Timetrap TUI commands and dialog data are passed on to [timetrap_wraplib](https://www.npmjs.com/package/timetrap_wraplib) as though you were entering them on the command line. Commands are sanitized relative to content after a system call to `timetrap`.
 
 * Always use quotes when using `--at`/`-a`/`--start`/`--end`:
 
