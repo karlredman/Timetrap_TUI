@@ -4,7 +4,7 @@ Author: [Karl N. Redman](https://karlredman.github.io/)
 
 Timetrap TUI is a node.js based event driven terminal user interface application for the ruby based 'Simple command line timetracker' [Timetrap](https://github.com/samg/timetrap).  Timetrap TUI intends to extend the elegance of Timetrap while honoring the original CLI interface as closely as possible. Timetrap packs a lot of functionality into a fairly simple interface with a short learning curve. I believe that if you have mastered Timetrap then the Timetrap TUI interface will feel natural.
 
-## Video / Gif Demo
+## Screenshot
 
 ![Latest Screenshot](https://github.com/karlredman/Timetrap_TUI/blob/master/devel/demo/screenshot.gif?raw=true "Timetrap TUI Screenshot")
 
