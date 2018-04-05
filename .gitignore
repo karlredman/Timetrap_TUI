@@ -8,14 +8,9 @@ lib/__tests__/output/*
 *.swp
 
 # Can also ignore all directories and files in a directory.
-tmp/**/*
-node_modules
+tmp/
 node_modules/
-node_modules/**/*
-*/node_modules/*
-*/node_modules/**/*
-coverage/*
-*/coverage/*
+coverage/
 
 # Development
 tags
