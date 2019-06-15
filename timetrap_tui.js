@@ -71,7 +71,7 @@ function process_opts({app = null, timetrap_env_config_file = null} ={}){
         .description(
             "http://github.com/karlredman/Timetrap_TUI"
             +"\n"
-			+"  Copyright 2017 Karl N. Redman (MIT licenced)"
+			+"  Copyright 2019 Karl N. Redman (MIT licenced)"
             +"\n"
             +"  -----------------------------------------"
             +"\n"

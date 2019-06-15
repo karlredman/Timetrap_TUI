@@ -1,0 +1,28 @@
+---
+database_file: "/home/karl/Repositories/timetrap/timetrap.db"
+round_in_seconds: 900
+append_notes_delimiter: " "
+formatter_search_paths:
+  - "/home/karl//Repositories/timetrap/formatters"
+  - "~/3rdparty/repositories/timetrap_formatters/formatters"
+default_formatter: text
+auto_sheet: nested_dotfiles
+################# TODO: how does search paths affect the tree ?
+auto_sheet_search_paths:
+  - "/home/karl//Repositories"
+  - "/home/karl/Projects"
+  - "/home/karl/timetrap_projects"
+default_command:
+week_start: Monday
+day_length_hours: 8     # normal work day
+progress_width: 32      # 15 min inc.
+day_countdown: false
+pay_rate: 1
+######## timetrap settings that affect tui
+# something that controls running clocks in display (?)
+note_editor: # if set... ??
+auto_checkout: false # if true behavior is as expected
+require_note: false # if true prompt for it
+#############################################################################
+##### tui stuff #############################################################
+tui_working_directory: '/'

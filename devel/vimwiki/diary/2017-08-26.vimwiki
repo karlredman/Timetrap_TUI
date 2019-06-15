@@ -1,5 +1,0 @@
-# Journal: Start of Project
-
-The purpose of this project is to provide a quick timetracking interface that enforces logging of activities within the context of project hiarchy. While I do engage in the practice of using `.timetrap-sheet` within both my vimwiki implementation and git repositories now, I find it time consuming and sometimes frustrating to have to use the command line for logging tasks. For me it is easier to have a tmux pane dedicated to an open application whereby I can merely enter a few keystrokes in an environment that displays all the information I need right in front of me. I will tend to use task logging far less if I have to type things out or enter commands to find out what projects I can log a task under. Also, I tend to switch back and forth between tasks quite often -sometimes requireing overlap between projects. I believe that if I'm writing code or performing a task that has benifit to more than one project at a time then I want to keep track of everything I can. Lastly, having an open app waiting for input is a good reminder for me to keep track of time overall.
-
-

@@ -41,9 +41,22 @@
   "dependencies": {
     "blessed": "^0.1.81",
     "commander": "^2.11.0",
-    "js-yaml": "^3.10.0",
+    "js-yaml": "^3.13.1",
     "strip-ansi": "^4.0.0",
-    "timetrap_wraplib": "^0.2.0"
+    "timetrap_wraplib": "^0.2.0",
+    "braces": ">=2.3.1",
+    "extend": ">=3.0.2",
+    "hoek": ">=5.0.3",
+    "lodash": ">=4.17.11",
+    "marked": ">=0.3.18",
+    "randomatic": ">=3.0.0",
+    "sshpk": ">=1.13.2"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-jest": "^24.8.0",
+    "babel-preset-env": "^1.7.0",
+    "jest": "^24.8.0",
+    "regenerator-runtime": "^0.13.2"
+  }
 }

@@ -4,11 +4,11 @@ Author: [Karl N. Redman](https://karlredman.github.io/)
 
 Timetrap TUI is a node.js based event driven terminal user interface application for the ruby based 'Simple command line timetracker' [Timetrap](https://github.com/samg/timetrap).  Timetrap TUI intends to extend the elegance of Timetrap while honoring the original CLI interface as closely as possible. Timetrap packs a lot of functionality into a fairly simple interface with a short learning curve. I believe that if you have mastered Timetrap then the Timetrap TUI interface will feel natural.
 
-## Screenshot
+## Screenshot ([image1](https://github.com/karlredman/Timetrap_TUI/blob/master/devel/demo/1_main_2017-11-19.png) / [image2](https://github.com/karlredman/Timetrap_TUI/blob/master/devel/demo/2_details_2017-11-19.png))
 
 ![Latest Screenshot](https://github.com/karlredman/Timetrap_TUI/blob/master/devel/demo/screenshot.gif?raw=true "Timetrap TUI Screenshot")
 
-## Features (i.e. working so far):
+## Features:
 ### original timetrap:
 * check-in / check-out of time sheets
 * edit running time sheets
@@ -48,6 +48,7 @@ Timetrap TUI is a node.js based event driven terminal user interface application
 	* even when sheets are checked in/out externally
 * basic runtime logging (non saving currently)
 * 'are you sure?' dialog boxes can be disabled via command line
+  * see `timetrap_tui --help` for more information
 * 'stop all sheets' menu item
 * ES6 compliant (within Node.js v8.4 limitations)
 
@@ -64,13 +65,24 @@ Timetrap TUI is a node.js based event driven terminal user interface application
 
 
 ## Installation:
-### production:
+
+### Install timetrap:
+* Note: you must run `timetrap` at least once to set up the configuration and database
+```
+# install it
+gem install timetrap
+
+# run at least once
+timetrap display
+```
+
+### Install production timetrap_tui:
 * it's a command line utility so install it globally
 ```
 npm install timetrap_tui -g
 ```
 
-### development:
+### Install development timetrap_tui:
 ```
 # clone the project
 git clone https://github.com/karlredman/Timetrap_TUI.git
@@ -78,15 +90,19 @@ git clone https://github.com/karlredman/Timetrap_TUI.git
 # build it
 cd ./Timetrap_TUI
 npm install
+
+# run it
+./timetrap_tui.js
 ```
 
 ## Configuration:
 
 * Please verify that Timetrap is working properly before testing Timetrap TUI.
 * Timetrap TUI currently uses the the Timetrap configuration file settings/configuration.
-    * this file is used to figure out where `timetrap.yml` is located to determine where the `timetrap.db` file is located.
-    * as per Timetrap configuration settings, set environment variable TIMETRAP_CONFIG_FILE to override timetrap default.
-    * the default location for `timetrap.yml` is `$HOME/.timetrap.yml`
+    * This file is used to figure out where `timetrap.yml` is located to determine where the `timetrap.db` file is located.
+    * As per Timetrap configuration settings, set environment variable TIMETRAP_CONFIG_FILE to override timetrap default.
+    * The default location for `timetrap.yml` is `$HOME/.timetrap.yml`
+    * Here's an [example](https://github.com/karlredman/Timetrap_TUI/blob/master/devel/demo/timetrap.yml) `timetrap.yml file` (`timetrap` will setup a default on the first run).
 
 ## Execution:
 
@@ -249,32 +265,6 @@ Every user interface has it's place. There are a lot of us vim using, mouse avoi
 ## Further Notes:
 
 Timetrap is an excellent command line application for basic time tracking. My goal with Timetrap TUI is to enhance the usefulness of the timetrap application by providing visually interactive components while maintaining the original program features. Hence, this project is a wrapper of the timetrap command. As such it suffers from the same limitations as most any command line wrapper interface: to be considered single user, limited interactivity, subject to breakage if the original command changes in any significant way. However, by wrapping timetrap we gain the advantages of a well tested back-end, established application workflow, and the ability to concentrate on user end functionality -thereby saving initial development time and effort. To be completely honest this project is meant as a prototype for a much larger, as yet unpublished, application/framework that I am working on in my spare time.
-
-## Upcoming Features:
-### original timetrap:
-* Sheets
-	* create new sheets
-	* kill/delete sheets
-	* ranged display context
-* Entries by ID
-	* archive entries
-	* move entries to different sheet
-	* kill/delete entries
-	* archive entries
-
-### additional features (Timetrap TUI):
-* add configuration file capability
-* customizable sheet tree view delimiter
-* customizable and dynamic themes
-* move all entries from one sheet to another
-* customizable command shortcuts
-* display view:
-	* active entries continue counting
-	* display archived entries
-* capability to save logs
-* show running sheet notes on main view
-* separate Timetrap wrapper library (extracted from this project)
-* additional unit testing
 
 ## License:
 This Project is MIT licensed. Furthermore, Timetrap TUI reallocates [log.js](https://github.com/yaronn/blessed-contrib/blob/master/lib/widget/log.js), [tree.js](https://github.com/yaronn/blessed-contrib/blob/master/lib/widget/tree.js) and [table.js](https://github.com/yaronn/blessed-contrib/blob/master/lib/widget/table.js) from the [blessed-contrib](https://github.com/yaronn/blessed-contrib/) project in order to reduce dependencies. Relicensing information can be found [here](https://github.com/karlredman/Timetrap_TUI/blob/master/lib/blessed-contrib/README.md).
