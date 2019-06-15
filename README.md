@@ -86,9 +86,15 @@ npm install timetrap_tui -g
 ```
 # clone the project
 git clone https://github.com/karlredman/Timetrap_TUI.git
+cd ./Timetrap_TUI
+
+# fetch tags
+git fetch --tags
+
+# checkout specific version
+git checkout <release tag>
 
 # build it
-cd ./Timetrap_TUI
 npm install
 
 # run it
