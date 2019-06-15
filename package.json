@@ -54,7 +54,6 @@
     "babel-preset-env": "^1.7.0",
     "braces": ">=2.3.1",
     "eslint": "^5.16.0",
-    "eslint-config-strongloop": "^2.1.0",
     "extend": ">=3.0.2",
     "jest": "^24.8.0",
     "lodash": ">=4.17.11",
