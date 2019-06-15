@@ -1,4 +1,4 @@
-[![Build Status](https://drone.parasynthetic.dev/api/badges/Scratch/Timetrap_TUI/status.svg)](https://drone.parasynthetic.dev/Scratch/Timetrap_TUI)
+[![Build Status](https://drone-github.parasynthetic.dev/api/badges/karlredman/Timetrap_TUI/status.svg)](https://drone-github.parasynthetic.dev/karlredman/Timetrap_TUI)
 
 # Project: Timetrap TUI
 
