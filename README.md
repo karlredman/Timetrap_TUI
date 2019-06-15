@@ -1,5 +1,5 @@
-[![Build Status](https://drone-github.parasynthetic.dev/api/badges/karlredman/Timetrap_TUI/status.svg)](https://drone-github.parasynthetic.dev/karlredman/Timetrap_TUI)
-[![npm version](https://badge.fury.io/js/timetrap_tui.svg)](https://badge.fury.io/js/timetrap_tui)
+[![build status](https://drone-github.parasynthetic.dev/api/badges/karlredman/Timetrap_TUI/status.svg)](https://drone-github.parasynthetic.dev/karlredman/Timetrap_TUI)
+[![npm version](https://img.shields.io/npm/v/timetrap_tui.svg)](https://www.npmjs.com/package/timetrap_tui)
 [![issues](https://img.shields.io/github/issues/karlredman/Timetrap_TUI.svg)](https://github.com/karlredman/Timetrap_TUI/issues)
 [![license](https://img.shields.io/github/license/karlredman/Timetrap_TUI.svg)](https://github.com/karlredman/Timetrap_TUI/blob/master/LICENSE)
 
