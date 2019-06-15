@@ -1,3 +1,5 @@
+[![Build Status](https://drone.parasynthetic.dev/api/badges/Scratch/Timetrap_TUI/status.svg)](https://drone.parasynthetic.dev/Scratch/Timetrap_TUI)
+
 # Project: Timetrap TUI
 
 Author: [Karl N. Redman](https://karlredman.github.io/)
