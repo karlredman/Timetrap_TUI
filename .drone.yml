@@ -1,0 +1,30 @@
+pipeline:
+  install:
+    image: node:8.6.0
+    commands:
+      - node -v
+      - npm -v
+      - npm install
+
+  lint:
+    image: node:8.6.0
+    group: testing
+    commands:
+      - npm run pretest
+  when:
+    branch:
+    - master
+    event:
+    - push
+
+  testing:
+    image: node:8.6.0
+    group: testing
+    commands:
+      - npm run test
+  when:
+    branch:
+    - master
+    event:
+    - push
+
