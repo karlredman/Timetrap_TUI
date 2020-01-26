@@ -45,6 +45,7 @@
     "js-yaml": "^3.13.1",
     "strip-ansi": "^4.0.0",
     "set-value": ">=3.0.1",
+    "braces": ">=2.3.1",
     "timetrap_wraplib": "^0.2.0"
   },
   "devDependencies": {
