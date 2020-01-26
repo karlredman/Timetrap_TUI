@@ -25,7 +25,7 @@ Timetrap TUI is a node.js based event driven terminal user interface application
 	* display all (non archived)
 * view/edit entries by ID (relative to display context)
 
-### additional features (Timetrap TUI):
+### additionazl features (Timetrap TUI):
 * time sheets are displayed in a tree view
 	* when words are seperated by `.`
 * 5 different color themes:
