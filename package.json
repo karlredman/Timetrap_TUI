@@ -44,21 +44,21 @@
     "commander": "^2.11.0",
     "js-yaml": "^3.13.1",
     "strip-ansi": "^4.0.0",
+    "set-value": ">=3.0.1",
     "timetrap_wraplib": "^0.2.0"
   },
   "devDependencies": {
     "@hapi/hoek": "^7",
     "babel-cli": "^6.26.0",
-    "babel-jest": "^24.8.0",
+    "babel-jest": "^25.1.0",
     "babel-preset-env": "^1.7.0",
     "braces": ">=2.3.1",
     "eslint": "^5.16.0",
     "extend": ">=3.0.2",
-    "jest": "^24.8.0",
+    "jest": "^25.1.0",
     "lodash": ">=4.17.11",
-    "marked": ">=0.3.18",
+    "marked": "^0.8.0",
     "randomatic": ">=3.0.0",
-    "set-value": ">=3.0.1",
     "regenerator-runtime": "^0.13.2",
     "sshpk": ">=1.13.2"
   }
