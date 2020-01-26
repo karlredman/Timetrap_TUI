@@ -1,6 +1,6 @@
 {
   "name": "timetrap_tui",
-  "version": "0.2.14",
+  "version": "0.2.15",
   "description": "Timetrap TUI is a terminal user interface wrapper application for Timetrap.",
   "main": "timetrap_tui.js",
   "bin": {
